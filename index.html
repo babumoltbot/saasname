@@ -757,29 +757,207 @@
             transform: translateY(0);
         }
 
-        /* --- Responsive --- */
+        /* --- Responsive: Tablet --- */
         @media (max-width: 768px) {
             nav { padding: 16px 20px; }
-            .nav-links { gap: 20px; }
+            .nav-links { gap: 16px; }
             .nav-links a:not(.nav-cta) { display: none; }
 
-            .hero { padding: 100px 20px 60px; }
-            .hero-actions { flex-direction: column; width: 100%; max-width: 320px; }
-            .hero-actions a { width: 100%; justify-content: center; }
+            section { padding: 80px 20px; }
 
-            .features-grid { grid-template-columns: 1fr; }
+            .hero {
+                min-height: auto;
+                padding: 110px 20px 60px;
+            }
 
-            .steps::before { left: 23px; }
+            .hero::before {
+                width: 400px;
+                height: 400px;
+                top: -10%;
+            }
 
-            .pricing-grid { grid-template-columns: 1fr; }
+            .hero-badge { margin-bottom: 24px; }
 
-            .footer-inner { flex-direction: column; gap: 16px; }
+            .hero h1 {
+                font-size: 36px;
+                letter-spacing: -1px;
+                line-height: 1.1;
+            }
+
+            .ticker-item {
+                font-size: inherit;
+            }
+
+            .hero-sub {
+                font-size: 16px;
+                margin: 16px auto 32px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .hero-actions a {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .terminal-demo {
+                margin-top: 48px;
+                max-width: 100%;
+            }
+
+            .terminal-body {
+                padding: 16px;
+                font-size: 12px;
+                line-height: 1.7;
+                overflow-x: auto;
+            }
+
+            .features-header { margin-bottom: 40px; }
+            .features-grid {
+                grid-template-columns: 1fr;
+                border-radius: 10px;
+            }
+
+            .feature-card { padding: 28px 24px; }
+
+            .how-it-works-header { margin-bottom: 40px; }
+
+            .steps::before { left: 19px; }
+
+            .step {
+                gap: 20px;
+                padding: 24px 0;
+            }
+
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .step-content h3 { font-size: 18px; }
+            .step-content p { font-size: 14px; }
+
+            .pricing-header { margin-bottom: 40px; }
+            .pricing-grid { grid-template-columns: 1fr; gap: 20px; }
+            .pricing-card { padding: 32px 24px; }
+            .pricing-amount { font-size: 44px; }
+
+            .section-title { margin-bottom: 16px; }
+            .section-desc { font-size: 15px; }
+
+            .cta-form textarea {
+                min-height: 100px;
+                font-size: 13px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 16px;
+            }
         }
 
+        /* --- Responsive: Small phones --- */
         @media (max-width: 480px) {
-            .hero h1 { letter-spacing: -1px; }
-            .terminal-demo { margin-top: 48px; }
-            .terminal-body { padding: 16px; font-size: 11px; }
+            nav { padding: 14px 16px; }
+            .nav-cta {
+                padding: 6px 14px !important;
+                font-size: 12px !important;
+            }
+
+            section { padding: 60px 16px; }
+
+            .hero {
+                padding: 96px 16px 48px;
+            }
+
+            .hero-badge {
+                font-size: 11px;
+                padding: 5px 12px;
+                margin-bottom: 20px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+                letter-spacing: -0.5px;
+            }
+
+            .hero-sub {
+                font-size: 15px;
+                margin: 12px auto 28px;
+            }
+
+            .hero-actions { max-width: 100%; }
+
+            .terminal-demo { margin-top: 36px; }
+            .terminal-header { padding: 10px 14px; }
+            .terminal-dot { width: 10px; height: 10px; }
+            .terminal-title { font-size: 11px; }
+            .terminal-body {
+                padding: 14px;
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+            .section-label {
+                font-size: 11px;
+                letter-spacing: 1.5px;
+            }
+
+            .features-header { margin-bottom: 32px; }
+            .feature-card { padding: 24px 20px; }
+            .feature-icon {
+                width: 36px;
+                height: 36px;
+                margin-bottom: 16px;
+            }
+            .feature-card h3 { font-size: 15px; }
+            .feature-card p { font-size: 13px; }
+
+            .how-it-works-header { margin-bottom: 32px; }
+            .steps::before { left: 15px; }
+            .step { gap: 16px; padding: 20px 0; }
+            .step-number {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            .step-content h3 { font-size: 16px; }
+            .step-content p { font-size: 13px; }
+
+            .pricing-header { margin-bottom: 32px; }
+            .pricing-grid { gap: 16px; }
+            .pricing-card { padding: 28px 20px; border-radius: 12px; }
+            .pricing-tier-name { font-size: 12px; }
+            .pricing-amount { font-size: 40px; }
+            .pricing-period { font-size: 13px; margin-bottom: 24px; }
+            .pricing-features { margin-bottom: 28px; }
+            .pricing-features li { font-size: 13px; padding: 6px 0; }
+
+            .cta-inner .section-desc { margin-bottom: 28px; }
+            .cta-form textarea {
+                padding: 14px 16px;
+                min-height: 90px;
+                font-size: 13px;
+            }
+            .cta-form .btn-primary {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .form-success { padding: 36px 16px; }
+            .success-icon { width: 48px; height: 48px; font-size: 20px; }
+            .form-success h3 { font-size: 20px; }
+            .form-success p { font-size: 14px; }
+
+            footer { padding: 32px 16px; }
+            .footer-text { font-size: 12px; }
+            .footer-links { gap: 20px; }
+            .footer-links a { font-size: 12px; }
         }
     </style>
 </head>

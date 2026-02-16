@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaSName - Validate Your SaaS Name</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #fafafa; }
+        .container { max-width: 600px; margin: 0 auto; padding: 60px 20px; text-align: center; }
+        h1 { font-size: 32px; font-weight: 600; margin-bottom: 20px; color: #111; }
+        .subtitle { font-size: 18px; color: #666; margin-bottom: 40px; }
+        .feature-list { text-align: left; margin-bottom: 40px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .feature-list h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111; }
+        .feature-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 16px; }
+        .feature-item:last-child { margin-bottom: 0; }
+        .check { width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
+        .form-section { margin-bottom: 40px; }
+        .form-section h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+        .form-section p { color: #666; margin-bottom: 20px; }
+        .text-form { display: flex; flex-direction: column; gap: 10px; }
+        .text-input { width: 100%; padding: 14px 18px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 8px; outline: none; transition: border-color 0.2s; min-height: 100px; resize: vertical; }
+        .text-input:focus { border-color: #333; }
+        .submit-btn { padding: 14px 28px; font-size: 16px; font-weight: 600; background: #111; color: white; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+        .submit-btn:hover { background: #333; }
+        .footer { color: #999; font-size: 14px; }
+        .tiers { margin-bottom: 40px; }
+        .tier { padding: 20px; background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .tier h3 { margin-bottom: 10px; }
+        .tier .price { font-size: 32px; font-weight: 700; color: #111; }
+        .tier ul { list-style: none; margin: 15px 0; }
+        .tier li { padding: 5px 0; }
+        .tier li::before { content: "✓ "; color: #4caf50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Name Your SaaS With Confidence.</h1>
+        <p class="subtitle">Validate your SaaS name before you build.</p>
+        
+        <div class="feature-list">
+            <h2>What SaaSName checks:</h2>
+            <div class="feature-item">
+                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Domain availability</strong> (.com, .io, .app)</span>
+            </div>
+            <div class="feature-item">
+                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Social media handles</strong> (X, LinkedIn, Instagram)</span>
+            </div>
+            <div class="feature-item">
+                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Competitor names</strong> (avoid confusion)</span>
+            </div>
+            <div class="feature-item">
+                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Trademark conflicts</strong> (legal safety)</span>
+            </div>
+            <div class="feature-item">
+                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Brand awareness score</strong> (memorability)</span>
+            </div>
+        </div>
+        
+        <div class="tiers">
+            <div class="tier">
+                <h3>🆓 Free</h3>
+                <div class="price">$0</div>
+                <ul>
+                    <li>Describe your SaaS idea</li>
+                    <li>5 name suggestions</li>
+                    <li>Basic domain check</li>
+                </ul>
+            </div>
+            <div class="tier">
+                <h3>🚀 Pro</h3>
+                <div class="price">$29</div>
+                <span style="color: #666; font-size: 14px;">one-time or $9/mo</span>
+                <ul>
+                    <li>Unlimited ideas</li>
+                    <li>Full competitor analysis</li>
+                    <li>Trademark check</li>
+                    <li>Social handle check</li>
+                    <li>PDF export report</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Try It Free</h3>
+            <p>Describe your SaaS idea. We'll generate name suggestions.</p>
+            
+            <form class="text-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <textarea name="saas_idea" class="text-input" placeholder="Describe your SaaS idea...&#10;&#10;Example: A tool that helps consultants schedule LinkedIn posts with AI-generated content" required></textarea>
+                <button type="submit" class="submit-btn">Generate Names</button>
+            </form>
+        </div>
+        
+        <p class="footer">
+            Built by founders, for founders.<br>
+            <a href="https://github.com/babumoltbot/saasname">View on GitHub</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -3,103 +3,1082 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaSName - Validate Your SaaS Name</title>
+    <title>SaaSName — AI-Powered Name Validator for Founders</title>
+    <meta name="description" content="Generate, validate, and secure the perfect name for your SaaS. Domain checks, trademark screening, social handle availability — all in one tool.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --black: #080a0c;
+            --surface: #0e1117;
+            --surface-raised: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #484f58;
+            --accent: #3cff8a;
+            --accent-dim: rgba(60, 255, 138, 0.12);
+            --accent-glow: rgba(60, 255, 138, 0.25);
+            --warning: #f0883e;
+            --font-display: 'Sora', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #fafafa; }
-        .container { max-width: 600px; margin: 0 auto; padding: 60px 20px; text-align: center; }
-        h1 { font-size: 32px; font-weight: 600; margin-bottom: 20px; color: #111; }
-        .subtitle { font-size: 18px; color: #666; margin-bottom: 40px; }
-        .feature-list { text-align: left; margin-bottom: 40px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .feature-list h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111; }
-        .feature-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 16px; }
-        .feature-item:last-child { margin-bottom: 0; }
-        .check { width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
-        .form-section { margin-bottom: 40px; }
-        .form-section h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
-        .form-section p { color: #666; margin-bottom: 20px; }
-        .text-form { display: flex; flex-direction: column; gap: 10px; }
-        .text-input { width: 100%; padding: 14px 18px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 8px; outline: none; transition: border-color 0.2s; min-height: 100px; resize: vertical; }
-        .text-input:focus { border-color: #333; }
-        .submit-btn { padding: 14px 28px; font-size: 16px; font-weight: 600; background: #111; color: white; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-        .submit-btn:hover { background: #333; }
-        .footer { color: #999; font-size: 14px; }
-        .tiers { margin-bottom: 40px; }
-        .tier { padding: 20px; background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .tier h3 { margin-bottom: 10px; }
-        .tier .price { font-size: 32px; font-weight: 700; color: #111; }
-        .tier ul { list-style: none; margin: 15px 0; }
-        .tier li { padding: 5px 0; }
-        .tier li::before { content: "✓ "; color: #4caf50; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Grain overlay --- */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(8, 10, 12, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        nav.scrolled { border-bottom-color: var(--border); }
+
+        .nav-logo {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: var(--black) !important;
+            background: var(--accent);
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: opacity 0.2s !important;
+        }
+
+        .nav-cta:hover { opacity: 0.85; }
+
+        /* --- Hero --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+
+        /* Radial glow behind hero */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+            background: var(--accent-dim);
+            border: 1px solid rgba(60, 255, 138, 0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.2s forwards;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 80px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            max-width: 800px;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.35s forwards;
+        }
+
+        /* The animated name ticker */
+        .ticker-wrapper {
+            display: block;
+            height: 1.1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticker-track {
+            display: flex;
+            flex-direction: column;
+            animation: tickerScroll 8s var(--ease-out-expo) infinite;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.1em;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .hero-sub {
+            font-size: clamp(16px, 2.2vw, 20px);
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 20px auto 40px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.5s forwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.65s forwards;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--black);
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            background: var(--surface);
+        }
+
+        /* --- Terminal demo card --- */
+        .terminal-demo {
+            margin-top: 72px;
+            width: 100%;
+            max-width: 640px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.85s forwards;
+        }
+
+        .terminal-window {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .terminal-dot:nth-child(1) { background: #ff5f57; }
+        .terminal-dot:nth-child(2) { background: #febc2e; }
+        .terminal-dot:nth-child(3) { background: #28c840; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .terminal-body {
+            padding: 24px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .t-prompt { color: var(--accent); }
+        .t-cmd { color: var(--text-primary); }
+        .t-output { color: var(--text-secondary); }
+        .t-success { color: #3cff8a; }
+        .t-warning { color: #f0883e; }
+        .t-info { color: #58a6ff; }
+        .t-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent);
+            vertical-align: text-bottom;
+            animation: blink 1s steps(1) infinite;
+        }
+
+        /* --- Section shared --- */
+        section {
+            padding: 120px 24px;
+            position: relative;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 17px;
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+        /* --- Features grid --- */
+        .features {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .features-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .features-header .section-desc { margin: 0 auto; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 40px 32px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .feature-card:hover { background: var(--surface-raised); }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-dim);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* --- How it works --- */
+        .how-it-works-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .how-it-works-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .how-it-works-header .section-desc { margin: 0 auto; }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 48px;
+            bottom: 48px;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), var(--border));
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 32px;
+            padding: 36px 0;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            background: var(--accent-dim);
+            border: 1px solid rgba(60, 255, 138, 0.2);
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .step-content p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 480px;
+        }
+
+        /* --- Pricing --- */
+        .pricing {
+            background: var(--black);
+        }
+
+        .pricing-inner {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .pricing-header .section-desc { margin: 0 auto; }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 36px;
+            position: relative;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, rgba(60, 255, 138, 0.04) 0%, var(--surface) 40%);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--black);
+            background: var(--accent);
+            padding: 4px 16px;
+            border-radius: 100px;
+        }
+
+        .pricing-tier-name {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .pricing-card.featured .pricing-tier-name { color: var(--accent); }
+
+        .pricing-amount {
+            font-size: 52px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .pricing-period {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 36px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features li::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%233cff8a'%3E%3Cpath d='M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 111.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .pricing-card .btn-primary,
+        .pricing-card .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* --- CTA / Form Section --- */
+        .cta-section {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-inner {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-inner .section-desc {
+            margin: 0 auto 40px;
+        }
+
+        .cta-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cta-form textarea {
+            width: 100%;
+            padding: 18px 20px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--black);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+
+        .cta-form textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .cta-form textarea::placeholder { color: var(--text-muted); }
+
+        .cta-form .btn-primary {
+            width: 100%;
+            justify-content: center;
+            padding: 16px;
+            font-size: 16px;
+        }
+
+        .cta-form .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-success {
+            padding: 48px 24px;
+            text-align: center;
+            animation: fadeUp 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            color: var(--black);
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .form-success h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .form-success p {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--text-secondary); }
+
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes tickerScroll {
+            0%, 18% { transform: translateY(0); }
+            22%, 40% { transform: translateY(-25%); }
+            44%, 62% { transform: translateY(-50%); }
+            66%, 84% { transform: translateY(-75%); }
+            88%, 100% { transform: translateY(0); }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            nav { padding: 16px 20px; }
+            .nav-links { gap: 20px; }
+            .nav-links a:not(.nav-cta) { display: none; }
+
+            .hero { padding: 100px 20px 60px; }
+            .hero-actions { flex-direction: column; width: 100%; max-width: 320px; }
+            .hero-actions a { width: 100%; justify-content: center; }
+
+            .features-grid { grid-template-columns: 1fr; }
+
+            .steps::before { left: 23px; }
+
+            .pricing-grid { grid-template-columns: 1fr; }
+
+            .footer-inner { flex-direction: column; gap: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { letter-spacing: -1px; }
+            .terminal-demo { margin-top: 48px; }
+            .terminal-body { padding: 16px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Name Your SaaS With Confidence.</h1>
-        <p class="subtitle">Validate your SaaS name before you build.</p>
-        
-        <div class="feature-list">
-            <h2>What SaaSName checks:</h2>
-            <div class="feature-item">
-                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Domain availability</strong> (.com, .io, .app)</span>
-            </div>
-            <div class="feature-item">
-                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Social media handles</strong> (X, LinkedIn, Instagram)</span>
-            </div>
-            <div class="feature-item">
-                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Competitor names</strong> (avoid confusion)</span>
-            </div>
-            <div class="feature-item">
-                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Trademark conflicts</strong> (legal safety)</span>
-            </div>
-            <div class="feature-item">
-                <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Brand awareness score</strong> (memorability)</span>
-            </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="nav-logo">SaaS<span>Name</span></a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#try-it" class="nav-cta">Try Free</a>
         </div>
-        
-        <div class="tiers">
-            <div class="tier">
-                <h3>🆓 Free</h3>
-                <div class="price">$0</div>
-                <ul>
-                    <li>Describe your SaaS idea</li>
-                    <li>5 name suggestions</li>
-                    <li>Basic domain check</li>
-                </ul>
-            </div>
-            <div class="tier">
-                <h3>🚀 Pro</h3>
-                <div class="price">$29</div>
-                <span style="color: #666; font-size: 14px;">one-time or $9/mo</span>
-                <ul>
-                    <li>Unlimited ideas</li>
-                    <li>Full competitor analysis</li>
-                    <li>Trademark check</li>
-                    <li>Social handle check</li>
-                    <li>PDF export report</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h3>Try It Free</h3>
-            <p>Describe your SaaS idea. We'll generate name suggestions.</p>
-            
-            <form class="text-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                <textarea name="saas_idea" class="text-input" placeholder="Describe your SaaS idea...&#10;&#10;Example: A tool that helps consultants schedule LinkedIn posts with AI-generated content" required></textarea>
-                <button type="submit" class="submit-btn">Generate Names</button>
-            </form>
-        </div>
-        
-        <p class="footer">
-            Built by founders, for founders.<br>
-            <a href="https://github.com/babumoltbot/saasname">View on GitHub</a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">AI-Powered Name Validation</div>
+
+        <h1>
+            Stop guessing.<br>
+            <span class="ticker-wrapper">
+                <span class="ticker-track">
+                    <span class="ticker-item">Validate it.</span>
+                    <span class="ticker-item">Check domains.</span>
+                    <span class="ticker-item">Secure handles.</span>
+                    <span class="ticker-item">Ship faster.</span>
+                </span>
+            </span>
+        </h1>
+
+        <p class="hero-sub">
+            Generate name ideas for your SaaS, then instantly validate domains,
+            trademarks, social handles, and competitive landscape.
         </p>
-    </div>
+
+        <div class="hero-actions">
+            <a href="#try-it" class="btn-primary">
+                Generate Names
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#features" class="btn-secondary">See How It Works</a>
+        </div>
+
+        <!-- Terminal demo -->
+        <div class="terminal-demo">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-title">saasname validate</span>
+                </div>
+                <div class="terminal-body">
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">saasname "AI scheduling tool for consultants"</span></div>
+                    <br>
+                    <div><span class="t-output">Generating names...</span></div>
+                    <br>
+                    <div><span class="t-success">&#10003;</span> <span class="t-cmd">CalendarIQ</span> <span class="t-output">&mdash; calendariq.com</span> <span class="t-success">available</span></div>
+                    <div><span class="t-success">&#10003;</span> <span class="t-cmd">Scheduly</span> <span class="t-output">&mdash; scheduly.io</span> <span class="t-success">available</span></div>
+                    <div><span class="t-warning">!</span> <span class="t-cmd">MeetFlow</span> <span class="t-output">&mdash; meetflow.com</span> <span class="t-warning">taken</span></div>
+                    <div><span class="t-success">&#10003;</span> <span class="t-cmd">BookSync</span> <span class="t-output">&mdash; booksync.app</span> <span class="t-success">available</span></div>
+                    <div><span class="t-success">&#10003;</span> <span class="t-cmd">Slotwise</span> <span class="t-output">&mdash; slotwise.dev</span> <span class="t-success">available</span></div>
+                    <br>
+                    <div><span class="t-info">i</span> <span class="t-output">Brand score: </span><span class="t-success">CalendarIQ 92/100</span> <span class="t-output">| Trademark: clear</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <div class="features-header reveal">
+                <p class="section-label">Features</p>
+                <h2 class="section-title">Everything you need to<br>name your startup</h2>
+                <p class="section-desc">One tool replaces hours of manual Googling, WHOIS lookups, and trademark searches.</p>
+            </div>
+
+            <div class="features-grid reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5L10 14.7 5.1 17.2l.9-5.5-4-3.9 5.5-.8L10 2z" stroke="#3cff8a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>AI Name Generation</h3>
+                    <p>Describe your SaaS idea and get creative, brandable name suggestions powered by AI.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#3cff8a" stroke-width="1.5"/><path d="M10 2a8 8 0 000 16" stroke="#3cff8a" stroke-width="1.5"/><path d="M2 10h16M10 2c2.2 1.8 3.5 4.8 3.5 8s-1.3 6.2-3.5 8c-2.2-1.8-3.5-4.8-3.5-8s1.3-6.2 3.5-8z" stroke="#3cff8a" stroke-width="1.5"/></svg>
+                    </div>
+                    <h3>Domain Availability</h3>
+                    <p>Instantly check .com, .io, .app, and .dev domains. No more switching between registrar tabs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 6v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6m14 0l-7 5-7-5m14 0a2 2 0 00-2-2H5a2 2 0 00-2 2" stroke="#3cff8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>Social Handle Check</h3>
+                    <p>Verify availability on X, LinkedIn, and Instagram before someone else grabs your name.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16 8.5V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2.5" stroke="#3cff8a" stroke-width="1.5" stroke-linecap="round"/><path d="M12 12l2 2 4-4" stroke="#3cff8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>Trademark Screening</h3>
+                    <p>Catch potential legal conflicts before they become expensive problems down the road.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 15V5a2 2 0 012-2h8a2 2 0 012 2v10" stroke="#3cff8a" stroke-width="1.5"/><path d="M2 15h16M6 7h8M6 10h5" stroke="#3cff8a" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>Competitor Analysis</h3>
+                    <p>See if similar names exist in your space. Avoid confusion and stand out from day one.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M6 7l4-4 4 4" stroke="#3cff8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="13" width="14" height="4" rx="1" stroke="#3cff8a" stroke-width="1.5"/></svg>
+                    </div>
+                    <h3>Brand Score & PDF Report</h3>
+                    <p>Get a memorability score and export a polished PDF report to share with co-founders.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works-inner">
+            <div class="how-it-works-header reveal">
+                <p class="section-label">How It Works</p>
+                <h2 class="section-title">Three steps to the<br>perfect SaaS name</h2>
+                <p class="section-desc">From idea to validated name in under 60 seconds.</p>
+            </div>
+
+            <div class="steps reveal">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Describe your idea</h3>
+                        <p>Tell us what your SaaS does in a sentence or two. Our AI understands context, audience, and tone to generate relevant names.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Review suggestions</h3>
+                        <p>Get a list of creative, brandable names. Each one comes with domain availability, social handle status, and a brand score.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Validate and ship</h3>
+                        <p>Run a full validation — trademark screening, competitor check, and memorability analysis. Export a PDF report and lock in your name.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-inner">
+            <div class="pricing-header reveal">
+                <p class="section-label">Pricing</p>
+                <h2 class="section-title">Simple, founder-friendly pricing</h2>
+                <p class="section-desc">Start free. Upgrade when you need the full picture.</p>
+            </div>
+
+            <div class="pricing-grid reveal">
+                <div class="pricing-card">
+                    <div class="pricing-tier-name">Free</div>
+                    <div class="pricing-amount">$0</div>
+                    <div class="pricing-period">Forever free</div>
+                    <ul class="pricing-features">
+                        <li>Describe your SaaS idea</li>
+                        <li>5 name suggestions</li>
+                        <li>Basic domain availability</li>
+                        <li>Brand score preview</li>
+                    </ul>
+                    <a href="#try-it" class="btn-secondary">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-tier-name">Pro</div>
+                    <div class="pricing-amount">$29</div>
+                    <div class="pricing-period">One-time &mdash; or $9/month</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited name ideas</li>
+                        <li>Full competitor analysis</li>
+                        <li>Trademark screening</li>
+                        <li>Social handle verification</li>
+                        <li>PDF export report</li>
+                    </ul>
+                    <a href="#try-it" class="btn-primary">Start Free Trial</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Form -->
+    <section class="cta-section" id="try-it">
+        <div class="cta-inner">
+            <p class="section-label reveal">Try It Free</p>
+            <h2 class="section-title reveal">What does your SaaS do?</h2>
+            <p class="section-desc reveal">Describe your idea below. We'll generate name suggestions and check availability.</p>
+
+            <form class="cta-form reveal" id="cta-form" action="https://formspree.io/f/xdalzeeq" method="POST">
+                <textarea
+                    name="saas_idea"
+                    placeholder="Example: A tool that helps consultants schedule LinkedIn posts with AI-generated content..."
+                    required
+                ></textarea>
+                <button type="submit" class="btn-primary">
+                    Generate Names
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </form>
+
+            <div class="form-success" id="form-success" style="display:none;">
+                <div class="success-icon">&#10003;</div>
+                <h3>We got your idea!</h3>
+                <p>We'll generate name suggestions and send them to you shortly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <span class="footer-text">Built by founders, for founders.</span>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll-triggered nav border
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 20);
+        }, { passive: true });
+
+        // Scroll reveal
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transitionDelay = `${i * 0.08}s`;
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        revealEls.forEach(el => observer.observe(el));
+
+        // Form AJAX submission
+        const ctaForm = document.getElementById('cta-form');
+        const formSuccess = document.getElementById('form-success');
+        ctaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = ctaForm.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            try {
+                const res = await fetch(ctaForm.action, {
+                    method: 'POST',
+                    body: new FormData(ctaForm),
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (res.ok) {
+                    ctaForm.style.display = 'none';
+                    formSuccess.style.display = 'block';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Something went wrong. Try again.';
+                }
+            } catch {
+                btn.disabled = false;
+                btn.textContent = 'Something went wrong. Try again.';
+            }
+        });
+
+        // Smooth anchor scroll
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

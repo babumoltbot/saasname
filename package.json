@@ -1,11 +1,11 @@
 {
   "name": "saasname",
-  "version": "0.1.0",
-  "description": "AI-powered SaaS name validator",
-  "main": "app.js",
+  "version": "1.0.0",
+  "description": "AI-powered SaaS name validator - helps founders validate and choose names for their SaaS ideas",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "saas",
@@ -18,7 +18,10 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "openai": "^4.20.0",
-    "axios": "^1.6.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

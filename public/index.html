@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaSName - Validate Your SaaS Name</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #fafafa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        h1 { font-size: 32px; font-weight: 600; margin-bottom: 20px; color: #111; text-align: center; }
+        .subtitle { font-size: 18px; color: #666; margin-bottom: 30px; text-align: center; }
+        .card { background: white; border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 18px; margin-bottom: 20px; }
+        textarea { width: 100%; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 8px; min-height: 120px; resize: vertical; outline: none; transition: border-color 0.2s; }
+        textarea:focus { border-color: #333; }
+        button { padding: 15px 30px; font-size: 16px; font-weight: 600; background: #111; color: white; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; margin-top: 15px; }
+        button:hover { background: #333; }
+        button:disabled { background: #999; cursor: not-allowed; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .feature { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .feature svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .loading { display: none; text-align: center; padding: 40px; }
+        .loading.active { display: block; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #333; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .results { display: none; }
+        .results.active { display: block; }
+        .name-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .name-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .name-title { font-size: 24px; font-weight: 600; }
+        .score-badge { padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+        .score-excellent { background: #e8f5e9; color: #2e7d32; }
+        .score-good { background: #fff3e0; color: #e65100; }
+        .score-fair { background: #fff8e1; color: #f57f17; }
+        .score-needs-work { background: #ffebee; color: #c62828; }
+        .tagline { color: #666; font-size: 16px; margin-bottom: 15px; }
+        .checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        .check-item { font-size: 13px; padding: 10px; background: #f5f5f5; border-radius: 8px; }
+        .check-label { color: #666; display: block; margin-bottom: 3px; }
+        .check-value { font-weight: 600; }
+        .check-value.available { color: #2e7d32; }
+        .check-value.taken { color: #c62828; }
+        .domains-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .domain-badge { padding: 4px 10px; border-radius: 4px; font-size: 12px; }
+        .domain-available { background: #e8f5e9; color: #2e7d32; }
+        .domain-taken { background: #ffebee; color: #c62828; }
+        .api-note { background: #fff8e1; border: 1px solid #ffc107; border-radius: 8px; padding: 15px; margin-top: 30px; font-size: 14px; }
+        .api-note strong { display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SaaSName</h1>
+        <p class="subtitle">Validate your SaaS name in seconds</p>
+        
+        <div class="card">
+            <h2>Describe your SaaS idea</h2>
+            <textarea id="ideaInput" placeholder="Describe your SaaS idea...
+
+Example: A tool that helps consultants schedule LinkedIn posts with AI-generated content"></textarea>
+            <button id="generateBtn" onclick="generateNames()">Generate Names</button>
+        </div>
+        
+        <div class="features">
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Domain check</span></div>
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Social handles</span></div>
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Brand score</span></div>
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>AI suggestions</span></div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating name suggestions...</p>
+        </div>
+        
+        <div class="results" id="results"></div>
+        
+        <div class="api-note">
+            <strong>🚀 Demo Mode</strong>
+            This is a demo with mock data. For real validation, connect APIs (OpenAI for names, Namecheap for domains, etc.). Check the code for integration points.
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = '';
+        
+        async function generateNames() {
+            const idea = document.getElementById('ideaInput').value.trim();
+            if (!idea || idea.length < 10) {
+                alert('Please describe your SaaS idea (at least 10 characters)');
+                return;
+            }
+            
+            const btn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            btn.disabled = true;
+            loading.classList.add('active');
+            results.classList.remove('active');
+            results.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea, count: 10 })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.names);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+        
+        function displayResults(names) {
+            const results = document.getElementById('results');
+            results.classList.add('active');
+            
+            let html = `<h2 style="margin-bottom: 20px;">Generated Names (${names.length})</h2>`;
+            
+            names.forEach((name, i) => {
+                const scoreClass = name.rating === 'Excellent' ? 'score-excellent' : 
+                                  name.rating === 'Good' ? 'score-good' : 
+                                  name.rating === 'Fair' ? 'score-fair' : 'score-needs-work';
+                
+                html += `
+                    <div class="name-card">
+                        <div class="name-header">
+                            <div class="name-title">${i + 1}. ${name.name}</div>
+                            <span class="score-badge ${scoreClass}">${name.rating} (${name.brandScore}%)</span>
+                        </div>
+                        <p class="tagline">${name.tagline}</p>
+                        <div class="checks">
+                            <div class="check-item">
+                                <span class="check-label">Available Domains:</span>
+                                <div class="domains-list">
+                                    ${name.domains.map(d => 
+                                        `<span class="domain-badge ${d.available ? 'domain-available' : 'domain-taken'}">${d.domain} ${d.available ? '✓' : '✗'}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            <div class="check-item">
+                                <span class="check-label">Social Handles:</span>
+                                <div class="domains-list">
+                                    ${name.handles.map(h => 
+                                        `<span class="domain-badge ${h.available ? 'domain-available' : 'domain-taken'}">@${h.handle} ${h.available ? '✓' : '✗'}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            results.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

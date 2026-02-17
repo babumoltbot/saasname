@@ -2,83 +2,119 @@
 
 AI-powered SaaS name validator that helps founders validate and choose names for their SaaS ideas.
 
-## The Problem
-
-Naming a SaaS is hard:
-- Domain availability confusion
-- Social handles taken
-- Competitor conflicts
-- Trademark issues
-- Brand awareness questions
-
-## The Solution
-
-Describe your SaaS idea → Get name suggestions → Validate across multiple dimensions
-
 ## Features
 
 ### Free Tier
-- Describe your SaaS idea
-- 5 name suggestions
-- Basic domain availability check
+- ✅ Describe your SaaS idea
+- ✅ Generate 10 name suggestions
+- ✅ Check domain availability (.com, .io, .app, .dev)
+- ✅ Check social media handles
+- ✅ Brand awareness scoring
 
 ### Pro Tier ($29 one-time or $9/mo)
-- Unlimited ideas
-- Full competitor analysis
-- Trademark conflict check
-- Social media handle check
-- Brand awareness scoring
-- PDF export report
+- 🔒 Unlimited ideas
+- 🔒 Full competitor analysis
+- 🔒 Trademark check
+- 🔒 PDF export report
 
-## MVP Tech Stack
+## Quick Start
 
-- **Frontend:** HTML/CSS/JS (simple landing page)
-- **Backend:** Node.js/Express
-- **APIs Needed:**
-  - Domain: Namecheap API or similar
-  - Social: Twitter/X API, LinkedIn API
-  - Trademark: USPTO API (or manual search)
-  - AI: OpenAI for name generation
+### Prerequisites
+- Node.js 18+
+- npm or yarn
 
-## Product Roadmap
+### Installation
 
-### Phase 1 (MVP)
-- [ ] Landing page (✅)
-- [ ] Basic form submission
-- [ ] AI name generation (OpenAI)
-- [ ] Domain availability check (basic)
-- [ ] Email capture (Formspree)
+```bash
+git clone https://github.com/babumoltbot/saasname.git
+cd saasname
+npm install
+```
 
-### Phase 2
-- [ ] Social handle checking
-- [ ] Competitor analysis
+### Configuration
+
+```bash
+cp .env.example .env
+# Edit .env and add your API keys
+```
+
+### Development
+
+```bash
+npm run dev
+# Server runs at http://localhost:3000
+```
+
+### Production
+
+```bash
+npm start
+```
+
+## API Endpoints
+
+### POST /api/validate
+Validate a SaaS idea and get name suggestions.
+
+```bash
+curl -X POST http://localhost:3000/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"idea": "A tool for LinkedIn scheduling"}'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "idea": "A tool for LinkedIn scheduling",
+  "names": [
+    {
+      "name": "LinkSchedule",
+      "tagline": "The LinkSchedule solution",
+      "description": "The ultimate scheduling tool",
+      "domains": [...],
+      "handles": [...],
+      "brandScore": 75,
+      "rating": "Good"
+    }
+  ]
+}
+```
+
+### GET /api/health
+Health check endpoint.
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| PORT | Server port (default: 3000) | No |
+| OPENAI_API_KEY | OpenAI API for AI names | No (uses mock data) |
+| NAMECHAP_API_KEY | Namecheap API for domains | No (uses mock data) |
+
+## Tech Stack
+
+- **Backend:** Node.js + Express
+- **Frontend:** HTML/CSS/JS (vanilla)
+- **APIs:** OpenAI (name generation), Namecheap (domains)
+
+## Roadmap
+
+- [x] Landing page
+- [x] Basic name generation (mock AI)
+- [x] Domain availability check (mock)
+- [x] Social handle check (mock)
+- [ ] Brand awareness algorithm
+- [ ] OpenAI integration for real AI names
+- [ ] Real domain API integration
 - [ ] User accounts
-- [ ] Payment integration (Stripe)
-
-### Phase 3
-- [ ] Trademark API integration
-- [ ] Brand awareness scoring
-- [ ] PDF report export
-- [ ] API for developers
-
-## Pricing Strategy
-
-| Tier | Price | Features |
-|------|-------|----------|
-| Free | $0 | 3 ideas, basic domain check |
-| Pro | $29 (one-time) | Unlimited, full analysis |
-| Pro Monthly | $9/mo | Same as one-time |
-
-## Why This Works
-
-1. **Low complexity** - Mostly API integrations
-2. **Clear value** - Naming is genuinely hard
-3. **Upsell path** - Free → Pro is obvious
-4. **Founder empathy** - Built by someone who faced this problem
+- [ ] Stripe payments
+- [ ] Trademark check (USPTO API)
+- [ ] Competitor analysis
 
 ## Contributing
 
-Pull requests welcome! Built for founders, by founders.
+Pull requests welcome! Built by founders, for founders.
 
 ## License
 
@@ -86,4 +122,4 @@ MIT
 
 ---
 
-*This project was named using the very tool it aims to be. Meta!*
+*Validate your SaaS name before you build.*

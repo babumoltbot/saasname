@@ -178,7 +178,6 @@ export default function GeneratePage() {
               {selectedName ? (
                 <ValidationPanel
                   name={selectedName}
-                  generationId={result.generationId}
                 />
               ) : (
                 <div className="border border-dashed border-border/60 rounded-2xl p-10 text-center bg-surface/30">

@@ -44,6 +44,12 @@ sqlite.exec(`
     created_at INTEGER
   );
 
+  CREATE TABLE IF NOT EXISTS domain_checks (
+    domain TEXT PRIMARY KEY,
+    available INTEGER NOT NULL,
+    checked_at INTEGER NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS feature_interest (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL REFERENCES users(id),

@@ -20,7 +20,20 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 
-type DomainStatus = "idle" | "loading" | "available" | "taken" | "error";
+interface DomainState {
+  status: "idle" | "loading" | "available" | "taken" | "error";
+  checkedAt?: Date;
+}
+
+function timeAgo(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
 
 export default function ValidationPanel({ name }: Props) {
   const { data: session } = useSession();
@@ -28,15 +41,30 @@ export default function ValidationPanel({ name }: Props) {
   const tlds = TIERS[tier as keyof typeof TIERS]?.tlds ?? TIERS.free.tlds;
 
   const [notified, setNotified] = useState<Record<string, boolean>>({});
-  const [domainStatus, setDomainStatus] = useState<Record<string, DomainStatus>>({});
+  const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
 
-  // Reset domain checks when name changes
+  // Load cached results when name changes
   useEffect(() => {
-    setDomainStatus({});
+    setDomainStates({});
+    fetch(`/api/check-domains?name=${encodeURIComponent(name.name)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.cached?.length) return;
+        const fromCache: Record<string, DomainState> = {};
+        for (const row of data.cached) {
+          const tld = "." + row.domain.split(".").slice(1).join(".");
+          fromCache[tld] = {
+            status: row.available ? "available" : "taken",
+            checkedAt: new Date(row.checkedAt * 1000),
+          };
+        }
+        setDomainStates(fromCache);
+      })
+      .catch(() => {});
   }, [name.name]);
 
   async function checkDomain(tld: string) {
-    setDomainStatus((prev) => ({ ...prev, [tld]: "loading" }));
+    setDomainStates((prev) => ({ ...prev, [tld]: { status: "loading" } }));
     try {
       const res = await fetch("/api/check-domains", {
         method: "POST",
@@ -44,12 +72,15 @@ export default function ValidationPanel({ name }: Props) {
         body: JSON.stringify({ name: name.name, tld }),
       });
       const data = await res.json();
-      setDomainStatus((prev) => ({
+      setDomainStates((prev) => ({
         ...prev,
-        [tld]: data.domain?.available ? "available" : "taken",
+        [tld]: {
+          status: data.domain?.available ? "available" : "taken",
+          checkedAt: data.domain?.checkedAt ? new Date(data.domain.checkedAt) : new Date(),
+        },
       }));
     } catch {
-      setDomainStatus((prev) => ({ ...prev, [tld]: "error" }));
+      setDomainStates((prev) => ({ ...prev, [tld]: { status: "error" } }));
     }
   }
 
@@ -120,7 +151,8 @@ export default function ValidationPanel({ name }: Props) {
             {tlds.map((tld) => {
               const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
               const domain = slug + tld;
-              const status = domainStatus[tld] ?? "idle";
+              const state = domainStates[tld] ?? { status: "idle" };
+              const { status, checkedAt } = state;
               return (
                 <div
                   key={tld}
@@ -132,9 +164,16 @@ export default function ValidationPanel({ name }: Props) {
                       : "bg-surface/40"
                   }`}
                 >
-                  <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
-                    {domain}
-                  </span>
+                  <div className="min-w-0">
+                    <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                      {domain}
+                    </span>
+                    {checkedAt && (
+                      <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                        {timeAgo(checkedAt)}
+                      </span>
+                    )}
+                  </div>
                   {status === "idle" && (
                     <button
                       onClick={() => checkDomain(tld)}

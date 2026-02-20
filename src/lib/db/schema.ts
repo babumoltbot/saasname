@@ -35,6 +35,13 @@ export const validations = sqliteTable("validations", {
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
 });
 
+// Global domain availability cache — shared across all users
+export const domainChecks = sqliteTable("domain_checks", {
+  domain: text("domain").primaryKey(), // e.g. "calendariq.com"
+  available: integer("available", { mode: "boolean" }).notNull(),
+  checkedAt: integer("checked_at", { mode: "timestamp" }).notNull(),
+});
+
 export const featureInterest = sqliteTable("feature_interest", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id").notNull().references(() => users.id),

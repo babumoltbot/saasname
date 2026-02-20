@@ -21,17 +21,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  if (!rateLimit(`check-domains:${dbUser.id}`, 10)) {
+  if (!rateLimit(`check-domains:${dbUser.id}`, 20)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  const { name } = await req.json();
-  if (!name || typeof name !== "string") {
-    return NextResponse.json({ error: "name is required" }, { status: 400 });
+  const { name, tld } = await req.json();
+  if (!name || typeof name !== "string" || !tld || typeof tld !== "string") {
+    return NextResponse.json({ error: "name and tld are required" }, { status: 400 });
   }
 
+  // Validate tld is in user's tier
   const tier = TIERS[dbUser.tier as keyof typeof TIERS];
-  const domains = await domainChecker.check(name, [...tier.tlds]);
+  if (!(tier.tlds as readonly string[]).includes(tld)) {
+    return NextResponse.json({ error: "TLD not available on your tier" }, { status: 403 });
+  }
 
-  return NextResponse.json({ domains });
+  const [result] = await domainChecker.check(name, [tld]);
+  return NextResponse.json({ domain: result });
 }

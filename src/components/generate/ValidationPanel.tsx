@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import type { NameWithScore } from "@/app/generate/page";
-import type { DomainResult } from "@/lib/services/interfaces";
 import BrandScore from "./BrandScore";
+import { TIERS } from "@/lib/constants";
 
 interface Props {
   name: NameWithScore;
@@ -19,24 +20,38 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 
-export default function ValidationPanel({ name }: Props) {
-  const [notified, setNotified] = useState<Record<string, boolean>>({});
-  const [domains, setDomains] = useState<DomainResult[] | null>(null);
-  const [domainsLoading, setDomainsLoading] = useState(false);
+type DomainStatus = "idle" | "loading" | "available" | "taken" | "error";
 
+export default function ValidationPanel({ name }: Props) {
+  const { data: session } = useSession();
+  const tier = (session as any)?.tier ?? "free";
+  const tlds = TIERS[tier as keyof typeof TIERS]?.tlds ?? TIERS.free.tlds;
+
+  const [notified, setNotified] = useState<Record<string, boolean>>({});
+  const [domainStatus, setDomainStatus] = useState<Record<string, DomainStatus>>({});
+
+  // Reset domain checks when name changes
   useEffect(() => {
-    setDomains(null);
-    setDomainsLoading(true);
-    fetch("/api/check-domains", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name.name }),
-    })
-      .then((r) => r.json())
-      .then((d) => setDomains(d.domains ?? null))
-      .catch(() => {})
-      .finally(() => setDomainsLoading(false));
+    setDomainStatus({});
   }, [name.name]);
+
+  async function checkDomain(tld: string) {
+    setDomainStatus((prev) => ({ ...prev, [tld]: "loading" }));
+    try {
+      const res = await fetch("/api/check-domains", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.name, tld }),
+      });
+      const data = await res.json();
+      setDomainStatus((prev) => ({
+        ...prev,
+        [tld]: data.domain?.available ? "available" : "taken",
+      }));
+    } catch {
+      setDomainStatus((prev) => ({ ...prev, [tld]: "error" }));
+    }
+  }
 
   async function notifyInterest(feature: string) {
     if (notified[feature]) return;
@@ -101,40 +116,62 @@ export default function ValidationPanel({ name }: Props) {
         {/* Domains */}
         <div>
           <SectionLabel>Domain Availability</SectionLabel>
-          {domainsLoading ? (
-            <div className="space-y-1.5">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="skeleton-line h-9 w-full rounded-lg" />
-              ))}
-            </div>
-          ) : domains && domains.length > 0 ? (
-            <div className="grid grid-cols-1 gap-1.5">
-              {domains.map((d) => (
+          <div className="grid grid-cols-1 gap-1.5">
+            {tlds.map((tld) => {
+              const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+              const domain = slug + tld;
+              const status = domainStatus[tld] ?? "idle";
+              return (
                 <div
-                  key={d.domain}
-                  className={`flex items-center justify-between py-2 px-3 rounded-lg ${
-                    d.available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
+                  key={tld}
+                  className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+                    status === "available"
+                      ? "bg-accent/[0.04]"
+                      : status === "taken"
+                      ? "bg-surface-raised/50"
+                      : "bg-surface/40"
                   }`}
                 >
                   <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
-                    {d.domain}
+                    {domain}
                   </span>
-                  <span
-                    className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
-                      d.available
-                        ? "text-accent bg-accent/10"
-                        : "text-warning bg-warning/10"
-                    }`}
-                  >
-                    <span className={`w-1 h-1 rounded-full ${d.available ? "bg-accent" : "bg-warning"}`} />
-                    {d.available ? "Open" : "Taken"}
-                  </span>
+                  {status === "idle" && (
+                    <button
+                      onClick={() => checkDomain(tld)}
+                      className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted hover:border-accent/40 hover:text-accent transition-all duration-150"
+                    >
+                      Check
+                    </button>
+                  )}
+                  {status === "loading" && (
+                    <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
+                      Checking...
+                    </span>
+                  )}
+                  {(status === "available" || status === "taken") && (
+                    <span
+                      className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                        status === "available"
+                          ? "text-accent bg-accent/10"
+                          : "text-warning bg-warning/10"
+                      }`}
+                    >
+                      <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
+                      {status === "available" ? "Open" : "Taken"}
+                    </span>
+                  )}
+                  {status === "error" && (
+                    <button
+                      onClick={() => checkDomain(tld)}
+                      className="text-[10px] font-[family-name:var(--font-mono)] text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      Retry
+                    </button>
+                  )}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-[11px] text-text-muted">Unable to check domains.</p>
-          )}
+              );
+            })}
+          </div>
         </div>
 
         {/* Socials — Coming Soon */}

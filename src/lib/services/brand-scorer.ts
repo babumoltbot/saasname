@@ -1,11 +1,15 @@
 import OpenAI from "openai";
 import type { IBrandScorer, BrandScoreResult } from "./interfaces";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let _openai: OpenAI | null = null;
+function getClient() {
+  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return _openai;
+}
 
 export const brandScorer: IBrandScorer = {
   async score(name: string, idea: string): Promise<BrandScoreResult> {
-    const response = await openai.chat.completions.create({
+    const response = await getClient().chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.4,
       response_format: { type: "json_object" },

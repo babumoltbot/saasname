@@ -1,11 +1,15 @@
 import OpenAI from "openai";
 import type { ITrademarkScreener, TrademarkResult } from "./interfaces";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let _openai: OpenAI | null = null;
+function getClient() {
+  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return _openai;
+}
 
 export const trademarkScreener: ITrademarkScreener = {
   async screen(name: string, industry: string): Promise<TrademarkResult> {
-    const response = await openai.chat.completions.create({
+    const response = await getClient().chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.3,
       response_format: { type: "json_object" },

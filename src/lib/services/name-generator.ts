@@ -1,11 +1,15 @@
 import OpenAI from "openai";
 import type { INameGenerator, GeneratedName } from "./interfaces";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let _openai: OpenAI | null = null;
+function getClient() {
+  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return _openai;
+}
 
 export const nameGenerator: INameGenerator = {
   async generate(idea: string, count: number): Promise<GeneratedName[]> {
-    const response = await openai.chat.completions.create({
+    const response = await getClient().chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.9,
       response_format: { type: "json_object" },

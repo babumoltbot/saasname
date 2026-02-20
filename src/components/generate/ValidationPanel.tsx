@@ -35,6 +35,8 @@ function timeAgo(date: Date): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
+const domainCheckMode = process.env.NEXT_PUBLIC_DOMAIN_CHECK_MODE ?? "api";
+
 export default function ValidationPanel({ name }: Props) {
   const { data: session } = useSession();
   const tier = (session as any)?.tier ?? "free";
@@ -43,8 +45,9 @@ export default function ValidationPanel({ name }: Props) {
   const [notified, setNotified] = useState<Record<string, boolean>>({});
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
 
-  // Load cached results when name changes
+  // Load cached results when name changes (api mode only)
   useEffect(() => {
+    if (domainCheckMode !== "api") return;
     setDomainStates({});
     fetch(`/api/check-domains?name=${encodeURIComponent(name.name)}`)
       .then((r) => r.json())
@@ -147,70 +150,104 @@ export default function ValidationPanel({ name }: Props) {
         {/* Domains */}
         <div>
           <SectionLabel>Domain Availability</SectionLabel>
-          <div className="grid grid-cols-1 gap-1.5">
-            {tlds.map((tld) => {
-              const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
-              const domain = slug + tld;
-              const state = domainStates[tld] ?? { status: "idle" };
-              const { status, checkedAt } = state;
-              return (
-                <div
-                  key={tld}
-                  className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
-                    status === "available"
-                      ? "bg-accent/[0.04]"
-                      : status === "taken"
-                      ? "bg-surface-raised/50"
-                      : "bg-surface/40"
-                  }`}
-                >
-                  <div className="min-w-0">
-                    <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+          {domainCheckMode === "redirect" ? (
+            // Redirect mode: link each domain to Porkbun search
+            <div className="grid grid-cols-1 gap-1.5">
+              {tlds.map((tld) => {
+                const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+                const domain = slug + tld;
+                const porkbunUrl = `https://porkbun.com/checkout/search?q=${encodeURIComponent(domain)}`;
+                return (
+                  <a
+                    key={tld}
+                    href={porkbunUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface/40 hover:bg-surface transition-colors group"
+                  >
+                    <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary group-hover:text-text-primary transition-colors">
                       {domain}
                     </span>
-                    {checkedAt && (
-                      <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
-                        {timeAgo(checkedAt)}
+                    <span className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted group-hover:border-accent/40 group-hover:text-accent transition-all duration-150 flex items-center gap-1">
+                      Check
+                      <svg width="9" height="9" viewBox="0 0 10 10" fill="none" className="opacity-60">
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                  </a>
+                );
+              })}
+              <p className="text-[9px] text-text-muted/40 font-[family-name:var(--font-mono)] mt-1 px-1">
+                Opens Porkbun to check & register
+              </p>
+            </div>
+          ) : (
+            // API mode: per-domain check buttons with cached results
+            <div className="grid grid-cols-1 gap-1.5">
+              {tlds.map((tld) => {
+                const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+                const domain = slug + tld;
+                const state = domainStates[tld] ?? { status: "idle" };
+                const { status, checkedAt } = state;
+                return (
+                  <div
+                    key={tld}
+                    className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+                      status === "available"
+                        ? "bg-accent/[0.04]"
+                        : status === "taken"
+                        ? "bg-surface-raised/50"
+                        : "bg-surface/40"
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                        {domain}
+                      </span>
+                      {checkedAt && (
+                        <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                          {timeAgo(checkedAt)}
+                        </span>
+                      )}
+                    </div>
+                    {status === "idle" && (
+                      <button
+                        onClick={() => checkDomain(tld)}
+                        className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted hover:border-accent/40 hover:text-accent transition-all duration-150"
+                      >
+                        Check
+                      </button>
+                    )}
+                    {status === "loading" && (
+                      <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
+                        Checking...
                       </span>
                     )}
+                    {(status === "available" || status === "taken") && (
+                      <span
+                        className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                          status === "available"
+                            ? "text-accent bg-accent/10"
+                            : "text-warning bg-warning/10"
+                        }`}
+                      >
+                        <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
+                        {status === "available" ? "Open" : "Taken"}
+                      </span>
+                    )}
+                    {status === "error" && (
+                      <button
+                        onClick={() => checkDomain(tld)}
+                        className="text-[10px] font-[family-name:var(--font-mono)] text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        Retry
+                      </button>
+                    )}
                   </div>
-                  {status === "idle" && (
-                    <button
-                      onClick={() => checkDomain(tld)}
-                      className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted hover:border-accent/40 hover:text-accent transition-all duration-150"
-                    >
-                      Check
-                    </button>
-                  )}
-                  {status === "loading" && (
-                    <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
-                      Checking...
-                    </span>
-                  )}
-                  {(status === "available" || status === "taken") && (
-                    <span
-                      className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
-                        status === "available"
-                          ? "text-accent bg-accent/10"
-                          : "text-warning bg-warning/10"
-                      }`}
-                    >
-                      <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
-                      {status === "available" ? "Open" : "Taken"}
-                    </span>
-                  )}
-                  {status === "error" && (
-                    <button
-                      onClick={() => checkDomain(tld)}
-                      className="text-[10px] font-[family-name:var(--font-mono)] text-red-400 hover:text-red-300 transition-colors"
-                    >
-                      Retry
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Socials — Coming Soon */}

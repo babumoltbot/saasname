@@ -156,11 +156,11 @@ export default function ValidationPanel({ name }: Props) {
               {tlds.map((tld) => {
                 const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
                 const domain = slug + tld;
-                const porkbunUrl = `https://porkbun.com/checkout/search?q=${encodeURIComponent(domain)}`;
+                const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(domain)}`;
                 return (
                   <a
                     key={tld}
-                    href={porkbunUrl}
+                    href={registrarUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface/40 hover:bg-surface transition-colors group"
@@ -178,7 +178,7 @@ export default function ValidationPanel({ name }: Props) {
                 );
               })}
               <p className="text-[9px] text-text-muted/40 font-[family-name:var(--font-mono)] mt-1 px-1">
-                Opens Porkbun to check & register
+                Opens Namecheap to check & register
               </p>
             </div>
           ) : (

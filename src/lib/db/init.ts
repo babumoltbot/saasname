@@ -43,6 +43,13 @@ sqlite.exec(`
     brand_score INTEGER,
     created_at INTEGER
   );
+
+  CREATE TABLE IF NOT EXISTS feature_interest (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    feature TEXT NOT NULL,
+    created_at INTEGER
+  );
 `);
 
 console.log("Database initialized at", dbPath);

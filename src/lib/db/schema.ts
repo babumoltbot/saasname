@@ -34,3 +34,10 @@ export const validations = sqliteTable("validations", {
   brandScore: integer("brand_score"),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
 });
+
+export const featureInterest = sqliteTable("feature_interest", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  feature: text("feature").notNull(), // e.g. "domain_check", "social_handles"
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+});

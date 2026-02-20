@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import type { NameWithScore } from "@/app/generate/page";
 import type {
-  DomainResult,
-  SocialResult,
   TrademarkResult,
   Competitor,
 } from "@/lib/services/interfaces";
@@ -16,8 +14,6 @@ interface Props {
 }
 
 interface ValidationData {
-  domains: DomainResult[] | null;
-  socials: SocialResult[] | null;
   trademark: TrademarkResult | null;
   competitors: Competitor[] | null;
   tierLocked: {
@@ -36,24 +32,21 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function StatusPill({ available }: { available: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
-        available
-          ? "text-accent bg-accent/10"
-          : "text-warning bg-warning/10"
-      }`}
-    >
-      <span className={`w-1 h-1 rounded-full ${available ? "bg-accent" : "bg-warning"}`} />
-      {available ? "Open" : "Taken"}
-    </span>
-  );
-}
 
 export default function ValidationPanel({ name, generationId }: Props) {
   const [data, setData] = useState<ValidationData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [notified, setNotified] = useState<Record<string, boolean>>({});
+
+  async function notifyInterest(feature: string) {
+    if (notified[feature]) return;
+    setNotified((prev) => ({ ...prev, [feature]: true }));
+    await fetch("/api/interest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ feature }),
+    }).catch(() => {});
+  }
 
   useEffect(() => {
     setData(null);
@@ -147,56 +140,23 @@ export default function ValidationPanel({ name, generationId }: Props) {
         {/* Divider */}
         <div className="h-px bg-border/40" />
 
-        {/* Domains */}
-        {data.domains && (
-          <div>
-            <SectionLabel>Domains</SectionLabel>
-            <div className="grid grid-cols-1 gap-1.5">
-              {data.domains.map((d) => (
-                <div
-                  key={d.domain}
-                  className={`flex items-center justify-between text-sm py-2 px-3 rounded-lg ${
-                    d.available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
-                  }`}
-                >
-                  <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
-                    {d.domain}
-                  </span>
-                  <StatusPill available={d.available} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Domains — Coming Soon */}
+        <ComingSoonSection
+          label="Domain Availability"
+          description="Real-time WHOIS lookup across .com, .io, .app, .dev and more."
+          feature="domain_check"
+          notified={!!notified["domain_check"]}
+          onNotify={() => notifyInterest("domain_check")}
+        />
 
-        {/* Socials */}
-        {data.socials ? (
-          <div>
-            <SectionLabel>Social Handles</SectionLabel>
-            <div className="grid grid-cols-1 gap-1.5">
-              {data.socials.map((s) => (
-                <div
-                  key={s.platform}
-                  className={`flex items-center justify-between text-sm py-2 px-3 rounded-lg ${
-                    s.available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <PlatformIcon platform={s.platform} />
-                    <span className="text-xs text-text-secondary">
-                      <span className="font-[family-name:var(--font-mono)] text-text-muted">
-                        {s.handle}
-                      </span>
-                    </span>
-                  </div>
-                  <StatusPill available={s.available} />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : data.tierLocked.socialHandles ? (
-          <LockedSection label="Social Handles" />
-        ) : null}
+        {/* Socials — Coming Soon */}
+        <ComingSoonSection
+          label="Social Handles"
+          description="Instant availability check on X, LinkedIn, and Instagram."
+          feature="social_handles"
+          notified={!!notified["social_handles"]}
+          onNotify={() => notifyInterest("social_handles")}
+        />
 
         {/* Trademark */}
         {data.trademark ? (
@@ -306,34 +266,48 @@ function LockedSection({ label }: { label: string }) {
           <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       </div>
-      <p className="text-xs text-text-muted">
-        {label}
-      </p>
+      <p className="text-xs text-text-muted">{label}</p>
       <p className="text-[10px] text-accent mt-1 font-medium">Upgrade to Pro to unlock</p>
     </div>
   );
 }
 
-function PlatformIcon({ platform }: { platform: string }) {
-  const iconClass = "w-3.5 h-3.5 text-text-muted";
-
-  if (platform === "twitter") {
-    return (
-      <svg className={iconClass} viewBox="0 0 16 16" fill="currentColor">
-        <path d="M9.333 6.929L14.546 1H13.31L8.783 6.147L5.169 1H1L6.466 8.783L1 15h1.235l5.66-6.58L11.831 15H16L9.333 6.929zM7.641 7.62l-.656-.938L2.767 1.91h2.248l4.21 6.025l.656.937l5.474 7.83h-2.248L7.641 7.62z" />
-      </svg>
-    );
-  }
-  if (platform === "linkedin") {
-    return (
-      <svg className={iconClass} viewBox="0 0 16 16" fill="currentColor">
-        <path d="M4.532 14H1.87V5.312h2.662V14zM3.2 4.16C2.29 4.16 1.6 3.45 1.6 2.56c0-.89.7-1.56 1.6-1.56.9 0 1.6.67 1.6 1.56 0 .89-.7 1.6-1.6 1.6zM14.4 14h-2.66V9.78c0-1.01-.02-2.3-1.4-2.3-1.4 0-1.62 1.1-1.62 2.23V14H6.02V5.312h2.56v1.19h.04c.36-.68 1.23-1.4 2.53-1.4 2.7 0 3.2 1.78 3.2 4.1V14z" />
-      </svg>
-    );
-  }
+function ComingSoonSection({
+  label,
+  description,
+  notified,
+  onNotify,
+}: {
+  label: string;
+  description: string;
+  feature: string;
+  notified: boolean;
+  onNotify: () => void;
+}) {
   return (
-    <svg className={iconClass} viewBox="0 0 16 16" fill="currentColor">
-      <path d="M8 1.44c1.753 0 1.96.007 2.652.038.64.029 1.147.174 1.554.371.42.203.777.475 1.132.83.355.355.627.712.83 1.132.197.407.342.915.371 1.554.031.692.038.9.038 2.635s-.007 1.943-.038 2.635c-.029.64-.174 1.147-.371 1.554a3.239 3.239 0 01-.83 1.132 3.239 3.239 0 01-1.132.83c-.407.197-.915.342-1.554.371-.692.031-.9.038-2.652.038s-1.96-.007-2.652-.038c-.64-.029-1.147-.174-1.554-.371a3.239 3.239 0 01-1.132-.83 3.239 3.239 0 01-.83-1.132c-.197-.407-.342-.915-.371-1.554C1.447 9.96 1.44 9.753 1.44 8s.007-1.96.038-2.652c.029-.64.174-1.147.371-1.554.203-.42.475-.777.83-1.132a3.239 3.239 0 011.132-.83c.407-.197.915-.342 1.554-.371C6.04 1.447 6.247 1.44 8 1.44zM8 4.16a3.84 3.84 0 100 7.68 3.84 3.84 0 000-7.68zm0 6.336A2.496 2.496 0 118 5.504 2.496 2.496 0 018 10.496zm4.992-6.48a.896.896 0 11-1.792 0 .896.896 0 011.792 0z" />
-    </svg>
+    <div className="p-4 rounded-xl border border-dashed border-border/40 bg-surface/20">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <SectionLabel>{label}</SectionLabel>
+            <span className="text-[9px] font-semibold font-[family-name:var(--font-mono)] tracking-widest uppercase text-text-muted bg-surface-raised px-1.5 py-0.5 rounded -mt-3">
+              Coming Soon
+            </span>
+          </div>
+          <p className="text-[11px] text-text-muted leading-relaxed">{description}</p>
+        </div>
+        <button
+          onClick={onNotify}
+          disabled={notified}
+          className={`shrink-0 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-3 py-1.5 rounded-lg border transition-all duration-200 ${
+            notified
+              ? "border-accent/20 text-accent bg-accent/5 cursor-default"
+              : "border-border/50 text-text-muted bg-surface hover:border-accent/40 hover:text-accent cursor-pointer"
+          }`}
+        >
+          {notified ? "✓ Noted" : "Notify me"}
+        </button>
+      </div>
+    </div>
   );
 }

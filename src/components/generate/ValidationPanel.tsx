@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { NameWithScore } from "@/app/generate/page";
+import type { DomainResult } from "@/lib/services/interfaces";
 import BrandScore from "./BrandScore";
 
 interface Props {
@@ -20,6 +21,22 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function ValidationPanel({ name }: Props) {
   const [notified, setNotified] = useState<Record<string, boolean>>({});
+  const [domains, setDomains] = useState<DomainResult[] | null>(null);
+  const [domainsLoading, setDomainsLoading] = useState(false);
+
+  useEffect(() => {
+    setDomains(null);
+    setDomainsLoading(true);
+    fetch("/api/check-domains", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.name }),
+    })
+      .then((r) => r.json())
+      .then((d) => setDomains(d.domains ?? null))
+      .catch(() => {})
+      .finally(() => setDomainsLoading(false));
+  }, [name.name]);
 
   async function notifyInterest(feature: string) {
     if (notified[feature]) return;
@@ -81,14 +98,44 @@ export default function ValidationPanel({ name }: Props) {
         {/* Divider */}
         <div className="h-px bg-border/40" />
 
-        {/* Domains — Coming Soon */}
-        <ComingSoonSection
-          label="Domain Availability"
-          description="Real-time WHOIS lookup across .com, .io, .app, .dev and more."
-          feature="domain_check"
-          notified={!!notified["domain_check"]}
-          onNotify={() => notifyInterest("domain_check")}
-        />
+        {/* Domains */}
+        <div>
+          <SectionLabel>Domain Availability</SectionLabel>
+          {domainsLoading ? (
+            <div className="space-y-1.5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="skeleton-line h-9 w-full rounded-lg" />
+              ))}
+            </div>
+          ) : domains && domains.length > 0 ? (
+            <div className="grid grid-cols-1 gap-1.5">
+              {domains.map((d) => (
+                <div
+                  key={d.domain}
+                  className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+                    d.available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
+                  }`}
+                >
+                  <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                    {d.domain}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                      d.available
+                        ? "text-accent bg-accent/10"
+                        : "text-warning bg-warning/10"
+                    }`}
+                  >
+                    <span className={`w-1 h-1 rounded-full ${d.available ? "bg-accent" : "bg-warning"}`} />
+                    {d.available ? "Open" : "Taken"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-[11px] text-text-muted">Unable to check domains.</p>
+          )}
+        </div>
 
         {/* Socials — Coming Soon */}
         <ComingSoonSection

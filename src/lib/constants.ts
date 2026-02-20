@@ -16,7 +16,7 @@ export const TIERS = {
     name: "Pro",
     generationsLimit: 50,
     namesPerGeneration: 10,
-    tlds: [".com", ".io", ".app", ".dev"],
+    tlds: [".com", ".io", ".app", ".dev", ".ai", ".co"],
     features: {
       socialHandles: true,
       trademarkScreening: true,

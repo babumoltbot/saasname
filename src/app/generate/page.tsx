@@ -81,7 +81,15 @@ export default function GeneratePage() {
           </div>
         )}
 
-        <SessionBanner />
+        <div className="flex items-center gap-4">
+          <Link
+            href="/history"
+            className="text-[11px] font-[family-name:var(--font-mono)] tracking-wide uppercase text-text-muted hover:text-accent transition-colors hidden sm:inline"
+          >
+            History
+          </Link>
+          <SessionBanner />
+        </div>
       </nav>
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-24">

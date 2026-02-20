@@ -55,7 +55,7 @@ export default function ValidationPanel({ name }: Props) {
           const tld = "." + row.domain.split(".").slice(1).join(".");
           fromCache[tld] = {
             status: row.available ? "available" : "taken",
-            checkedAt: new Date(row.checkedAt * 1000),
+            checkedAt: new Date(row.checkedAt),
           };
         }
         setDomainStates(fromCache);

@@ -10,13 +10,13 @@ const freeFeatures = [
   "Brand score preview",
 ];
 
-const proFeatures = [
-  "50 name generations",
-  "10 names per generation",
-  ".com, .io, .app, .dev domains",
-  "Social handle verification",
-  "Trademark screening",
-  "Competitor analysis",
+const proFeatures: { label: string; comingSoon?: boolean }[] = [
+  { label: "50 name generations" },
+  { label: "10 names per generation" },
+  { label: ".com, .io, .app, .dev domains" },
+  { label: "Social handle verification", comingSoon: true },
+  { label: "Trademark screening", comingSoon: true },
+  { label: "Competitor analysis", comingSoon: true },
 ];
 
 function CheckIcon() {
@@ -89,9 +89,16 @@ export default function Pricing() {
             </div>
             <ul className="list-none mb-9 space-y-2 max-[480px]:mb-7">
               {proFeatures.map((f) => (
-                <li key={f} className="flex items-center gap-3 text-sm text-text-secondary max-[480px]:text-[13px]">
+                <li key={f.label} className="flex items-center gap-3 text-sm text-text-secondary max-[480px]:text-[13px]">
                   <CheckIcon />
-                  {f}
+                  <span className="flex items-center gap-2">
+                    {f.label}
+                    {f.comingSoon && (
+                      <span className="font-[family-name:var(--font-mono)] text-[8px] font-bold tracking-[1px] uppercase text-text-muted bg-surface border border-border/60 px-1.5 py-0.5 rounded-full leading-none">
+                        Soon
+                      </span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>

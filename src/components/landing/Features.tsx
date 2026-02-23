@@ -26,11 +26,22 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 3v14M6 7l4-4 4 4" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="3" y="13" width="14" height="4" rx="1" stroke="#3cff8a" strokeWidth="1.5" />
+      </svg>
+    ),
+    title: "Brand Score",
+    desc: "Get an instant memorability score across pronunciation, uniqueness, and domain fit for every name.",
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M17 6v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6m14 0l-7 5-7-5m14 0a2 2 0 00-2-2H5a2 2 0 00-2 2" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
     title: "Social Handle Check",
     desc: "Verify availability on X, LinkedIn, and Instagram before someone else grabs your name.",
+    comingSoon: true,
   },
   {
     icon: (
@@ -41,6 +52,7 @@ const features = [
     ),
     title: "Trademark Screening",
     desc: "Catch potential legal conflicts before they become expensive problems down the road.",
+    comingSoon: true,
   },
   {
     icon: (
@@ -51,16 +63,7 @@ const features = [
     ),
     title: "Competitor Analysis",
     desc: "See if similar names exist in your space. Avoid confusion and stand out from day one.",
-  },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 3v14M6 7l4-4 4 4" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <rect x="3" y="13" width="14" height="4" rx="1" stroke="#3cff8a" strokeWidth="1.5" />
-      </svg>
-    ),
-    title: "Brand Score & PDF Report",
-    desc: "Get a memorability score and export a polished PDF report to share with co-founders.",
+    comingSoon: true,
   },
 ];
 
@@ -89,8 +92,13 @@ export default function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-surface p-10 px-8 hover:bg-surface-raised transition-colors max-[768px]:p-7 max-[768px]:px-6 max-[480px]:p-6 max-[480px]:px-5"
+              className="relative bg-surface p-10 px-8 hover:bg-surface-raised transition-colors max-[768px]:p-7 max-[768px]:px-6 max-[480px]:p-6 max-[480px]:px-5"
             >
+              {f.comingSoon && (
+                <span className="absolute top-4 right-4 font-[family-name:var(--font-mono)] text-[9px] font-bold tracking-[1.5px] uppercase text-text-muted bg-surface-raised border border-border/60 px-2 py-0.5 rounded-full">
+                  Coming Soon
+                </span>
+              )}
               <div className="w-10 h-10 flex items-center justify-center bg-accent-dim rounded-[10px] mb-5 text-lg max-[480px]:w-9 max-[480px]:h-9 max-[480px]:mb-4">
                 {f.icon}
               </div>

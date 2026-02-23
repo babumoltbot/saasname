@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useScrollReveal } from "@/lib/hooks";
 
 const freeFeatures = [
-  "3 name generations",
+  "1 name generation",
   "5 names per generation",
   ".com domain check only",
   "Brand score preview",

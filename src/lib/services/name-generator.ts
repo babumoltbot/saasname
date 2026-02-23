@@ -10,19 +10,38 @@ function getClient() {
 export const nameGenerator: INameGenerator = {
   async generate(idea: string, count: number): Promise<GeneratedName[]> {
     const response = await getClient().chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       temperature: 0.9,
       response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
-          content: `You are a creative startup naming expert. Generate exactly ${count} unique, brandable SaaS name suggestions. Each name should be:
-- Short (1-2 words, max 12 characters)
-- Easy to spell and pronounce
-- Available as a .com domain (use creative variations)
-- Memorable and relevant to the idea
+          content: `You are an expert startup naming consultant and brand strategist.
 
-Return JSON: { "names": [{ "name": "...", "tagline": "...", "reasoning": "..." }] }`,
+Generate exactly ${count} unique, brandable SaaS name suggestions for the product described below.
+
+Requirements for each name:
+- Short, memorable, and easy to pronounce (prefer 1-3 syllables)
+- Suitable for a technology company
+- Prefer invented or compound words over generic dictionary phrases
+- Avoid names already widely used by major companies
+- No hyphens, numbers, or difficult spellings
+- Should work well as a .com domain (favor uncommon word constructions)
+- Must sound professional and trustworthy
+- Should scale globally (not region-specific)
+- Easy to spell after hearing once
+- Distinct from overused startup suffixes like "AI", "App", "HQ" unless they truly fit
+- Suitable for logo design and easy to search on Google
+
+Generate a diverse mix of naming styles:
+- Invented words (e.g., "Zapier", "Calendly")
+- Compound tech names (e.g., "Webflow", "Mailchimp")
+- Abstract brand names (e.g., "Notion", "Figma")
+- Slightly descriptive but still brandable (e.g., "Airtable", "Canva")
+
+Avoid names that feel generic, spammy, or auto-generated. Prefer names that could plausibly become a venture-scale brand.
+
+Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "Why this name fits the product and its style category (Invented/Compound/Abstract/Descriptive)" }] }`,
         },
         {
           role: "user",

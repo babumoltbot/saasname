@@ -1,7 +1,7 @@
 export const TIERS = {
   free: {
     name: "Free",
-    generationsLimit: 3,
+    generationsLimit: 1,
     namesPerGeneration: 5,
     tlds: [".com"],
     features: {

@@ -98,7 +98,7 @@ export default function GeneratePage() {
           <div className="text-center mb-14 animate-fade-up animate-fade-up-1">
             <div className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] text-accent bg-accent-dim border border-accent/20 px-3 py-1 rounded-full mb-6 tracking-wide uppercase">
               <span className="status-dot" />
-              AI Name Generator
+              AI Startup Name Generator
             </div>
             <h1 className="text-[clamp(32px,5vw,52px)] font-bold tracking-[-1.5px] leading-[1.1] mb-4">
               Name your next
@@ -106,8 +106,8 @@ export default function GeneratePage() {
               <span className="text-accent font-[family-name:var(--font-mono)]">big thing</span>
             </h1>
             <p className="text-text-secondary text-base max-w-md mx-auto leading-relaxed">
-              Describe your idea. Our AI generates brandable names and validates
-              domains, trademarks, and social handles instantly.
+              Describe your idea. Get AI-generated brandable names with brand
+              scores and instant domain availability checks.
             </p>
           </div>
         )}
@@ -196,7 +196,7 @@ export default function GeneratePage() {
                   </div>
                   <p className="text-sm text-text-muted font-medium">Select a name</p>
                   <p className="text-xs text-text-muted/70 mt-1">
-                    Click on a name to see domain, social, and trademark validation
+                    Click on a name to see its brand score and domain availability
                   </p>
                 </div>
               )}

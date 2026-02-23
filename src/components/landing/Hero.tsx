@@ -9,7 +9,7 @@ export default function Hero() {
 
       <div className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-xs text-accent bg-accent-dim border border-accent/20 px-4 py-1.5 rounded-full mb-8 animate-fade-up animate-fade-up-1 max-[768px]:mb-6 max-[480px]:text-[11px] max-[480px]:px-3 max-[480px]:py-[5px] max-[480px]:mb-5">
         <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse-dot" />
-        AI-Powered Name Validation
+        AI Startup Name Generator
       </div>
 
       <h1 className="text-[clamp(42px,7vw,80px)] font-bold leading-[1.05] tracking-[-2px] max-w-[800px] mb-3 animate-fade-up animate-fade-up-2 max-[768px]:text-4xl max-[768px]:tracking-[-1px] max-[768px]:leading-[1.1] max-[480px]:text-[30px] max-[480px]:tracking-[-0.5px]">

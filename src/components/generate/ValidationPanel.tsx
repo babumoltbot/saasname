@@ -151,36 +151,33 @@ export default function ValidationPanel({ name }: Props) {
         <div>
           <SectionLabel>Domain Availability</SectionLabel>
           {domainCheckMode === "redirect" ? (
-            // Redirect mode: link each domain to Porkbun search
-            <div className="grid grid-cols-1 gap-1.5">
-              {tlds.map((tld) => {
-                const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
-                const domain = slug + tld;
-                const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(domain)}`;
-                return (
+            // Redirect mode: all TLDs as equal badges, single CTA
+            (() => {
+              const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+              const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
+              return (
+                <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {tlds.map((tld) => (
+                      <span key={tld} className="font-[family-name:var(--font-mono)] text-[11px] text-text-secondary bg-surface border border-border/50 px-2.5 py-1 rounded-lg">
+                        {slug}{tld}
+                      </span>
+                    ))}
+                  </div>
                   <a
-                    key={tld}
                     href={registrarUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface/40 hover:bg-surface transition-colors group"
+                    className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
                   >
-                    <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary group-hover:text-text-primary transition-colors">
-                      {domain}
-                    </span>
-                    <span className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted group-hover:border-accent/40 group-hover:text-accent transition-all duration-150 flex items-center gap-1">
-                      Check
-                      <svg width="9" height="9" viewBox="0 0 10 10" fill="none" className="opacity-60">
-                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
+                    Check availability
+                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </a>
-                );
-              })}
-              <p className="text-[9px] text-text-muted/40 font-[family-name:var(--font-mono)] mt-1 px-1">
-                Opens Namecheap to check & register
-              </p>
-            </div>
+                </div>
+              );
+            })()
           ) : (
             // API mode: per-domain check buttons with cached results
             <div className="grid grid-cols-1 gap-1.5">

@@ -15,6 +15,7 @@
  *   --industry=X    Industry for trademark/competitor analysis (default: technology)
  *   --json          Output raw JSON instead of formatted text
  *   --no-validate   Skip domain/social/trademark/competitor checks
+ *   --prompt-only   Print the prompt that would be sent to the model and exit
  */
 
 // Load .env from project root (same env the Next.js app uses)
@@ -34,7 +35,7 @@ try {
   }
 } catch {}
 
-import { nameGenerator } from "@/lib/services/name-generator";
+import { nameGenerator, buildMessages } from "@/lib/services/name-generator";
 import { brandScorer } from "@/lib/services/brand-scorer";
 import { domainChecker } from "@/lib/services/domain-checker";
 import { socialChecker } from "@/lib/services/social-checker";
@@ -69,11 +70,25 @@ if (!idea) {
   process.exit(1);
 }
 
-const count = parseInt(flags.count ?? "5", 10);
+const count = parseInt(flags.count ?? "10", 10);
 const tlds = (flags.tlds ?? ".com,.io,.app,.dev").split(",");
 const industry = flags.industry ?? "technology";
 const jsonOutput = flags.json === "true";
 const skipValidation = flags["no-validate"] === "true";
+const promptOnly = flags["prompt-only"] === "true";
+
+if (promptOnly) {
+  const messages = buildMessages(idea, count);
+  console.log("\n--- MODEL PARAMS ---\n");
+  console.log("model:           gpt-4o");
+  console.log("temperature:     0.9");
+  console.log("response_format: json_object");
+  for (const msg of messages) {
+    console.log(`\n--- ${msg.role.toUpperCase()} ---\n`);
+    console.log(msg.content);
+  }
+  process.exit(0);
+}
 
 // --- Helpers ---
 const green = (s: string) => `\x1b[32m${s}\x1b[0m`;

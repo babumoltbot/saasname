@@ -7,16 +7,11 @@ function getClient() {
   return _openai;
 }
 
-export const nameGenerator: INameGenerator = {
-  async generate(idea: string, count: number): Promise<GeneratedName[]> {
-    const response = await getClient().chat.completions.create({
-      model: "gpt-4o",
-      temperature: 0.9,
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: `You are an expert startup naming consultant and brand strategist.
+export function buildMessages(idea: string, count: number) {
+  return [
+    {
+      role: "system" as const,
+      content: `You are an expert startup naming consultant and brand strategist.
 
 Generate exactly ${count} unique, brandable SaaS name suggestions for the product described below.
 
@@ -42,12 +37,21 @@ Generate a diverse mix of naming styles:
 Avoid names that feel generic, spammy, or auto-generated. Prefer names that could plausibly become a venture-scale brand.
 
 Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "Why this name fits the product and its style category (Invented/Compound/Abstract/Descriptive)" }] }`,
-        },
-        {
-          role: "user",
-          content: `Generate ${count} SaaS name ideas for: ${idea}`,
-        },
-      ],
+    },
+    {
+      role: "user" as const,
+      content: `Generate ${count} SaaS name ideas for: ${idea}`,
+    },
+  ];
+}
+
+export const nameGenerator: INameGenerator = {
+  async generate(idea: string, count: number): Promise<GeneratedName[]> {
+    const response = await getClient().chat.completions.create({
+      model: "gpt-4o",
+      temperature: 0.9,
+      response_format: { type: "json_object" },
+      messages: buildMessages(idea, count),
     });
 
     const content = response.choices[0].message.content;

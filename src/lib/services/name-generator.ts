@@ -13,7 +13,7 @@ export function buildMessages(idea: string, count: number) {
       role: "system" as const,
       content: `You are an expert startup naming consultant and brand strategist.
 
-Generate exactly ${count} unique, brandable SaaS name suggestions for the product described below.
+Generate exactly ${count} unique, brandable name suggestions for the product described below.
 
 Requirements for each name:
 - Short, memorable, and easy to pronounce (prefer 1-3 syllables)
@@ -33,6 +33,7 @@ Generate a diverse mix of naming styles:
 - Compound tech names (e.g., "Webflow", "Mailchimp")
 - Abstract brand names (e.g., "Notion", "Figma")
 - Slightly descriptive but still brandable (e.g., "Airtable", "Canva")
+- Can be 3 words too if .com availability will be higher
 
 Avoid names that feel generic, spammy, or auto-generated. Prefer names that could plausibly become a venture-scale brand.
 
@@ -40,7 +41,7 @@ Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "
     },
     {
       role: "user" as const,
-      content: `Generate ${count} SaaS name ideas for: ${idea}`,
+      content: `Generate ${count} name ideas for: ${idea}`,
     },
   ];
 }

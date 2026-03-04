@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
   const idea = body.idea?.trim();
+  const clarifications = body.clarifications;
 
   if (!idea || idea.length < 10) {
     return NextResponse.json({ error: "Please describe your idea in at least 10 characters" }, { status: 400 });
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
   const count = tier.namesPerGeneration;
 
   // Generate names
-  const names = await nameGenerator.generate(idea, count);
+  const names = await nameGenerator.generate(idea, count, clarifications);
 
   // Score each name
   const namesWithScores = await Promise.all(

@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import IdeaInput from "@/components/generate/IdeaInput";
+import ClarificationQuestions from "@/components/generate/ClarificationQuestions";
 import NameList from "@/components/generate/NameList";
 import ValidationPanel from "@/components/generate/ValidationPanel";
 import SessionBanner from "@/components/generate/SessionBanner";
 import UpgradePrompt from "@/components/generate/UpgradePrompt";
-import type { GeneratedName, BrandScoreResult } from "@/lib/services/interfaces";
+import type { GeneratedName, BrandScoreResult, ClarificationQuestion, Clarification } from "@/lib/services/interfaces";
 
 export interface NameWithScore extends GeneratedName {
   brandScore: BrandScoreResult;
@@ -20,6 +21,8 @@ interface GenerationResult {
   generationsRemaining: number;
 }
 
+type Phase = "input" | "questions" | "generating" | "results";
+
 export default function GeneratePage() {
   const { data: session, status } = useSession();
   const [result, setResult] = useState<GenerationResult | null>(null);
@@ -27,14 +30,18 @@ export default function GeneratePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [phase, setPhase] = useState<Phase>("input");
+  const [questions, setQuestions] = useState<ClarificationQuestion[]>([]);
+  const [currentIdea, setCurrentIdea] = useState("");
 
-  const handleGenerate = async (idea: string) => {
+  const handleIdeaSubmit = async (idea: string) => {
     setError(null);
     setLoading(true);
     setSelectedName(null);
+    setCurrentIdea(idea);
 
     try {
-      const res = await fetch("/api/generate", {
+      const res = await fetch("/api/generate/questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idea }),
@@ -43,20 +50,75 @@ export default function GeneratePage() {
       const data = await res.json();
 
       if (!res.ok) {
+        throw new Error(data.error || "Failed to get questions");
+      }
+
+      if (data.questions?.length > 0) {
+        setQuestions(data.questions);
+        setPhase("questions");
+      } else {
+        // No questions returned, go straight to generation
+        await generateNames(idea, []);
+      }
+    } catch (err: any) {
+      setError(err.message);
+      setPhase("input");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateNames = async (idea: string, clarifications: Clarification[]) => {
+    setError(null);
+    setLoading(true);
+    setPhase("generating");
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idea, clarifications }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
         if (res.status === 403 && data.upgrade) {
           setShowUpgrade(true);
+          setPhase("input");
           return;
         }
         throw new Error(data.error || "Generation failed");
       }
 
       setResult(data);
+      setPhase("results");
     } catch (err: any) {
       setError(err.message);
+      setPhase("input");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleClarificationsSubmit = (clarifications: Clarification[]) => {
+    generateNames(currentIdea, clarifications);
+  };
+
+  const handleSkipQuestions = () => {
+    generateNames(currentIdea, []);
+  };
+
+  const handleNewGeneration = async (idea: string) => {
+    setResult(null);
+    setPhase("input");
+    await handleIdeaSubmit(idea);
+  };
+
+  const isLoadingQuestions = loading && phase === "input";
+  const isGenerating = phase === "generating";
+  const showHero = phase === "input" && !result && !loading;
+  const showCompactHeader = phase !== "input" || loading;
 
   return (
     <div className="min-h-screen bg-black relative">
@@ -94,7 +156,7 @@ export default function GeneratePage() {
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-24">
         {/* Hero section — only shows before first generation */}
-        {!result && !loading && (
+        {showHero && (
           <div className="text-center mb-14 animate-fade-up animate-fade-up-1">
             <div className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] text-accent bg-accent-dim border border-accent/20 px-3 py-1 rounded-full mb-6 tracking-wide uppercase">
               <span className="status-dot" />
@@ -113,26 +175,63 @@ export default function GeneratePage() {
         )}
 
         {/* Compact header when results exist */}
-        {(result || loading) && (
+        {showCompactHeader && (
           <div className="mb-8">
             <h1 className="text-xl font-bold tracking-tight text-text-primary">
               Name Generator
             </h1>
             <p className="text-sm text-text-muted mt-1">
-              {loading ? "Generating names..." : `${result?.names.length} names generated`}
+              {isLoadingQuestions
+                ? "Analyzing your idea..."
+                : isGenerating
+                  ? "Generating names..."
+                  : phase === "questions"
+                    ? "Answer a few optional questions to get better names"
+                    : `${result?.names.length} names generated`}
             </p>
           </div>
         )}
 
-        {/* Input area */}
-        <div className={result ? "mb-10" : "mb-0"}>
-          <IdeaInput
-            onSubmit={handleGenerate}
-            loading={loading}
-            sessionStatus={status}
-            compact={!!result}
-          />
-        </div>
+        {/* Input area — show in input phase or results phase (compact) */}
+        {(phase === "input" || phase === "results") && (
+          <div className={result ? "mb-10" : "mb-0"}>
+            <IdeaInput
+              onSubmit={result ? handleNewGeneration : handleIdeaSubmit}
+              loading={loading}
+              sessionStatus={status}
+              compact={!!result}
+            />
+          </div>
+        )}
+
+        {/* Loading state for questions */}
+        {isLoadingQuestions && (
+          <div className="mt-12 max-w-2xl mx-auto">
+            <div className="rounded-2xl border border-border/60 bg-surface/70 p-8">
+              <div className="flex items-center justify-center gap-3">
+                <svg className="animate-spin h-4 w-4 text-accent" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <span className="text-sm text-text-muted font-[family-name:var(--font-mono)]">
+                  Preparing clarification questions...
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Clarification questions phase */}
+        {phase === "questions" && (
+          <div className="mt-8">
+            <ClarificationQuestions
+              questions={questions}
+              onSubmit={handleClarificationsSubmit}
+              onSkip={handleSkipQuestions}
+              loading={loading}
+            />
+          </div>
+        )}
 
         {/* Error state */}
         {error && (
@@ -149,8 +248,8 @@ export default function GeneratePage() {
           </div>
         )}
 
-        {/* Loading state */}
-        {loading && (
+        {/* Loading state for name generation */}
+        {isGenerating && (
           <div className="mt-12 max-w-2xl mx-auto space-y-4">
             {[0, 1, 2, 3, 4].map((i) => (
               <div
@@ -168,13 +267,13 @@ export default function GeneratePage() {
               </div>
             ))}
             <p className="text-center text-xs text-text-muted font-[family-name:var(--font-mono)] mt-6">
-              Generating names with GPT-4o-mini...
+              Generating names with GPT-4o...
             </p>
           </div>
         )}
 
         {/* Results area */}
-        {result && !loading && (
+        {phase === "results" && result && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
             <NameList
               names={result.names}

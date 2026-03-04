@@ -4,8 +4,22 @@ export interface GeneratedName {
   reasoning: string;
 }
 
+export interface Clarification {
+  question: string;
+  answer: string;
+}
+
+export interface ClarificationQuestion {
+  id: string;
+  question: string;
+  type: "single-select" | "multi-select" | "text";
+  options?: string[];
+  placeholder?: string;
+}
+
 export interface INameGenerator {
-  generate(idea: string, count: number): Promise<GeneratedName[]>;
+  generate(idea: string, count: number, clarifications?: Clarification[]): Promise<GeneratedName[]>;
+  generateQuestions(idea: string): Promise<ClarificationQuestion[]>;
 }
 
 export interface DomainResult {

@@ -1,13 +1,16 @@
 #!/usr/bin/env npx tsx
 /**
  * Takes mobile screenshots of all pages.
- * Usage: npx tsx scripts/mobile-screenshots.ts
+ * Usage: npx tsx scripts/mobile-screenshots.ts [--headed]
  * Requires: app running on localhost:3000
  */
 
 import { chromium, devices } from "playwright";
 import * as fs from "fs";
 import * as path from "path";
+
+const args = process.argv.slice(2);
+const headed = args.includes("--headed");
 
 const BASE_URL = "http://localhost:3000";
 const OUT_DIR = path.join(process.cwd(), "screenshots");
@@ -26,7 +29,10 @@ const DEVICES = [
 async function run() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    headless: !headed,
+    slowMo: headed ? 600 : 0,
+  });
 
   for (const { name: deviceName, device } of DEVICES) {
     console.log(`\n[${deviceName}]`);

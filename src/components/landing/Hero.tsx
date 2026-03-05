@@ -55,10 +55,13 @@ export default function Hero() {
           </svg>
         </Link>
         <a
-          href="#features"
+          href="#demo"
           className="inline-flex items-center gap-2 px-8 py-3.5 font-[family-name:var(--font-display)] text-[15px] font-medium text-text-primary bg-transparent border border-border rounded-lg no-underline hover:border-text-muted hover:bg-surface transition-all max-[768px]:w-full max-[768px]:justify-center"
         >
-          See How It Works
+          See a Live Demo
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </a>
       </div>
 

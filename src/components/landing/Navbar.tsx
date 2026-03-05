@@ -38,6 +38,12 @@ export default function Navbar() {
           How It Works
         </a>
         <a
+          href="#demo"
+          className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
+        >
+          Demo
+        </a>
+        <a
           href="#pricing"
           className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
         >
@@ -47,7 +53,7 @@ export default function Navbar() {
           href="/generate"
           className="text-[13px] font-medium text-black bg-accent px-5 py-2 rounded-md hover:opacity-85 transition-opacity no-underline max-[480px]:px-3.5 max-[480px]:py-1.5 max-[480px]:text-xs"
         >
-          Try Free
+          Get Started
         </Link>
       </div>
     </nav>

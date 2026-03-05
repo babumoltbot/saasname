@@ -6,17 +6,22 @@ const steps = [
   {
     num: "01",
     title: "Describe your idea",
-    desc: "Tell us what your SaaS does in a sentence or two. Our AI understands context, audience, and tone to generate relevant names.",
+    desc: "Tell us what your SaaS does in a sentence or two. Our AI understands context, audience, and tone.",
   },
   {
     num: "02",
+    title: "Refine with quick questions",
+    desc: "Answer a few optional questions about your target audience, vibe, and preferences so the AI generates names that truly fit.",
+  },
+  {
+    num: "03",
     title: "Review suggestions",
     desc: "Get a list of creative, brandable names. Each one comes with domain availability, social handle status, and a brand score.",
   },
   {
-    num: "03",
+    num: "04",
     title: "Validate and ship",
-    desc: "Run a full validation — trademark screening, competitor check, and memorability analysis. Export a PDF report and lock in your name.",
+    desc: "Run a full validation — trademark screening, competitor check, and memorability analysis. Lock in your name.",
   },
 ];
 
@@ -31,9 +36,9 @@ export default function HowItWorks() {
             How It Works
           </p>
           <h2 className="text-[clamp(28px,4vw,44px)] font-bold tracking-[-1px] leading-[1.15] mb-5">
-            Three steps to the
+            Four steps to the
             <br />
-            perfect SaaS name
+            perfect name
           </h2>
           <p className="text-[17px] font-light text-text-secondary max-w-[520px] leading-[1.7] mx-auto max-[768px]:text-[15px]">
             From idea to validated name in under 60 seconds.

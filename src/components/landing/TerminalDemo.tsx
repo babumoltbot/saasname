@@ -1,7 +1,7 @@
 export default function TerminalDemo() {
   return (
     <div className="mt-[72px] w-full max-w-[640px] animate-fade-up animate-fade-up-5 max-[768px]:mt-12 max-[768px]:max-w-full max-[480px]:mt-9">
-      <div className="bg-surface border border-border rounded-xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.5)]">
+      <div className="bg-surface border border-border rounded-xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.1)]">
         <div className="flex items-center gap-2 px-[18px] py-3.5 border-b border-border max-[480px]:px-3.5 max-[480px]:py-2.5">
           <span className="w-3 h-3 rounded-full bg-[#ff5f57] max-[480px]:w-2.5 max-[480px]:h-2.5" />
           <span className="w-3 h-3 rounded-full bg-[#febc2e] max-[480px]:w-2.5 max-[480px]:h-2.5" />
@@ -16,6 +16,15 @@ export default function TerminalDemo() {
             <span className="text-text-primary">
               saasname &quot;AI scheduling tool for consultants&quot;
             </span>
+          </div>
+          <br />
+          <div>
+            <span className="text-text-secondary">? Who is your target audience?</span>{" "}
+            <span className="text-accent">Solo consultants & freelancers</span>
+          </div>
+          <div>
+            <span className="text-text-secondary">? What vibe fits your brand?</span>{" "}
+            <span className="text-accent">Professional & minimal</span>
           </div>
           <br />
           <div>

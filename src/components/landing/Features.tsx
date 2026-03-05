@@ -10,18 +10,7 @@ const features = [
       </svg>
     ),
     title: "AI Name Generation",
-    desc: "Describe your SaaS idea and get creative, brandable name suggestions powered by AI.",
-  },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="8" stroke="var(--color-accent)" strokeWidth="1.5" />
-        <path d="M10 2a8 8 0 000 16" stroke="var(--color-accent)" strokeWidth="1.5" />
-        <path d="M2 10h16M10 2c2.2 1.8 3.5 4.8 3.5 8s-1.3 6.2-3.5 8c-2.2-1.8-3.5-4.8-3.5-8s1.3-6.2 3.5-8z" stroke="var(--color-accent)" strokeWidth="1.5" />
-      </svg>
-    ),
-    title: "Domain Availability",
-    desc: "Instantly check .com, .io, .app, and .dev domains. No more switching between registrar tabs.",
+    desc: "Describe your idea and get creative, brandable name suggestions powered by AI — tailored with a few quick questions.",
   },
   {
     icon: (
@@ -32,6 +21,17 @@ const features = [
     ),
     title: "Brand Score",
     desc: "Get an instant memorability score across pronunciation, uniqueness, and domain fit for every name.",
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="8" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <path d="M10 2a8 8 0 000 16" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <path d="M2 10h16M10 2c2.2 1.8 3.5 4.8 3.5 8s-1.3 6.2-3.5 8c-2.2-1.8-3.5-4.8-3.5-8s1.3-6.2 3.5-8z" stroke="var(--color-accent)" strokeWidth="1.5" />
+      </svg>
+    ),
+    title: "Domain Quick-Check",
+    desc: "Jump straight to a registrar with your name pre-filled across .com, .io, .app, and .dev — one click per name.",
   },
   {
     icon: (

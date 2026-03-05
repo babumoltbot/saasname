@@ -6,7 +6,7 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5L10 14.7 5.1 17.2l.9-5.5-4-3.9 5.5-.8L10 2z" stroke="#3cff8a" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5L10 14.7 5.1 17.2l.9-5.5-4-3.9 5.5-.8L10 2z" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinejoin="round" />
       </svg>
     ),
     title: "AI Name Generation",
@@ -15,9 +15,9 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="8" stroke="#3cff8a" strokeWidth="1.5" />
-        <path d="M10 2a8 8 0 000 16" stroke="#3cff8a" strokeWidth="1.5" />
-        <path d="M2 10h16M10 2c2.2 1.8 3.5 4.8 3.5 8s-1.3 6.2-3.5 8c-2.2-1.8-3.5-4.8-3.5-8s1.3-6.2 3.5-8z" stroke="#3cff8a" strokeWidth="1.5" />
+        <circle cx="10" cy="10" r="8" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <path d="M10 2a8 8 0 000 16" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <path d="M2 10h16M10 2c2.2 1.8 3.5 4.8 3.5 8s-1.3 6.2-3.5 8c-2.2-1.8-3.5-4.8-3.5-8s1.3-6.2 3.5-8z" stroke="var(--color-accent)" strokeWidth="1.5" />
       </svg>
     ),
     title: "Domain Availability",
@@ -26,8 +26,8 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 3v14M6 7l4-4 4 4" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <rect x="3" y="13" width="14" height="4" rx="1" stroke="#3cff8a" strokeWidth="1.5" />
+        <path d="M10 3v14M6 7l4-4 4 4" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="3" y="13" width="14" height="4" rx="1" stroke="var(--color-accent)" strokeWidth="1.5" />
       </svg>
     ),
     title: "Brand Score",
@@ -36,7 +36,7 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M17 6v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6m14 0l-7 5-7-5m14 0a2 2 0 00-2-2H5a2 2 0 00-2 2" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M17 6v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6m14 0l-7 5-7-5m14 0a2 2 0 00-2-2H5a2 2 0 00-2 2" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
     title: "Social Handle Check",
@@ -46,8 +46,8 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M16 8.5V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2.5" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" />
-        <path d="M12 12l2 2 4-4" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M16 8.5V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2.5" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M12 12l2 2 4-4" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
     title: "Trademark Screening",
@@ -57,8 +57,8 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M4 15V5a2 2 0 012-2h8a2 2 0 012 2v10" stroke="#3cff8a" strokeWidth="1.5" />
-        <path d="M2 15h16M6 7h8M6 10h5" stroke="#3cff8a" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M4 15V5a2 2 0 012-2h8a2 2 0 012 2v10" stroke="var(--color-accent)" strokeWidth="1.5" />
+        <path d="M2 15h16M6 7h8M6 10h5" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     ),
     title: "Competitor Analysis",

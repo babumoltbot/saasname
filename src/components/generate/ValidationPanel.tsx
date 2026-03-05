@@ -235,7 +235,7 @@ export default function ValidationPanel({ name }: Props) {
                     {status === "error" && (
                       <button
                         onClick={() => checkDomain(tld)}
-                        className="text-[10px] font-[family-name:var(--font-mono)] text-red-400 hover:text-red-300 transition-colors"
+                        className="text-[10px] font-[family-name:var(--font-mono)] text-red-600 hover:text-red-500 transition-colors"
                       >
                         Retry
                       </button>

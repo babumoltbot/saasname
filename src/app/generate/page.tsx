@@ -124,7 +124,7 @@ export default function GeneratePage() {
     <div className="min-h-screen bg-black relative">
       {/* Ambient background glow */}
       <div className="ambient-glow" />
-      <div className="fixed top-[40%] left-[-15%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(88,166,255,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="fixed top-[40%] left-[-15%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(37,99,235,0.04)_0%,transparent_70%)] pointer-events-none" />
 
       {/* Navbar */}
       <nav className="sticky top-0 z-50 px-8 py-4 flex items-center justify-between bg-black/70 backdrop-blur-[24px] border-b border-border/50">
@@ -238,11 +238,11 @@ export default function GeneratePage() {
           <div className="mt-8 max-w-2xl mx-auto animate-scale-in">
             <div className="flex items-start gap-3 p-4 bg-red-500/[0.06] border border-red-500/20 rounded-xl">
               <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-red-400 text-xs">!</span>
+                <span className="text-red-600 text-xs">!</span>
               </div>
               <div>
-                <p className="text-red-400 text-sm font-medium">Generation failed</p>
-                <p className="text-red-400/70 text-xs mt-1">{error}</p>
+                <p className="text-red-600 text-sm font-medium">Generation failed</p>
+                <p className="text-red-600/70 text-xs mt-1">{error}</p>
               </div>
             </div>
           </div>

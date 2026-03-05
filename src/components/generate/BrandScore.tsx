@@ -20,10 +20,10 @@ export default function BrandScore({ score, size = "sm", animated }: Props) {
 
   const bgGlow =
     score >= 80
-      ? "rgba(60, 255, 138, 0.06)"
+      ? "rgba(5, 150, 105, 0.08)"
       : score >= 60
-      ? "rgba(240, 136, 62, 0.06)"
-      : "rgba(239, 68, 68, 0.06)";
+      ? "rgba(217, 119, 6, 0.08)"
+      : "rgba(239, 68, 68, 0.08)";
 
   return (
     <div

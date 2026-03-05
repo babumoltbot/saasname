@@ -23,7 +23,7 @@ export default function UpgradePrompt({ onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-md">
       <div className="animate-scale-in relative bg-surface border border-border rounded-2xl p-8 max-w-sm mx-4 text-center overflow-hidden">
         {/* Ambient glow behind modal */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-[radial-gradient(ellipse,var(--color-accent-glow)_0%,transparent_70%)] opacity-30 pointer-events-none" />

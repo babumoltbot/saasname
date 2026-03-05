@@ -71,9 +71,9 @@ export default function Features() {
   const ref = useScrollReveal();
 
   return (
-    <section id="features" className="py-[120px] px-6 bg-surface border-t border-b border-border max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-[60px] max-[480px]:px-4">
+    <section id="features" className="py-[120px] px-6 bg-surface border-t border-b border-border max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-12 max-[480px]:px-4">
       <div className="max-w-[1100px] mx-auto">
-        <div ref={ref} className="text-center mb-[72px] reveal max-[768px]:mb-10 max-[480px]:mb-8">
+        <div ref={ref} className="text-center mb-[72px] reveal max-[768px]:mb-10 max-[480px]:mb-6">
           <p className="font-[family-name:var(--font-mono)] text-xs font-normal tracking-[2px] uppercase text-accent mb-4 max-[480px]:text-[11px] max-[480px]:tracking-[1.5px]">
             Features
           </p>
@@ -92,7 +92,7 @@ export default function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="relative bg-surface p-10 px-8 hover:bg-surface-raised transition-colors max-[768px]:p-7 max-[768px]:px-6 max-[480px]:p-6 max-[480px]:px-5"
+              className="relative bg-surface p-10 px-8 hover:bg-surface-raised transition-colors max-[768px]:p-7 max-[768px]:px-6 max-[480px]:p-5 max-[480px]:px-4"
             >
               {f.comingSoon && (
                 <span className="absolute top-4 right-4 font-[family-name:var(--font-mono)] text-[9px] font-bold tracking-[1.5px] uppercase text-text-muted bg-surface-raised border border-border/60 px-2 py-0.5 rounded-full">

@@ -29,9 +29,9 @@ export default function HowItWorks() {
   const ref = useScrollReveal();
 
   return (
-    <section id="how-it-works" className="py-[120px] px-6 max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-[60px] max-[480px]:px-4">
+    <section id="how-it-works" className="py-[120px] px-6 max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-12 max-[480px]:px-4">
       <div className="max-w-[900px] mx-auto">
-        <div ref={ref} className="text-center mb-[72px] reveal max-[768px]:mb-10 max-[480px]:mb-8">
+        <div ref={ref} className="text-center mb-[72px] reveal max-[768px]:mb-10 max-[480px]:mb-6">
           <p className="font-[family-name:var(--font-mono)] text-xs font-normal tracking-[2px] uppercase text-accent mb-4 max-[480px]:text-[11px] max-[480px]:tracking-[1.5px]">
             How It Works
           </p>
@@ -50,7 +50,7 @@ export default function HowItWorks() {
           <div className="absolute left-6 top-12 bottom-12 w-px bg-gradient-to-b from-accent to-border max-[768px]:left-[19px] max-[480px]:left-[15px]" />
 
           {steps.map((s) => (
-            <div key={s.num} className="flex items-start gap-8 py-9 max-[768px]:gap-5 max-[768px]:py-6 max-[480px]:gap-4 max-[480px]:py-5">
+            <div key={s.num} className="flex items-start gap-8 py-9 max-[768px]:gap-5 max-[768px]:py-6 max-[480px]:gap-4 max-[480px]:py-4">
               <div className="shrink-0 w-12 h-12 flex items-center justify-center font-[family-name:var(--font-mono)] text-base font-bold text-accent bg-accent-dim border border-accent/20 rounded-full relative z-10 max-[768px]:w-10 max-[768px]:h-10 max-[768px]:text-sm max-[480px]:w-8 max-[480px]:h-8 max-[480px]:text-xs">
                 {s.num}
               </div>

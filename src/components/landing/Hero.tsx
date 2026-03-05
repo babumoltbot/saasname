@@ -3,7 +3,7 @@ import TerminalDemo from "./TerminalDemo";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-[120px] pb-20 relative max-[768px]:min-h-auto max-[768px]:px-5 max-[768px]:pt-[110px] max-[768px]:pb-[60px] max-[480px]:px-4 max-[480px]:pt-24 max-[480px]:pb-12">
+    <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-[120px] pb-20 relative max-[768px]:min-h-0 max-[768px]:px-5 max-[768px]:pt-[110px] max-[768px]:pb-[60px] max-[480px]:px-4 max-[480px]:pt-20 max-[480px]:pb-8">
       {/* Radial glow */}
       <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,var(--color-accent-glow)_0%,transparent_70%)] opacity-40 pointer-events-none max-[768px]:w-[400px] max-[768px]:h-[400px] max-[768px]:top-[-10%]" />
 

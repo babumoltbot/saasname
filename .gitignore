@@ -22,3 +22,6 @@ data/*.db-shm
 .DS_Store
 *.pem
 .claude/
+
+# test output
+screenshots/

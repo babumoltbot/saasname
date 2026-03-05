@@ -31,9 +31,9 @@ export default function Pricing() {
   const ref = useScrollReveal();
 
   return (
-    <section id="pricing" className="py-[120px] px-6 bg-black max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-[60px] max-[480px]:px-4">
+    <section id="pricing" className="py-[120px] px-6 bg-black max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-12 max-[480px]:px-4">
       <div className="max-w-[880px] mx-auto">
-        <div ref={ref} className="text-center mb-16 reveal max-[768px]:mb-10 max-[480px]:mb-8">
+        <div ref={ref} className="text-center mb-16 reveal max-[768px]:mb-10 max-[480px]:mb-6">
           <p className="font-[family-name:var(--font-mono)] text-xs font-normal tracking-[2px] uppercase text-accent mb-4 max-[480px]:text-[11px] max-[480px]:tracking-[1.5px]">
             Pricing
           </p>

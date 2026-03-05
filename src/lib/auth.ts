@@ -30,6 +30,16 @@ export const authOptions: NextAuthOptions = {
             generationsLimit: TIERS.free.generationsLimit,
             namesPerGeneration: TIERS.free.namesPerGeneration,
           });
+        } else if (!existing.googleId) {
+          await db
+            .update(users)
+            .set({
+              googleId: account.providerAccountId,
+              name: existing.name ?? user.name ?? null,
+              image: existing.image ?? user.image ?? null,
+              updatedAt: new Date(),
+            })
+            .where(eq(users.email, user.email));
         }
       }
       return true;

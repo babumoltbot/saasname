@@ -17,7 +17,12 @@ npm run db:init      # Initialize database
 npm run generate -- "idea" --count=10 --tlds=.com,.io  # CLI name generator
 npx tsx scripts/list-users.ts          # List all users (--pro or --free to filter)
 npx tsx scripts/grant-pro.ts <email>   # Grant Pro access (--generations=N, --revoke)
+node scripts/screenshots.mjs                  # Screenshot all pages (unauthenticated)
+node scripts/screenshots.mjs <session-token>  # Screenshot all pages (authenticated)
 ```
+
+### Visual QA with Screenshots
+To visually check all pages, run the screenshot script (requires `npx playwright install chromium` once). Pass a `next-auth.session-token` cookie value to test authenticated pages (generate with results, history with data). Get the cookie from DevTools → Application → Cookies → localhost:3000. Screenshots are saved to `screenshots/` (gitignored).
 
 ## Tech Stack
 

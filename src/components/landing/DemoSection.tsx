@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DEMO_JOURNEYS, type DemoJourney, type DemoName } from "@/lib/demo-data";
+import { DIRECT_CHECK_TLDS } from "@/lib/constants";
 import { useScrollReveal } from "@/lib/hooks";
 
 function BrandScoreMini({ score }: { score: number }) {
@@ -34,32 +35,17 @@ function BrandScoreMini({ score }: { score: number }) {
   );
 }
 
-function DemoDomainRow({ domain, available }: { domain: string; available: boolean }) {
+function DemoDomainBadge({ domain, available }: { domain: string; available?: boolean }) {
+  const style =
+    available === true
+      ? "text-accent border-accent/30"
+      : available === false
+        ? "text-text-secondary border-border/50"
+        : "text-text-muted/60 border-border/30 border-dashed";
   return (
-    <div
-      className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
-        available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
-      }`}
-    >
-      <div className="min-w-0">
-        <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
-          {domain}
-        </span>
-        <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
-          just now
-        </span>
-      </div>
-      <span
-        className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
-          available
-            ? "text-accent bg-accent/10"
-            : "text-warning bg-warning/10"
-        }`}
-      >
-        <span className={`w-1 h-1 rounded-full ${available ? "bg-accent" : "bg-warning"}`} />
-        {available ? "Open" : "Taken"}
-      </span>
-    </div>
+    <span className={`font-[family-name:var(--font-mono)] text-[11px] bg-surface border px-2.5 py-1 rounded-lg ${style}`}>
+      {domain}
+    </span>
   );
 }
 
@@ -170,11 +156,47 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
             <span className="w-4 h-px bg-border" />
             Domain Availability
           </h4>
-          <div className="grid grid-cols-1 gap-1.5">
-            {name.domains.map((d) => (
-              <DemoDomainRow key={d.tld} domain={d.domain} available={d.available} />
-            ))}
-          </div>
+          {(() => {
+            const checkable = name.domains.filter((d) => DIRECT_CHECK_TLDS.includes(d.tld));
+            const external = name.domains.filter((d) => !DIRECT_CHECK_TLDS.includes(d.tld));
+            const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+            const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
+            return (
+              <div className="space-y-3">
+                {/* Checkable TLDs with status */}
+                {checkable.length > 0 && (
+                  <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      {checkable.map((d) => (
+                        <DemoDomainBadge key={d.tld} domain={d.domain} available={d.available} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* External TLDs */}
+                {external.length > 0 && (
+                  <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {external.map((d) => (
+                        <DemoDomainBadge key={d.tld} domain={d.domain} />
+                      ))}
+                    </div>
+                    <a
+                      href={registrarUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
+                    >
+                      Check availability
+                      <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         <div className="h-px bg-border/40" />

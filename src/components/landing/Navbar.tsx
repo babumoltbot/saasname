@@ -27,31 +27,31 @@ export default function Navbar() {
       <div className="flex gap-8 items-center max-[768px]:gap-4">
         <a
           href="#features"
-          className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
+          className="text-[15px] text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
         >
           Features
         </a>
         <a
           href="#how-it-works"
-          className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
+          className="text-[15px] text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
         >
           How It Works
         </a>
         <a
           href="#demo"
-          className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
+          className="text-[15px] text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
         >
           Demo
         </a>
         <a
           href="#pricing"
-          className="text-sm text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
+          className="text-[15px] text-text-secondary no-underline hover:text-text-primary transition-colors max-[768px]:hidden"
         >
           Pricing
         </a>
         <Link
           href="/generate"
-          className="text-[13px] font-medium text-black bg-accent px-5 py-2 rounded-md hover:opacity-85 transition-opacity no-underline max-[480px]:px-3.5 max-[480px]:py-1.5 max-[480px]:text-xs"
+          className="text-[15px] font-medium text-black bg-accent px-5 py-2.5 rounded-md hover:opacity-85 transition-opacity no-underline max-[480px]:px-3.5 max-[480px]:py-1.5 max-[480px]:text-sm"
         >
           Get Started
         </Link>

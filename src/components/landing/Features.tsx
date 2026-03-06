@@ -95,17 +95,17 @@ export default function Features() {
               className="relative bg-surface p-10 px-8 hover:bg-surface-raised transition-colors max-[768px]:p-7 max-[768px]:px-6 max-[480px]:p-5 max-[480px]:px-4"
             >
               {f.comingSoon && (
-                <span className="absolute top-4 right-4 font-[family-name:var(--font-mono)] text-[9px] font-bold tracking-[1.5px] uppercase text-text-muted bg-surface-raised border border-border/60 px-2 py-0.5 rounded-full">
+                <span className="absolute top-4 right-4 font-[family-name:var(--font-mono)] text-[11px] font-bold tracking-[1.5px] uppercase text-text-muted bg-surface-raised border border-border/60 px-2 py-0.5 rounded-full">
                   Coming Soon
                 </span>
               )}
               <div className="w-10 h-10 flex items-center justify-center bg-accent-dim rounded-[10px] mb-5 text-lg max-[480px]:w-9 max-[480px]:h-9 max-[480px]:mb-4">
                 {f.icon}
               </div>
-              <h3 className="text-base font-semibold mb-2 tracking-[-0.3px] max-[480px]:text-[15px]">
+              <h3 className="text-lg font-semibold mb-2 tracking-[-0.3px] max-[480px]:text-base">
                 {f.title}
               </h3>
-              <p className="text-sm text-text-secondary leading-relaxed max-[480px]:text-[13px]">
+              <p className="text-[15px] text-text-secondary leading-relaxed max-[480px]:text-sm">
                 {f.desc}
               </p>
             </div>

@@ -46,17 +46,17 @@ export default function Pricing() {
           <div className="text-[52px] font-bold tracking-[-2px] leading-none mb-1 max-[768px]:text-[44px] max-[480px]:text-[40px]">
             $29
           </div>
-          <div className="text-sm text-text-muted mb-8 max-[480px]:text-[13px] max-[480px]:mb-6">
+          <div className="text-[15px] text-text-muted mb-8 max-[480px]:text-sm max-[480px]:mb-6">
             One-time payment
           </div>
-          <ul className="list-none mb-9 space-y-2 max-[480px]:mb-7">
+          <ul className="list-none mb-9 space-y-2.5 max-[480px]:mb-7">
             {proFeatures.map((f) => (
-              <li key={f.label} className="flex items-center gap-3 text-sm text-text-secondary max-[480px]:text-[13px]">
+              <li key={f.label} className="flex items-center gap-3 text-[15px] text-text-secondary max-[480px]:text-sm">
                 <CheckIcon />
                 <span className="flex items-center gap-2">
                   {f.label}
                   {f.comingSoon && (
-                    <span className="font-[family-name:var(--font-mono)] text-[8px] font-bold tracking-[1px] uppercase text-text-muted bg-surface border border-border/60 px-1.5 py-0.5 rounded-full leading-none">
+                    <span className="font-[family-name:var(--font-mono)] text-[11px] font-bold tracking-[1px] uppercase text-text-muted bg-surface border border-border/60 px-1.5 py-0.5 rounded-full leading-none">
                       Soon
                     </span>
                   )}
@@ -70,7 +70,7 @@ export default function Pricing() {
           >
             Get Pro
           </Link>
-          <p className="text-center mt-4 text-sm text-text-muted">
+          <p className="text-center mt-4 text-[15px] text-text-muted">
             Not sure yet?{" "}
             <a href="#demo" className="text-accent hover:underline">
               Try the demo

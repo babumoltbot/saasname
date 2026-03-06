@@ -108,7 +108,7 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
         {/* Header with progress */}
         <div className="flex items-center gap-2 px-5 py-3 border-b border-border/50">
           <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-          <span className="flex-1 text-center text-[11px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
+          <span className="flex-1 text-center text-[13px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
             question {step + 1} of {questions.length} — optional
           </span>
         </div>

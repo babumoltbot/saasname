@@ -12,7 +12,7 @@ interface Props {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="font-[family-name:var(--font-mono)] text-[10px] tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
+    <h4 className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
       <span className="w-4 h-px bg-border" />
       {children}
     </h4>
@@ -40,7 +40,6 @@ export default function ValidationPanel({ name }: Props) {
   const tier = (session as any)?.tier ?? "free";
   const tlds = TIERS[tier as keyof typeof TIERS]?.tlds ?? TIERS.free.tlds;
 
-  const [notified, setNotified] = useState<Record<string, boolean>>({});
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
 
   // Load cached results when name changes
@@ -108,16 +107,6 @@ export default function ValidationPanel({ name }: Props) {
     }
   }
 
-  async function notifyInterest(feature: string) {
-    if (notified[feature]) return;
-    setNotified((prev) => ({ ...prev, [feature]: true }));
-    await fetch("/api/interest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ feature }),
-    }).catch(() => {});
-  }
-
   return (
     <div className="animate-slide-in-right bg-surface/70 border border-border/50 rounded-2xl overflow-hidden">
       {/* Header with score */}
@@ -125,8 +114,8 @@ export default function ValidationPanel({ name }: Props) {
         <div className="flex items-start gap-4">
           <BrandScore score={name.brandScore.overall} size="lg" animated />
           <div className="min-w-0 flex-1 pt-1">
-            <h3 className="text-xl font-bold tracking-tight">{name.name}</h3>
-            <p className="text-xs text-text-secondary mt-1 leading-relaxed">
+            <h3 className="text-2xl font-bold tracking-tight">{name.name}</h3>
+            <p className="text-sm text-text-secondary mt-1.5 leading-relaxed">
               {name.brandScore.summary}
             </p>
           </div>
@@ -137,13 +126,13 @@ export default function ValidationPanel({ name }: Props) {
         {/* Brand breakdown */}
         <div>
           <SectionLabel>Brand Score</SectionLabel>
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {Object.entries(name.brandScore.breakdown).map(([key, val]) => (
               <div key={key} className="flex items-center gap-3">
-                <span className="text-[11px] text-text-secondary w-24 capitalize">
+                <span className="text-[13px] text-text-secondary w-28 capitalize">
                   {key}
                 </span>
-                <div className="flex-1 h-1 bg-border/50 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-border/50 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-700"
                     style={{
@@ -157,7 +146,7 @@ export default function ValidationPanel({ name }: Props) {
                     }}
                   />
                 </div>
-                <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)] w-6 text-right tabular-nums">
+                <span className="text-sm text-text-secondary font-[family-name:var(--font-mono)] w-8 text-right tabular-nums">
                   {val}
                 </span>
               </div>
@@ -207,29 +196,29 @@ export default function ValidationPanel({ name }: Props) {
                               }`}
                             >
                               <div className="min-w-0">
-                                <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                                <span className="font-[family-name:var(--font-mono)] text-sm text-text-primary">
                                   {domain}
                                 </span>
                                 {checkedAt && (
-                                  <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                                  <span className="block text-xs text-text-muted font-[family-name:var(--font-mono)] mt-0.5">
                                     {timeAgo(checkedAt)}
                                   </span>
                                 )}
                               </div>
                               {status === "loading" && (
-                                <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
+                                <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
                                   Checking...
                                 </span>
                               )}
                               {(status === "available" || status === "taken") && (
                                 <span
-                                  className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                                  className={`inline-flex items-center gap-1.5 text-xs font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2.5 py-1 rounded-full ${
                                     status === "available"
                                       ? "text-accent bg-accent/10"
                                       : "text-warning bg-warning/10"
                                   }`}
                                 >
-                                  <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
+                                  <span className={`w-1.5 h-1.5 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
                                   {status === "available" ? "Open" : "Taken"}
                                 </span>
                               )}
@@ -241,7 +230,7 @@ export default function ValidationPanel({ name }: Props) {
                         <button
                           onClick={checkAllDomains}
                           disabled={anyLoading}
-                          className="flex items-center justify-center gap-2 w-full mt-3 py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150 disabled:opacity-50"
+                          className="flex items-center justify-center gap-2 w-full mt-3 py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[13px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150 disabled:opacity-50"
                         >
                           {anyLoading ? (
                             <>
@@ -263,7 +252,7 @@ export default function ValidationPanel({ name }: Props) {
                   <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {external.map((tld) => (
-                        <span key={tld} className="font-[family-name:var(--font-mono)] text-[11px] text-text-muted/60 bg-surface border border-dashed border-border/30 px-2.5 py-1 rounded-lg">
+                        <span key={tld} className="font-[family-name:var(--font-mono)] text-[13px] text-text-muted bg-surface border border-dashed border-border/30 px-2.5 py-1 rounded-lg">
                           {slug}{tld}
                         </span>
                       ))}
@@ -272,7 +261,7 @@ export default function ValidationPanel({ name }: Props) {
                       href={registrarUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[13px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
                     >
                       Check availability
                       <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
@@ -290,27 +279,18 @@ export default function ValidationPanel({ name }: Props) {
         <ComingSoonSection
           label="Social Handles"
           description="Instant availability check on X, LinkedIn, and Instagram."
-          feature="social_handles"
-          notified={!!notified["social_handles"]}
-          onNotify={() => notifyInterest("social_handles")}
         />
 
         {/* Trademark — Coming Soon */}
         <ComingSoonSection
           label="Trademark Screening"
           description="Screen against USPTO and international trademark databases for conflicts."
-          feature="trademark_screening"
-          notified={!!notified["trademark_screening"]}
-          onNotify={() => notifyInterest("trademark_screening")}
         />
 
         {/* Competitors — Coming Soon */}
         <ComingSoonSection
           label="Competitor Analysis"
           description="Find companies with similar names using live web data."
-          feature="competitor_analysis"
-          notified={!!notified["competitor_analysis"]}
-          onNotify={() => notifyInterest("competitor_analysis")}
         />
       </div>
     </div>
@@ -321,39 +301,19 @@ export default function ValidationPanel({ name }: Props) {
 function ComingSoonSection({
   label,
   description,
-  notified,
-  onNotify,
 }: {
   label: string;
   description: string;
-  feature: string;
-  notified: boolean;
-  onNotify: () => void;
 }) {
   return (
-    <div className="p-4 rounded-xl border border-dashed border-border/40 bg-surface/20">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <SectionLabel>{label}</SectionLabel>
-            <span className="text-[9px] font-semibold font-[family-name:var(--font-mono)] tracking-widest uppercase text-text-muted bg-surface-raised px-1.5 py-0.5 rounded -mt-3">
-              Coming Soon
-            </span>
-          </div>
-          <p className="text-[11px] text-text-muted leading-relaxed">{description}</p>
-        </div>
-        <button
-          onClick={onNotify}
-          disabled={notified}
-          className={`shrink-0 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-3 py-1.5 rounded-lg border transition-all duration-200 ${
-            notified
-              ? "border-accent/20 text-accent bg-accent/5 cursor-default"
-              : "border-border/50 text-text-muted bg-surface hover:border-accent/40 hover:text-accent cursor-pointer"
-          }`}
-        >
-          {notified ? "✓ Noted" : "Notify me"}
-        </button>
+    <div className="p-5 rounded-xl border border-dashed border-border/40 bg-surface/20">
+      <div className="flex items-center gap-2.5 mb-2">
+        <SectionLabel>{label}</SectionLabel>
+        <span className="text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-widest uppercase text-text-muted bg-surface-raised px-1.5 py-0.5 rounded -mt-3">
+          Coming Soon
+        </span>
       </div>
+      <p className="text-sm text-text-secondary leading-relaxed">{description}</p>
     </div>
   );
 }

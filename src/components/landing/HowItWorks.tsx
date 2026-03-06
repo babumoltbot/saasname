@@ -58,7 +58,7 @@ export default function HowItWorks() {
                 <h3 className="text-xl font-semibold mb-2 tracking-[-0.3px] max-[768px]:text-lg max-[480px]:text-base">
                   {s.title}
                 </h3>
-                <p className="text-[15px] text-text-secondary leading-[1.7] max-w-[480px] max-[768px]:text-sm max-[480px]:text-[13px]">
+                <p className="text-base text-text-secondary leading-[1.7] max-w-[480px] max-[768px]:text-[15px] max-[480px]:text-sm">
                   {s.desc}
                 </p>
               </div>

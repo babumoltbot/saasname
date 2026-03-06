@@ -28,7 +28,7 @@ function BrandScoreMini({ score }: { score: number }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold font-[family-name:var(--font-mono)]">
+      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold font-[family-name:var(--font-mono)]">
         {score}
       </span>
     </div>
@@ -43,7 +43,7 @@ function DemoDomainBadge({ domain, available }: { domain: string; available?: bo
         ? "text-text-secondary border-border/50"
         : "text-text-muted/60 border-border/30 border-dashed";
   return (
-    <span className={`font-[family-name:var(--font-mono)] text-[11px] bg-surface border px-2.5 py-1 rounded-lg ${style}`}>
+    <span className={`font-[family-name:var(--font-mono)] text-[13px] bg-surface border px-2.5 py-1 rounded-lg ${style}`}>
       {domain}
     </span>
   );
@@ -75,23 +75,23 @@ function DemoNameCard({
         }`}
       />
       <div className="flex items-center gap-4 py-4 px-5 pl-6">
-        <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted/50 w-5 shrink-0 tabular-nums">
+        <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted w-5 shrink-0 tabular-nums">
           {String(index + 1).padStart(2, "0")}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2.5">
             <h3
-              className={`text-base font-semibold tracking-tight transition-colors ${
+              className={`text-lg font-semibold tracking-tight transition-colors ${
                 isSelected ? "text-accent" : "text-text-primary"
               }`}
             >
               {name.name}
             </h3>
-            <span className="text-xs text-text-muted font-light truncate hidden sm:inline">
+            <span className="text-sm text-text-secondary font-light truncate hidden sm:inline">
               {name.tagline}
             </span>
           </div>
-          <p className="text-[11px] text-text-muted mt-0.5 line-clamp-1">{name.reasoning}</p>
+          <p className="text-[13px] text-text-secondary mt-0.5 line-clamp-1">{name.reasoning}</p>
         </div>
         <BrandScoreMini score={name.brandScore.overall} />
       </div>
@@ -107,8 +107,8 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
         <div className="flex items-start gap-4">
           <BrandScoreMini score={name.brandScore.overall} />
           <div className="min-w-0 flex-1 pt-1">
-            <h3 className="text-xl font-bold tracking-tight">{name.name}</h3>
-            <p className="text-xs text-text-secondary mt-1 leading-relaxed">
+            <h3 className="text-2xl font-bold tracking-tight">{name.name}</h3>
+            <p className="text-sm text-text-secondary mt-1.5 leading-relaxed">
               {name.brandScore.summary}
             </p>
           </div>
@@ -118,15 +118,15 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
       <div className="px-6 pb-6 space-y-5">
         {/* Brand breakdown */}
         <div>
-          <h4 className="font-[family-name:var(--font-mono)] text-[10px] tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
+          <h4 className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
             <span className="w-4 h-px bg-border" />
             Brand Score
           </h4>
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {Object.entries(name.brandScore.breakdown).map(([key, val]) => (
               <div key={key} className="flex items-center gap-3">
-                <span className="text-[11px] text-text-secondary w-24 capitalize">{key}</span>
-                <div className="flex-1 h-1 bg-border/50 rounded-full overflow-hidden">
+                <span className="text-[13px] text-text-secondary w-28 capitalize">{key}</span>
+                <div className="flex-1 h-2 bg-border/50 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-700"
                     style={{
@@ -140,7 +140,7 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
                     }}
                   />
                 </div>
-                <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)] w-6 text-right tabular-nums">
+                <span className="text-sm text-text-secondary font-[family-name:var(--font-mono)] w-8 text-right tabular-nums">
                   {val}
                 </span>
               </div>
@@ -152,7 +152,7 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
 
         {/* Domains */}
         <div>
-          <h4 className="font-[family-name:var(--font-mono)] text-[10px] tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
+          <h4 className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
             <span className="w-4 h-px bg-border" />
             Domain Availability
           </h4>
@@ -178,24 +178,24 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
                         }`}
                       >
                         <div className="min-w-0">
-                          <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                          <span className="font-[family-name:var(--font-mono)] text-sm text-text-primary">
                             {d.domain}
                           </span>
                           {d.checkedAgo && (
-                            <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                            <span className="block text-xs text-text-muted font-[family-name:var(--font-mono)] mt-0.5">
                               {d.checkedAgo}
                             </span>
                           )}
                         </div>
                         {d.available !== undefined && (
                           <span
-                            className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                            className={`inline-flex items-center gap-1.5 text-xs font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2.5 py-1 rounded-full ${
                               d.available
                                 ? "text-accent bg-accent/10"
                                 : "text-warning bg-warning/10"
                             }`}
                           >
-                            <span className={`w-1 h-1 rounded-full ${d.available ? "bg-accent" : "bg-warning"}`} />
+                            <span className={`w-1.5 h-1.5 rounded-full ${d.available ? "bg-accent" : "bg-warning"}`} />
                             {d.available ? "Open" : "Taken"}
                           </span>
                         )}
@@ -215,7 +215,7 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
                       href={registrarUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[13px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
                     >
                       Check availability
                       <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
@@ -235,15 +235,15 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
         <div className="relative rounded-xl border border-dashed border-accent/30 bg-accent/[0.02] p-5 overflow-hidden">
           <div className="space-y-3 opacity-40 blur-[1px] pointer-events-none select-none">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-[family-name:var(--font-mono)] uppercase tracking-[2px] text-text-muted">Social Handles</span>
+              <span className="text-xs font-[family-name:var(--font-mono)] uppercase tracking-[2px] text-text-muted">Social Handles</span>
             </div>
             <div className="flex gap-2">
-              <span className="text-[11px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">@{name.name.toLowerCase()} on X</span>
-              <span className="text-[11px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">LinkedIn</span>
-              <span className="text-[11px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">Instagram</span>
+              <span className="text-[13px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">@{name.name.toLowerCase()} on X</span>
+              <span className="text-[13px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">LinkedIn</span>
+              <span className="text-[13px] bg-surface border border-border/50 px-2.5 py-1 rounded-lg text-text-muted">Instagram</span>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-[10px] font-[family-name:var(--font-mono)] uppercase tracking-[2px] text-text-muted">Trademark Risk</span>
+              <span className="text-xs font-[family-name:var(--font-mono)] uppercase tracking-[2px] text-text-muted">Trademark Risk</span>
             </div>
             <div className="h-2 bg-accent/20 rounded-full w-3/4" />
           </div>
@@ -251,7 +251,7 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[2px]">
             <Link
               href="/generate"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold text-black bg-accent rounded-lg no-underline hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-[15px] font-semibold text-black bg-accent rounded-lg no-underline hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all"
             >
               Unlock full report — Get Pro
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -299,7 +299,7 @@ export default function DemoSection() {
             <button
               key={journey.id}
               onClick={() => handleJourneySelect(journey)}
-              className={`font-[family-name:var(--font-mono)] text-[12px] tracking-wide px-4 py-2 rounded-lg border transition-all duration-200 ${
+              className={`font-[family-name:var(--font-mono)] text-sm tracking-wide px-4 py-2.5 rounded-lg border transition-all duration-200 ${
                 activeJourney.id === journey.id
                   ? "text-accent bg-accent/10 border-accent/30 shadow-[0_0_20px_-5px_var(--color-accent-glow)]"
                   : "text-text-muted bg-surface border-border/50 hover:border-text-muted hover:text-text-secondary"
@@ -312,10 +312,10 @@ export default function DemoSection() {
 
         {/* Demo report label */}
         <div className="flex items-center justify-center gap-2 mb-6">
-          <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[2px] uppercase text-accent/60 bg-accent/[0.06] border border-accent/15 px-3 py-1 rounded-full">
+          <span className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-accent/60 bg-accent/[0.06] border border-accent/15 px-3 py-1 rounded-full">
             Sample Report
           </span>
-          <span className="text-[12px] text-text-muted italic">
+          <span className="text-sm text-text-muted italic">
             &ldquo;{activeJourney.input}&rdquo;
           </span>
         </div>
@@ -325,10 +325,10 @@ export default function DemoSection() {
           {/* Name list */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[2px] uppercase text-text-muted">
+              <h3 className="font-[family-name:var(--font-mono)] text-[13px] tracking-[2px] uppercase text-text-muted">
                 Results
               </h3>
-              <span className="text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
+              <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
                 {activeJourney.names.length} names
               </span>
             </div>

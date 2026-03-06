@@ -10,7 +10,7 @@ export default function TerminalDemo() {
             saasname validate
           </span>
         </div>
-        <div className="p-6 font-[family-name:var(--font-mono)] text-[13px] leading-[1.8] max-[768px]:p-4 max-[768px]:text-xs max-[768px]:leading-[1.7] max-[768px]:overflow-x-auto max-[480px]:p-3.5 max-[480px]:text-[11px] max-[480px]:leading-[1.6]">
+        <div className="p-6 font-[family-name:var(--font-mono)] text-[15px] leading-[1.8] max-[768px]:p-4 max-[768px]:text-sm max-[768px]:leading-[1.7] max-[768px]:overflow-x-auto max-[480px]:p-3.5 max-[480px]:text-[13px] max-[480px]:leading-[1.6]">
           <div>
             <span className="text-accent">$</span>{" "}
             <span className="text-text-primary">

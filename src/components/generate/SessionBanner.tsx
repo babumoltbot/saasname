@@ -47,7 +47,7 @@ export default function SessionBanner() {
       </span>
       <button
         onClick={() => signOut()}
-        className="text-[11px] text-text-muted hover:text-text-secondary transition-colors px-2 py-1 rounded hover:bg-surface"
+        className="text-xs text-text-muted hover:text-text-secondary transition-colors px-2 py-1 rounded hover:bg-surface"
       >
         Sign out
       </button>

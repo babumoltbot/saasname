@@ -5,8 +5,8 @@ interface Props {
 }
 
 export default function BrandScore({ score, size = "sm", animated }: Props) {
-  const radius = size === "lg" ? 44 : 20;
-  const strokeWidth = size === "lg" ? 4 : 2.5;
+  const radius = size === "lg" ? 44 : 22;
+  const strokeWidth = size === "lg" ? 4 : 3;
   const circumference = 2 * Math.PI * radius;
   const filled = (score / 100) * circumference;
   const svgSize = (radius + strokeWidth) * 2;
@@ -63,7 +63,7 @@ export default function BrandScore({ score, size = "sm", animated }: Props) {
       </svg>
       <span
         className={`absolute font-[family-name:var(--font-mono)] font-bold ${
-          size === "lg" ? "text-lg" : "text-[10px]"
+          size === "lg" ? "text-xl" : "text-xs"
         }`}
         style={{ color }}
       >

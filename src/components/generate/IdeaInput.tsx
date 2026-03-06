@@ -64,7 +64,7 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
           <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-          <span className="flex-1 text-center text-[11px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
+          <span className="flex-1 text-center text-[13px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
             describe your idea
           </span>
         </div>
@@ -86,7 +86,7 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
 
         {/* Bottom action bar */}
         <div className="flex items-center justify-between px-5 py-3 border-t border-border/50 bg-surface-raised/30 rounded-b-2xl">
-          <span className="text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
+          <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
             {idea.length > 0 ? `${idea.trim().split(/\s+/).length} words` : "min. 10 characters"}
           </span>
           <button

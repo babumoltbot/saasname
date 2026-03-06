@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { TIERS } from "./constants";
+import { audit } from "./audit-log";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -41,7 +42,12 @@ export const authOptions: NextAuthOptions = {
             })
             .where(eq(users.email, user.email));
         }
+        audit("sign_in", {
+          user: user.email,
+          meta: { provider: account.provider, isNew: !existing },
+        });
       }
+
       return true;
     },
     async session({ session }) {

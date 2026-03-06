@@ -8,6 +8,7 @@ import { nameGenerator } from "@/lib/services/name-generator";
 import { brandScorer } from "@/lib/services/brand-scorer";
 import { rateLimit } from "@/lib/rate-limit";
 import { TIERS } from "@/lib/constants";
+import { audit } from "@/lib/audit-log";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
 
   // Rate limit: 5 per minute
   if (!rateLimit(`generate:${dbUser.id}`, 5)) {
+    audit("rate_limited", { user: session.user.email, tier: dbUser.tier, meta: { action: "generate" } });
     return NextResponse.json({ error: "Rate limit exceeded. Try again in a minute." }, { status: 429 });
   }
 
@@ -76,6 +78,12 @@ export async function POST(req: NextRequest) {
       updatedAt: new Date(),
     })
     .where(eq(users.id, dbUser.id));
+
+  audit("generate", {
+    user: session.user.email,
+    tier: dbUser.tier,
+    meta: { generationId: generation.id, nameCount: namesWithScores.length, idea: idea.slice(0, 100) },
+  });
 
   return NextResponse.json({
     generationId: generation.id,

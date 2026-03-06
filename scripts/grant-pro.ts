@@ -19,6 +19,7 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "../src/lib/db";
 import { users } from "../src/lib/db/schema";
+import { audit } from "../src/lib/audit-log";
 
 const args = process.argv.slice(2);
 const email = args.find((a) => !a.startsWith("--"));
@@ -52,6 +53,7 @@ if (!user) {
     })
     .run();
 
+  audit("pro_granted", { user: email, meta: { generationsLimit, namesPerGeneration, preCreated: true } });
   console.log(`Pre-created Pro account for ${email}`);
   console.log(`  Generations: ${generationsLimit}`);
   console.log(`  Names/gen:   ${namesPerGeneration}`);
@@ -71,6 +73,7 @@ if (revoke) {
     .where(eq(users.email, email))
     .run();
 
+  audit("pro_revoked", { user: email });
   console.log(`Revoked Pro access for ${email} (back to free tier).`);
 } else {
   db.update(users)
@@ -84,6 +87,7 @@ if (revoke) {
     .where(eq(users.email, email))
     .run();
 
+  audit("pro_granted", { user: email, meta: { generationsLimit, namesPerGeneration } });
   console.log(`Granted Pro access to ${email}`);
   console.log(`  Generations: ${generationsLimit}`);
   console.log(`  Names/gen:   ${namesPerGeneration}`);

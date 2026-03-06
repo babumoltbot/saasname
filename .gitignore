@@ -25,3 +25,6 @@ data/*.db-shm
 
 # test output
 screenshots/
+
+# audit logs
+logs/

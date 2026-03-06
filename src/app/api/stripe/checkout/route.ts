@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { createCheckoutSession } from "@/lib/stripe";
+import { audit } from "@/lib/audit-log";
 
 export async function POST() {
   const session = await getServerSession(authOptions);
@@ -25,5 +26,8 @@ export async function POST() {
   }
 
   const url = await createCheckoutSession(dbUser.email, dbUser.id);
+
+  audit("checkout_created", { user: session.user.email, tier: dbUser.tier });
+
   return NextResponse.json({ url });
 }

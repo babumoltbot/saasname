@@ -10,6 +10,7 @@ import { trademarkScreener } from "@/lib/services/trademark-screener";
 import { competitorAnalyzer } from "@/lib/services/competitor-analyzer";
 import { rateLimit } from "@/lib/rate-limit";
 import { TIERS } from "@/lib/constants";
+import { audit } from "@/lib/audit-log";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
 
   // Rate limit: 10 per minute
   if (!rateLimit(`validate:${dbUser.id}`, 10)) {
+    audit("rate_limited", { user: session.user.email, tier: dbUser.tier, meta: { action: "validate" } });
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
@@ -65,6 +67,12 @@ export async function POST(req: NextRequest) {
       competitors,
     })
     .returning();
+
+  audit("validate", {
+    user: session.user.email,
+    tier: dbUser.tier,
+    meta: { name, checks: { domains: !!domains, socials: !!socials, trademark: !!trademark, competitors: !!competitors } },
+  });
 
   return NextResponse.json({
     id: validation.id,

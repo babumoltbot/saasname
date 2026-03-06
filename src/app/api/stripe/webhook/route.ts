@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { TIERS } from "@/lib/constants";
+import { audit } from "@/lib/audit-log";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -39,6 +40,11 @@ export async function POST(req: NextRequest) {
           updatedAt: new Date(),
         })
         .where(eq(users.id, userId));
+
+      audit("payment_completed", {
+        user: session.customer_email ?? userId,
+        meta: { userId, stripeSessionId: session.id },
+      });
     }
   }
 

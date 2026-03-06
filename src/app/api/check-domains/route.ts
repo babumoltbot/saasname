@@ -7,6 +7,7 @@ import { eq, inArray } from "drizzle-orm";
 import { domainChecker } from "@/lib/services/domain-checker";
 import { rateLimit } from "@/lib/rate-limit";
 import { TIERS } from "@/lib/constants";
+import { audit } from "@/lib/audit-log";
 
 // GET /api/check-domains?name=CalendarIQ
 // Returns cached results for all TLDs the user's tier allows
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!rateLimit(`check-domains:${dbUser.id}`, 20)) {
+    audit("rate_limited", { user: session.user.email, tier: dbUser.tier, meta: { action: "check_domains" } });
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
@@ -88,6 +90,12 @@ export async function POST(req: NextRequest) {
         set: { available: result.available, checkedAt: now },
       });
   }
+
+  audit("check_domains", {
+    user: session.user.email,
+    tier: dbUser.tier,
+    meta: { name, tlds, resultCount: results.length },
+  });
 
   return NextResponse.json({
     domains: results.map((r) => ({ ...r, checkedAt: now })),

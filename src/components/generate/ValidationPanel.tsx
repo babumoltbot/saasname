@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import type { NameWithScore } from "@/app/generate/page";
 import BrandScore from "./BrandScore";
-import { TIERS } from "@/lib/constants";
+import { TIERS, DIRECT_CHECK_TLDS } from "@/lib/constants";
 
 interface Props {
   name: NameWithScore;
@@ -35,8 +35,6 @@ function timeAgo(date: Date): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
-const domainCheckMode = process.env.NEXT_PUBLIC_DOMAIN_CHECK_MODE ?? "api";
-
 export default function ValidationPanel({ name }: Props) {
   const { data: session } = useSession();
   const tier = (session as any)?.tier ?? "free";
@@ -45,9 +43,8 @@ export default function ValidationPanel({ name }: Props) {
   const [notified, setNotified] = useState<Record<string, boolean>>({});
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
 
-  // Load cached results when name changes (api mode only)
+  // Load cached results when name changes
   useEffect(() => {
-    if (domainCheckMode !== "api") return;
     setDomainStates({});
     fetch(`/api/check-domains?name=${encodeURIComponent(name.name)}`)
       .then((r) => r.json())
@@ -66,24 +63,48 @@ export default function ValidationPanel({ name }: Props) {
       .catch(() => {});
   }, [name.name]);
 
-  async function checkDomain(tld: string) {
-    setDomainStates((prev) => ({ ...prev, [tld]: { status: "loading" } }));
+  async function checkAllDomains() {
+    const checkable = [...tlds].filter((tld) => DIRECT_CHECK_TLDS.includes(tld));
+    // Only check TLDs that haven't been checked yet
+    const unchecked = checkable.filter((tld) => {
+      const s = domainStates[tld]?.status;
+      return !s || s === "idle" || s === "error";
+    });
+    if (unchecked.length === 0) return;
+
+    // Set all to loading
+    setDomainStates((prev) => {
+      const next = { ...prev };
+      for (const tld of unchecked) next[tld] = { status: "loading" };
+      return next;
+    });
+
     try {
       const res = await fetch("/api/check-domains", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.name, tld }),
+        body: JSON.stringify({ name: name.name, tlds: unchecked }),
       });
       const data = await res.json();
-      setDomainStates((prev) => ({
-        ...prev,
-        [tld]: {
-          status: data.domain?.available ? "available" : "taken",
-          checkedAt: data.domain?.checkedAt ? new Date(data.domain.checkedAt) : new Date(),
-        },
-      }));
+      if (data.domains) {
+        setDomainStates((prev) => {
+          const next = { ...prev };
+          for (const d of data.domains) {
+            const tld = "." + d.domain.split(".").slice(1).join(".");
+            next[tld] = {
+              status: d.available ? "available" : "taken",
+              checkedAt: d.checkedAt ? new Date(d.checkedAt) : new Date(),
+            };
+          }
+          return next;
+        });
+      }
     } catch {
-      setDomainStates((prev) => ({ ...prev, [tld]: { status: "error" } }));
+      setDomainStates((prev) => {
+        const next = { ...prev };
+        for (const tld of unchecked) next[tld] = { status: "error" };
+        return next;
+      });
     }
   }
 
@@ -150,101 +171,119 @@ export default function ValidationPanel({ name }: Props) {
         {/* Domains */}
         <div>
           <SectionLabel>Domain Availability</SectionLabel>
-          {domainCheckMode === "redirect" ? (
-            // Redirect mode: all TLDs as equal badges, single CTA
-            (() => {
-              const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
-              const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
-              return (
-                <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {tlds.map((tld) => (
-                      <span key={tld} className="font-[family-name:var(--font-mono)] text-[11px] text-text-secondary bg-surface border border-border/50 px-2.5 py-1 rounded-lg">
-                        {slug}{tld}
-                      </span>
-                    ))}
-                  </div>
-                  <a
-                    href={registrarUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
-                  >
-                    Check availability
-                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </a>
-                </div>
-              );
-            })()
-          ) : (
-            // API mode: per-domain check buttons with cached results
-            <div className="grid grid-cols-1 gap-1.5">
-              {tlds.map((tld) => {
-                const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
-                const domain = slug + tld;
-                const state = domainStates[tld] ?? { status: "idle" };
-                const { status, checkedAt } = state;
-                return (
-                  <div
-                    key={tld}
-                    className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
-                      status === "available"
-                        ? "bg-accent/[0.04]"
-                        : status === "taken"
-                        ? "bg-surface-raised/50"
-                        : "bg-surface/40"
-                    }`}
-                  >
-                    <div className="min-w-0">
-                      <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
-                        {domain}
-                      </span>
-                      {checkedAt && (
-                        <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
-                          {timeAgo(checkedAt)}
-                        </span>
+          {(() => {
+            const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+            const checkable = [...tlds].filter((tld) => DIRECT_CHECK_TLDS.includes(tld));
+            const external = [...tlds].filter((tld) => !DIRECT_CHECK_TLDS.includes(tld));
+            const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
+
+            return (
+              <div className="space-y-3">
+                {/* Checkable TLDs — show status + single Check All button */}
+                {checkable.length > 0 && (() => {
+                  const allChecked = checkable.every((tld) => {
+                    const s = domainStates[tld]?.status;
+                    return s === "available" || s === "taken";
+                  });
+                  const anyLoading = checkable.some((tld) => domainStates[tld]?.status === "loading");
+                  const anyError = checkable.some((tld) => domainStates[tld]?.status === "error");
+
+                  return (
+                    <div>
+                      <div className="grid grid-cols-1 gap-1.5">
+                        {checkable.map((tld) => {
+                          const domain = slug + tld;
+                          const state = domainStates[tld] ?? { status: "idle" };
+                          const { status, checkedAt } = state;
+                          return (
+                            <div
+                              key={tld}
+                              className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+                                status === "available"
+                                  ? "bg-accent/[0.04]"
+                                  : status === "taken"
+                                  ? "bg-surface-raised/50"
+                                  : "bg-surface/40"
+                              }`}
+                            >
+                              <div className="min-w-0">
+                                <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                                  {domain}
+                                </span>
+                                {checkedAt && (
+                                  <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                                    {timeAgo(checkedAt)}
+                                  </span>
+                                )}
+                              </div>
+                              {status === "loading" && (
+                                <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
+                                  Checking...
+                                </span>
+                              )}
+                              {(status === "available" || status === "taken") && (
+                                <span
+                                  className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                                    status === "available"
+                                      ? "text-accent bg-accent/10"
+                                      : "text-warning bg-warning/10"
+                                  }`}
+                                >
+                                  <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
+                                  {status === "available" ? "Open" : "Taken"}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {!allChecked && (
+                        <button
+                          onClick={checkAllDomains}
+                          disabled={anyLoading}
+                          className="flex items-center justify-center gap-2 w-full mt-3 py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150 disabled:opacity-50"
+                        >
+                          {anyLoading ? (
+                            <>
+                              <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                              Checking...
+                            </>
+                          ) : anyError ? "Retry check" : "Check all"}
+                        </button>
                       )}
                     </div>
-                    {status === "idle" && (
-                      <button
-                        onClick={() => checkDomain(tld)}
-                        className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded border border-border/50 text-text-muted hover:border-accent/40 hover:text-accent transition-all duration-150"
-                      >
-                        Check
-                      </button>
-                    )}
-                    {status === "loading" && (
-                      <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
-                        Checking...
-                      </span>
-                    )}
-                    {(status === "available" || status === "taken") && (
-                      <span
-                        className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
-                          status === "available"
-                            ? "text-accent bg-accent/10"
-                            : "text-warning bg-warning/10"
-                        }`}
-                      >
-                        <span className={`w-1 h-1 rounded-full ${status === "available" ? "bg-accent" : "bg-warning"}`} />
-                        {status === "available" ? "Open" : "Taken"}
-                      </span>
-                    )}
-                    {status === "error" && (
-                      <button
-                        onClick={() => checkDomain(tld)}
-                        className="text-[10px] font-[family-name:var(--font-mono)] text-red-600 hover:text-red-500 transition-colors"
-                      >
-                        Retry
-                      </button>
-                    )}
+                  );
+                })()}
+
+                {/* External TLDs — badges with registrar link */}
+                {external.length > 0 && (
+                  <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {external.map((tld) => (
+                        <span key={tld} className="font-[family-name:var(--font-mono)] text-[11px] text-text-muted/60 bg-surface border border-dashed border-border/30 px-2.5 py-1 rounded-lg">
+                          {slug}{tld}
+                        </span>
+                      ))}
+                    </div>
+                    <a
+                      href={registrarUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
+                    >
+                      Check availability
+                      <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </a>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Socials — Coming Soon */}

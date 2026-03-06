@@ -163,14 +163,44 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
             const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
             return (
               <div className="space-y-3">
-                {/* Checkable TLDs with status */}
+                {/* Checkable TLDs with status — row layout matching ValidationPanel */}
                 {checkable.length > 0 && (
-                  <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
-                    <div className="flex flex-wrap gap-1.5">
-                      {checkable.map((d) => (
-                        <DemoDomainBadge key={d.tld} domain={d.domain} available={d.available} />
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-1 gap-1.5">
+                    {checkable.map((d) => (
+                      <div
+                        key={d.tld}
+                        className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+                          d.available === true
+                            ? "bg-accent/[0.04]"
+                            : d.available === false
+                              ? "bg-surface-raised/50"
+                              : "bg-surface/40"
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+                            {d.domain}
+                          </span>
+                          {d.checkedAgo && (
+                            <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+                              {d.checkedAgo}
+                            </span>
+                          )}
+                        </div>
+                        {d.available !== undefined && (
+                          <span
+                            className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+                              d.available
+                                ? "text-accent bg-accent/10"
+                                : "text-warning bg-warning/10"
+                            }`}
+                          >
+                            <span className={`w-1 h-1 rounded-full ${d.available ? "bg-accent" : "bg-warning"}`} />
+                            {d.available ? "Open" : "Taken"}
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
                 {/* External TLDs */}

@@ -40,8 +40,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ cached });
 }
 
-// POST /api/check-domains  { name, tld }
-// Checks a single domain via WhoisXML API and saves result to cache
+// POST /api/check-domains  { name, tlds: [".com", ".net", ...] }
+// Checks multiple domains in parallel and saves results to cache
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
@@ -59,27 +59,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  const { name, tld } = await req.json();
-  if (!name || typeof name !== "string" || !tld || typeof tld !== "string") {
-    return NextResponse.json({ error: "name and tld are required" }, { status: 400 });
+  const body = await req.json();
+  const name = body.name;
+  // Support both { tld } (single) and { tlds } (batch)
+  const tlds: string[] = body.tlds ?? (body.tld ? [body.tld] : []);
+
+  if (!name || typeof name !== "string" || tlds.length === 0) {
+    return NextResponse.json({ error: "name and tlds are required" }, { status: 400 });
   }
 
   const tier = TIERS[dbUser.tier as keyof typeof TIERS];
-  if (!(tier.tlds as readonly string[]).includes(tld)) {
-    return NextResponse.json({ error: "TLD not available on your tier" }, { status: 403 });
+  const allowed = tier.tlds as readonly string[];
+  const invalid = tlds.filter((t) => !allowed.includes(t));
+  if (invalid.length > 0) {
+    return NextResponse.json({ error: `TLDs not available on your tier: ${invalid.join(", ")}` }, { status: 403 });
   }
 
-  const [result] = await domainChecker.check(name, [tld]);
+  const results = await domainChecker.check(name, tlds);
   const now = new Date();
 
-  // Save/update cache
-  await db
-    .insert(domainChecks)
-    .values({ domain: result.domain, available: result.available, checkedAt: now })
-    .onConflictDoUpdate({
-      target: domainChecks.domain,
-      set: { available: result.available, checkedAt: now },
-    });
+  // Save/update cache for all results
+  for (const result of results) {
+    await db
+      .insert(domainChecks)
+      .values({ domain: result.domain, available: result.available, checkedAt: now })
+      .onConflictDoUpdate({
+        target: domainChecks.domain,
+        set: { available: result.available, checkedAt: now },
+      });
+  }
 
-  return NextResponse.json({ domain: { ...result, checkedAt: now } });
+  return NextResponse.json({
+    domains: results.map((r) => ({ ...r, checkedAt: now })),
+  });
 }

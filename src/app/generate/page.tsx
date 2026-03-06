@@ -92,6 +92,7 @@ export default function GeneratePage() {
       }
 
       setResult(data);
+      if (data.names?.length > 0) setSelectedName(data.names[0]);
       setPhase("results");
     } catch (err: any) {
       setError(err.message);

@@ -46,7 +46,10 @@ export default function HistoryPage() {
       .then((rows) => {
         setGenerations(rows);
         // Auto-expand the most recent generation
-        if (rows.length > 0) setExpandedId(rows[0].id);
+        if (rows.length > 0) {
+          setExpandedId(rows[0].id);
+          if (rows[0].names.length > 0) setSelectedName(rows[0].names[0]);
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -67,7 +70,7 @@ export default function HistoryPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/generate"
-            className="text-[11px] font-[family-name:var(--font-mono)] tracking-wide uppercase text-text-muted hover:text-accent transition-colors"
+            className="text-[13px] font-[family-name:var(--font-mono)] tracking-wide uppercase text-text-muted hover:text-accent transition-colors"
           >
             + New
           </Link>
@@ -78,8 +81,8 @@ export default function HistoryPage() {
       <main className="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-24">
         {/* Page header */}
         <div className="mb-10 animate-fade-up animate-fade-up-1">
-          <h1 className="text-2xl font-bold tracking-tight">Generation History</h1>
-          <p className="text-sm text-text-muted mt-1">
+          <h1 className="text-3xl font-bold tracking-tight">Generation History</h1>
+          <p className="text-base text-text-secondary mt-2">
             All your past name generations — click any name to explore it.
           </p>
         </div>
@@ -150,19 +153,24 @@ export default function HistoryPage() {
                     <button
                       className="w-full text-left px-5 py-4 flex items-center gap-4 group"
                       onClick={() => {
-                        setExpandedId(isExpanded ? null : gen.id);
-                        if (!isExpanded) setSelectedName(null);
+                        if (isExpanded) {
+                          setExpandedId(null);
+                          setSelectedName(null);
+                        } else {
+                          setExpandedId(gen.id);
+                          if (gen.names.length > 0) setSelectedName(gen.names[0]);
+                        }
                       }}
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-text-primary truncate">
+                        <p className="text-base font-medium text-text-primary truncate">
                           {gen.ideaText}
                         </p>
                         <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
+                          <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
                             {formatDate(gen.createdAt)} · {formatTime(gen.createdAt)}
                           </span>
-                          <span className="text-[11px] text-text-muted">
+                          <span className="text-[13px] text-text-muted">
                             {gen.names.length} names
                           </span>
                         </div>
@@ -199,14 +207,14 @@ export default function HistoryPage() {
                                 }`}
                               />
                               <div className="flex items-center gap-3 py-3 px-4 pl-5">
-                                <span className="text-[10px] font-[family-name:var(--font-mono)] text-text-muted/50 w-4 shrink-0 tabular-nums">
+                                <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted w-4 shrink-0 tabular-nums">
                                   {String(ni + 1).padStart(2, "0")}
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                  <span className={`text-sm font-semibold tracking-tight ${isSelected ? "text-accent" : "text-text-primary"}`}>
+                                  <span className={`text-base font-semibold tracking-tight ${isSelected ? "text-accent" : "text-text-primary"}`}>
                                     {name.name}
                                   </span>
-                                  <span className="text-[11px] text-text-muted ml-2 hidden sm:inline truncate">
+                                  <span className="text-[13px] text-text-secondary ml-2 hidden sm:inline truncate">
                                     {name.tagline}
                                   </span>
                                 </div>
@@ -233,8 +241,8 @@ export default function HistoryPage() {
                       <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                   </div>
-                  <p className="text-sm text-text-muted font-medium">Select a name</p>
-                  <p className="text-xs text-text-muted/70 mt-1">
+                  <p className="text-base text-text-muted font-medium">Select a name</p>
+                  <p className="text-sm text-text-secondary mt-1">
                     Click any name to see its brand score and checks
                   </p>
                 </div>

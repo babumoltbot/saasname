@@ -34,18 +34,32 @@ function BrandScoreMini({ score }: { score: number }) {
   );
 }
 
-function DomainBadge({ domain, available }: { domain: string; available: boolean }) {
+function DemoDomainRow({ domain, available }: { domain: string; available: boolean }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] px-2.5 py-1 rounded-lg border ${
-        available
-          ? "text-accent bg-accent/[0.06] border-accent/20"
-          : "text-text-muted bg-surface border-border/40"
+    <div
+      className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+        available ? "bg-accent/[0.04]" : "bg-surface-raised/50"
       }`}
     >
-      <span className={`w-1 h-1 rounded-full ${available ? "bg-accent" : "bg-text-muted/40"}`} />
-      {domain}
-    </span>
+      <div className="min-w-0">
+        <span className="font-[family-name:var(--font-mono)] text-xs text-text-secondary">
+          {domain}
+        </span>
+        <span className="block text-[9px] text-text-muted/50 font-[family-name:var(--font-mono)] mt-0.5">
+          just now
+        </span>
+      </div>
+      <span
+        className={`inline-flex items-center gap-1 text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2 py-0.5 rounded-full ${
+          available
+            ? "text-accent bg-accent/10"
+            : "text-warning bg-warning/10"
+        }`}
+      >
+        <span className={`w-1 h-1 rounded-full ${available ? "bg-accent" : "bg-warning"}`} />
+        {available ? "Open" : "Taken"}
+      </span>
+    </div>
   );
 }
 
@@ -156,9 +170,9 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
             <span className="w-4 h-px bg-border" />
             Domain Availability
           </h4>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="grid grid-cols-1 gap-1.5">
             {name.domains.map((d) => (
-              <DomainBadge key={d.tld} domain={d.domain} available={d.available} />
+              <DemoDomainRow key={d.tld} domain={d.domain} available={d.available} />
             ))}
           </div>
         </div>

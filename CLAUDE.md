@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-AI-powered name generator and validator for software products. Users describe their idea, get AI-generated names (GPT-4o), then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Two tiers: Free (1 gen, 5 names, .com only) and Pro ($29 one-time, 50 gens, 10 names, all checks).
+AI-powered name generator and validator for software products. Users describe their idea, get AI-generated names (GPT-4o), then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Landing page has a cached demo mode (no API calls) showing sample reports. Pro tier ($29 one-time) unlocks 50 gens, 10 names, all checks.
 
 ## Commands
 
@@ -15,6 +15,8 @@ npm run lint         # ESLint
 npm run db:push      # Apply Drizzle schema migrations
 npm run db:init      # Initialize database
 npm run generate -- "idea" --count=10 --tlds=.com,.io  # CLI name generator
+npx tsx scripts/list-users.ts          # List all users (--pro or --free to filter)
+npx tsx scripts/grant-pro.ts <email>   # Grant Pro access (--generations=N, --revoke)
 ```
 
 ## Tech Stack

@@ -12,18 +12,18 @@ interface Generation {
   id: string;
   ideaText: string;
   names: NameWithScore[];
-  createdAt: number | null;
+  createdAt: string | null;
 }
 
-function formatDate(ts: number | null): string {
+function formatDate(ts: string | null): string {
   if (!ts) return "";
-  const d = new Date(ts * 1000);
+  const d = new Date(ts);
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-function formatTime(ts: number | null): string {
+function formatTime(ts: string | null): string {
   if (!ts) return "";
-  const d = new Date(ts * 1000);
+  const d = new Date(ts);
   return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 

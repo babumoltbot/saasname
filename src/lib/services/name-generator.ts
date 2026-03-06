@@ -8,12 +8,21 @@ function getClient() {
 }
 
 export function buildMessages(idea: string, count: number, clarifications?: Clarification[]) {
-  const clarificationContext = clarifications?.length
-    ? `\n\nAdditional context from the founder:\n${clarifications
+  const hasClarifications = clarifications?.some((c) => c.answer.trim());
+  const clarificationContext = hasClarifications
+    ? `\n\nThe founder provided additional context — use this to tailor industry, tone, naming style, and audience fit:\n${clarifications!
         .filter((c) => c.answer.trim())
         .map((c) => `Q: ${c.question}\nA: ${c.answer}`)
         .join("\n\n")}`
     : "";
+
+  const industryLine = hasClarifications
+    ? "- Suitable for the industry and audience described by the founder"
+    : "- Suitable for a technology company";
+
+  const scaleLine = hasClarifications
+    ? "- Should match the founder's described brand ambition and tone"
+    : "- Prefer names that could plausibly become a venture-scale brand";
 
   return [
     {
@@ -24,7 +33,7 @@ Generate exactly ${count} unique, brandable name suggestions for the product des
 
 Requirements for each name:
 - Short, memorable, and easy to pronounce (prefer 1-3 syllables)
-- Suitable for a technology company
+${industryLine}
 - Prefer invented or compound words over generic dictionary phrases
 - Avoid names already widely used by major companies
 - No hyphens, numbers, or difficult spellings
@@ -42,7 +51,8 @@ Generate a diverse mix of naming styles:
 - Slightly descriptive but still brandable (e.g., "Airtable", "Canva")
 - Can be 3 words too if .com availability will be higher
 
-Avoid names that feel generic, spammy, or auto-generated. Prefer names that could plausibly become a venture-scale brand.
+${scaleLine}
+Avoid names that feel generic, spammy, or auto-generated.
 
 Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "Why this name fits the product and its style category (Invented/Compound/Abstract/Descriptive)" }] }`,
     },

@@ -32,29 +32,31 @@ export function buildMessages(idea: string, count: number, clarifications?: Clar
 Generate exactly ${count} unique, brandable name suggestions for the product described below.
 
 Requirements for each name:
-- Short, memorable, and easy to pronounce (prefer 1-3 syllables)
+- Single-word names: 1-3 syllables. Multi-word names (2-3 short words): max 5 syllables total.
 ${industryLine}
 - Prefer invented or compound words over generic dictionary phrases
 - Avoid names already widely used by major companies
 - No hyphens, numbers, or difficult spellings
-- Should work well as a .com domain (favor uncommon word constructions)
+- Should work as a domain name — short, no special characters, easy to type
 - Must sound professional and trustworthy
 - Should scale globally (not region-specific)
 - Easy to spell after hearing once
-- Distinct from overused startup suffixes like "AI", "App", "HQ" unless they truly fit
+- Should evoke a positive emotion or mental image related to the product's value
+- Prefer names with strong, punchy consonant sounds (K, T, P, Z) — avoid names that sound like existing common words when spoken aloud
+- Avoid overused startup suffixes/prefixes: -ly, -ify, -io, -hub, -lab, -stack, AI-, Get-, My-, Go- — unless the founder's context specifically calls for them
 - Suitable for logo design and easy to search on Google
+- None of the ${count} names should share the same root word, prefix, or suffix pattern — maximize variety
 
 Generate a diverse mix of naming styles:
 - Invented words (e.g., "Zapier", "Calendly")
 - Compound tech names (e.g., "Webflow", "Mailchimp")
 - Abstract brand names (e.g., "Notion", "Figma")
 - Slightly descriptive but still brandable (e.g., "Airtable", "Canva")
-- Can be 3 words too if .com availability will be higher
 
 ${scaleLine}
-Avoid names that feel generic, spammy, or auto-generated.
+Avoid names that feel generic, spammy, or auto-generated. Do NOT generate names like "SmartTask Pro", "DataSync Hub", or "QuickBuild" — these are forgettable.
 
-Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "Why this name fits the product and its style category (Invented/Compound/Abstract/Descriptive)" }] }`,
+Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "The specific wordplay, etymology, or phonetic trick behind this name and why it fits" }] }`,
     },
     {
       role: "user" as const,
@@ -67,7 +69,7 @@ export const nameGenerator: INameGenerator = {
   async generate(idea: string, count: number, clarifications?: Clarification[]): Promise<GeneratedName[]> {
     const response = await getClient().chat.completions.create({
       model: "gpt-4o",
-      temperature: 0.9,
+      temperature: 0.8,
       response_format: { type: "json_object" },
       messages: buildMessages(idea, count, clarifications),
     });

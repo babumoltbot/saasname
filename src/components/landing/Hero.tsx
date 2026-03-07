@@ -34,7 +34,7 @@ export default function Hero() {
       </h1>
 
       <p className="text-[clamp(16px,2.2vw,20px)] font-light text-text-secondary max-w-[540px] mt-5 mb-10 animate-fade-up animate-fade-up-3 max-[768px]:text-base max-[768px]:mt-4 max-[768px]:mb-8 max-[480px]:text-[15px] max-[480px]:mt-3 max-[480px]:mb-7">
-        Generate name ideas for your SaaS, then instantly validate domains,
+        Generate name ideas for your startup, then instantly validate domains,
         trademarks, social handles, and competitive landscape.
       </p>
 

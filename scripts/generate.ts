@@ -67,7 +67,7 @@ for (const arg of args) {
 
 const idea = positional.join(" ").trim();
 if (!idea) {
-  console.error("Usage: npx tsx scripts/generate.ts \"Your SaaS idea here\"");
+  console.error("Usage: npx tsx scripts/generate.ts \"Your idea here\"");
   process.exit(1);
 }
 

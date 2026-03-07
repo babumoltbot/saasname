@@ -247,7 +247,7 @@ export const DEMO_JOURNEYS: DemoJourney[] = [
       {
         name: "Cliently",
         tagline: "Client management, done right",
-        reasoning: "'Client' + '-ly' suffix — immediately descriptive, warm, and SaaS-friendly.",
+        reasoning: "'Client' + '-ly' suffix — immediately descriptive, warm, and startup-friendly.",
         brandScore: {
           overall: 80,
           breakdown: { memorability: 82, pronounceability: 92, uniqueness: 66, relevance: 94, length: 78 },
@@ -595,7 +595,7 @@ export const DEMO_JOURNEYS: DemoJourney[] = [
         brandScore: {
           overall: 78,
           breakdown: { memorability: 80, pronounceability: 88, uniqueness: 70, relevance: 80, length: 82 },
-          summary: "Clear SEO connection and easy to say. The -ly pattern is common in SaaS.",
+          summary: "Clear SEO connection and easy to say. The -ly pattern is common in tech.",
         },
         domains: [
           { domain: "indexly.com", tld: ".com", available: false, checkedAgo: "2m ago" },

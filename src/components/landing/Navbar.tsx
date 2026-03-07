@@ -22,7 +22,7 @@ export default function Navbar() {
         href="/"
         className="font-[family-name:var(--font-mono)] text-lg font-bold text-text-primary no-underline tracking-tight"
       >
-        SaaS<span className="text-accent">Name</span>
+        Pik<span className="text-accent">Name</span>
       </Link>
       <div className="flex gap-8 items-center max-[768px]:gap-4">
         <a

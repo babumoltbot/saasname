@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-AI-powered name generator and validator for software products. Users describe their idea, get AI-generated names, then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Landing page has a cached demo mode (no API calls) showing sample reports. Pro tier ($29 one-time) unlocks 50 gens, 10 names, all checks.
+AI-powered name generator and validator for startups, products, and businesses. Users describe their idea, get AI-generated names, then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Landing page has a cached demo mode (no API calls) showing sample reports. Pro tier ($29 one-time) unlocks 50 gens, 10 names, all checks.
 
 ## Commands
 

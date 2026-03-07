@@ -6,7 +6,7 @@ const steps = [
   {
     num: "01",
     title: "Describe your idea",
-    desc: "Tell us what your SaaS does in a sentence or two. Our AI understands context, audience, and tone.",
+    desc: "Tell us what your product does in a sentence or two. Our AI understands context, audience, and tone.",
   },
   {
     num: "02",

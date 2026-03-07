@@ -133,7 +133,7 @@ export default function GeneratePage() {
           href="/"
           className="font-[family-name:var(--font-mono)] text-lg font-bold text-text-primary no-underline tracking-tight"
         >
-          SaaS<span className="text-accent">Name</span>
+          Pik<span className="text-accent">Name</span>
         </Link>
 
         {/* Center status indicator */}

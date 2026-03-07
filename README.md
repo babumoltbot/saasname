@@ -1,10 +1,10 @@
-# PikName - Validate Your SaaS Name
+# PikName - Name Your Next Big Thing
 
-AI-powered SaaS name validator that helps founders validate and choose names for their SaaS ideas.
+AI-powered name generator and validator that helps founders find and validate names for their startups and products.
 
 ## The Problem
 
-Naming a SaaS is hard:
+Naming a startup is hard:
 - Domain availability confusion
 - Social handles taken
 - Competitor conflicts
@@ -13,12 +13,12 @@ Naming a SaaS is hard:
 
 ## The Solution
 
-Describe your SaaS idea → Get name suggestions → Validate across multiple dimensions
+Describe your idea → Get name suggestions → Validate across multiple dimensions
 
 ## Features
 
 ### Free Tier
-- Describe your SaaS idea
+- Describe your idea
 - 5 name suggestions
 - Basic domain availability check
 

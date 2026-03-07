@@ -10,7 +10,8 @@ export const domainChecker: IDomainChecker = {
     const results = await Promise.allSettled(
       tlds.map(async (tld): Promise<DomainResult> => {
         const domain = slug + tld;
-        const url = `https://domain-availability.whoisxmlapi.com/api/v1?apiKey=${apiKey}&domainName=${domain}&credits=DA&outputFormat=JSON`;
+        const base = process.env.WHOISXML_API_BASE_URL ?? "https://domain-availability.whoisxmlapi.com/api/v1";
+        const url = `${base}?apiKey=${apiKey}&domainName=${domain}&credits=DA&outputFormat=JSON`;
         const res = await fetch(url);
         if (!res.ok) return { domain, tld, available: false };
         const data = await res.json();

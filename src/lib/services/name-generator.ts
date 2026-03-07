@@ -37,7 +37,7 @@ ${industryLine}
 - Prefer invented or compound words over generic dictionary phrases
 - Avoid names already widely used by major companies
 - No hyphens, numbers, or difficult spellings
-- Should work as a domain name — short, no special characters, easy to type. Favor names where a generic TLD (gTLD) like .com, .app, .dev, .net, or .org would be realistically available. Avoid relying on country-code TLDs like .io, .co, or .ai
+- Should work as a domain name — short, no special characters, easy to type
 - Should feel approachable and have personality — warm or clever beats corporate-sounding
 - Should scale globally (not region-specific)
 - Easy to spell after hearing once

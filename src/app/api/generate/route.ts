@@ -9,6 +9,7 @@ import { brandScorer } from "@/lib/services/brand-scorer";
 import { rateLimit } from "@/lib/rate-limit";
 import { TIERS } from "@/lib/constants";
 import { audit } from "@/lib/audit-log";
+import { getProvider } from "@/lib/ai-client";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -61,12 +62,14 @@ export async function POST(req: NextRequest) {
   );
 
   // Save generation
+  const aiProvider = getProvider();
   const [generation] = await db
     .insert(generations)
     .values({
       userId: dbUser.id,
       ideaText: idea,
       names: namesWithScores,
+      aiProvider,
     })
     .returning();
 
@@ -82,7 +85,7 @@ export async function POST(req: NextRequest) {
   audit("generate", {
     user: session.user.email,
     tier: dbUser.tier,
-    meta: { generationId: generation.id, nameCount: namesWithScores.length, idea: idea.slice(0, 100) },
+    meta: { generationId: generation.id, nameCount: namesWithScores.length, idea: idea.slice(0, 100), aiProvider },
   });
 
   return NextResponse.json({

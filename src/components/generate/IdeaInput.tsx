@@ -16,7 +16,7 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!idea.trim() || loading) return;
+    if (!idea.trim() || idea.trim().length < 10 || loading) return;
 
     if (sessionStatus === "unauthenticated") {
       signIn("google", { callbackUrl: "/generate" });
@@ -41,7 +41,7 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
         </div>
         <button
           type="submit"
-          disabled={loading || !idea.trim()}
+          disabled={loading || !idea.trim() || idea.trim().length < 10}
           className="shrink-0 px-5 py-3 text-sm font-semibold text-black bg-accent rounded-xl hover:shadow-[0_0_20px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Regenerate
@@ -87,11 +87,11 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
         {/* Bottom action bar */}
         <div className="flex items-center justify-between px-5 py-3 border-t border-border/50 bg-surface-raised/30 rounded-b-2xl">
           <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
-            {idea.length > 0 ? `${idea.trim().split(/\s+/).length} words` : "min. 10 characters"}
+            {idea.length === 0 ? "min. 10 characters" : idea.trim().length < 10 ? `${idea.trim().length}/10 characters` : `${idea.trim().split(/\s+/).length} words`}
           </span>
           <button
             type="submit"
-            disabled={loading || !idea.trim()}
+            disabled={loading || !idea.trim() || idea.trim().length < 10}
             className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-black bg-accent rounded-lg hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
           >
             {loading ? (

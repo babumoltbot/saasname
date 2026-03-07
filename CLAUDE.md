@@ -12,8 +12,9 @@ AI-powered name generator and validator for software products. Users describe th
 npm run dev          # Start dev server (localhost:3000)
 npm run build        # Production build
 npm run lint         # ESLint
-npm run db:push      # Apply Drizzle schema migrations
-npm run db:init      # Initialize database
+npm run db:push      # Apply Drizzle schema changes (dev only, interactive)
+npm run db:generate  # Generate migration files after schema changes
+npm run db:init      # Initialize database (runs migrations)
 npm run generate -- "idea" --count=10 --tlds=.com,.io  # CLI name generator (--provider=anthropic to override)
 npx tsx scripts/list-users.ts          # List all users (--pro or --free to filter)
 npx tsx scripts/grant-pro.ts <email>   # Grant Pro access (--generations=N, --revoke)
@@ -57,7 +58,7 @@ Each service is a module exporting an object with methods, reused by both API ro
 - `interfaces.ts` — Shared TypeScript interfaces
 
 ### Database (`src/lib/db/`)
-Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users`, `generations`, `validations`, `domainChecks` (global cache), `featureInterest`.
+Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users`, `generations`, `validations`, `domainChecks` (global cache), `featureInterest`. Migrations run automatically on first DB access via `drizzle-orm/migrator`. Migration SQL files live in `drizzle/` (committed to git). After changing `schema.ts`, run `npm run db:generate` to create a new migration file.
 
 ### Key Patterns
 - **Tier gating**: Checked in every relevant API route. Constants in `src/lib/constants.ts`.

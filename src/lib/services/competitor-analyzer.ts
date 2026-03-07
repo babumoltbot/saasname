@@ -1,18 +1,11 @@
-import OpenAI from "openai";
+import { chatCompletion } from "@/lib/ai-client";
 import type { ICompetitorAnalyzer, Competitor } from "./interfaces";
-
-let _openai: OpenAI | null = null;
-function getClient() {
-  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  return _openai;
-}
 
 export const competitorAnalyzer: ICompetitorAnalyzer = {
   async analyze(name: string, industry: string): Promise<Competitor[]> {
-    const response = await getClient().chat.completions.create({
-      model: "gpt-4o-mini",
+    const content = await chatCompletion({
+      model: "fast",
       temperature: 0.3,
-      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -31,7 +24,6 @@ Return an empty array if no similar competitors found.`,
       ],
     });
 
-    const content = response.choices[0].message.content;
     if (!content) return [];
 
     const parsed = JSON.parse(content);

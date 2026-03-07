@@ -1,18 +1,11 @@
-import OpenAI from "openai";
+import { chatCompletion } from "@/lib/ai-client";
 import type { ITrademarkScreener, TrademarkResult } from "./interfaces";
-
-let _openai: OpenAI | null = null;
-function getClient() {
-  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  return _openai;
-}
 
 export const trademarkScreener: ITrademarkScreener = {
   async screen(name: string, industry: string): Promise<TrademarkResult> {
-    const response = await getClient().chat.completions.create({
-      model: "gpt-4o-mini",
+    const content = await chatCompletion({
+      model: "fast",
       temperature: 0.3,
-      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -30,7 +23,6 @@ Return JSON: { "riskLevel": "clear"|"caution"|"high-risk", "details": "...", "si
       ],
     });
 
-    const content = response.choices[0].message.content;
     if (!content) {
       return { riskLevel: "caution", details: "Unable to analyze", similarMarks: [] };
     }

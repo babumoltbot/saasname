@@ -1,11 +1,5 @@
-import OpenAI from "openai";
+import { chatCompletion } from "@/lib/ai-client";
 import type { INameGenerator, GeneratedName, Clarification, ClarificationQuestion } from "./interfaces";
-
-let _openai: OpenAI | null = null;
-function getClient() {
-  if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  return _openai;
-}
 
 export function buildMessages(idea: string, count: number, clarifications?: Clarification[]) {
   const hasClarifications = clarifications?.some((c) => c.answer.trim());
@@ -67,14 +61,12 @@ Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "
 
 export const nameGenerator: INameGenerator = {
   async generate(idea: string, count: number, clarifications?: Clarification[]): Promise<GeneratedName[]> {
-    const response = await getClient().chat.completions.create({
-      model: "gpt-4o",
+    const content = await chatCompletion({
+      model: "primary",
       temperature: 0.8,
-      response_format: { type: "json_object" },
       messages: buildMessages(idea, count, clarifications),
     });
 
-    const content = response.choices[0].message.content;
     if (!content) return [];
 
     const parsed = JSON.parse(content);
@@ -82,10 +74,9 @@ export const nameGenerator: INameGenerator = {
   },
 
   async generateQuestions(idea: string): Promise<ClarificationQuestion[]> {
-    const response = await getClient().chat.completions.create({
-      model: "gpt-4o-mini",
+    const content = await chatCompletion({
+      model: "fast",
       temperature: 0.7,
-      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -116,7 +107,6 @@ Keep questions concise (one sentence). Options should be short (1-4 words each).
       ],
     });
 
-    const content = response.choices[0].message.content;
     if (!content) return [];
 
     const parsed = JSON.parse(content);

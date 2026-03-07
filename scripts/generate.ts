@@ -36,6 +36,7 @@ try {
 } catch {}
 
 import { nameGenerator, buildMessages } from "@/lib/services/name-generator";
+import { getProvider } from "@/lib/ai-client";
 import { brandScorer } from "@/lib/services/brand-scorer";
 import { domainChecker } from "@/lib/services/domain-checker";
 import { socialChecker } from "@/lib/services/social-checker";
@@ -77,12 +78,23 @@ const jsonOutput = flags.json === "true";
 const skipValidation = flags["no-validate"] === "true";
 const promptOnly = flags["prompt-only"] === "true";
 
+// --provider flag overrides AI_PROVIDER env var for this run
+if (flags.provider) {
+  process.env.AI_PROVIDER = flags.provider;
+}
+
 if (promptOnly) {
   const messages = buildMessages(idea, count);
+  const provider = getProvider();
+  const modelDefaults: Record<string, string> = {
+    openai: process.env.OPENAI_PRIMARY_MODEL || "gpt-4o",
+    anthropic: process.env.ANTHROPIC_PRIMARY_MODEL || "claude-sonnet-4-6",
+  };
   console.log("\n--- MODEL PARAMS ---\n");
-  console.log("model:           gpt-4o");
-  console.log("temperature:     0.9");
-  console.log("response_format: json_object");
+  console.log(`provider:        ${provider}`);
+  console.log(`model:           ${modelDefaults[provider]}`);
+  console.log("temperature:     0.8");
+  if (provider === "openai") console.log("response_format: json_object");
   for (const msg of messages) {
     console.log(`\n--- ${msg.role.toUpperCase()} ---\n`);
     console.log(msg.content);
@@ -205,7 +217,8 @@ async function main() {
   const names = await nameGenerator.generate(idea, count);
 
   if (names.length === 0) {
-    console.error(red("No names generated. Check your OPENAI_API_KEY."));
+    const keyHint = getProvider() === "anthropic" ? "ANTHROPIC_API_KEY" : "OPENAI_API_KEY";
+    console.error(red(`No names generated. Check your ${keyHint}.`));
     process.exit(1);
   }
 

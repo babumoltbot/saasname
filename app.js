@@ -1,4 +1,4 @@
-// SaaSName MVP - Simple Name Generator
+// PikName MVP - Simple Name Generator
 // This is a proof-of-concept for name generation
 
 const namePrefixes = {

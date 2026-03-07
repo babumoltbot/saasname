@@ -7,14 +7,14 @@ export default function TerminalDemo() {
           <span className="w-3 h-3 rounded-full bg-[#febc2e] max-[480px]:w-2.5 max-[480px]:h-2.5" />
           <span className="w-3 h-3 rounded-full bg-[#28c840] max-[480px]:w-2.5 max-[480px]:h-2.5" />
           <span className="flex-1 text-center font-[family-name:var(--font-mono)] text-xs text-text-muted max-[480px]:text-[11px]">
-            saasname validate
+            pikname validate
           </span>
         </div>
         <div className="p-6 font-[family-name:var(--font-mono)] text-[15px] leading-[1.8] max-[768px]:p-4 max-[768px]:text-sm max-[768px]:leading-[1.7] max-[768px]:overflow-x-auto max-[480px]:p-3.5 max-[480px]:text-[13px] max-[480px]:leading-[1.6]">
           <div>
             <span className="text-accent">$</span>{" "}
             <span className="text-text-primary">
-              saasname &quot;AI scheduling tool for consultants&quot;
+              pikname &quot;AI scheduling tool for consultants&quot;
             </span>
           </div>
           <br />

@@ -10,7 +10,7 @@ let _db: BetterSQLite3Database<typeof schema> | null = null;
 export function getDb() {
   if (!_db) {
     mkdirSync("data", { recursive: true });
-    const sqlite = new Database("data/saasname.db");
+    const sqlite = new Database("data/pikname.db");
     sqlite.pragma("journal_mode = WAL");
     _db = drizzle(sqlite, { schema });
     migrate(_db, { migrationsFolder: resolve("drizzle") });

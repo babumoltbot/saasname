@@ -29,7 +29,7 @@ To visually check all pages, run the screenshot script (requires `npx playwright
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript 5**
 - **Tailwind CSS v4** (dark theme, accent green #3cff8a, fonts: Sora/Space Mono)
-- **SQLite** via better-sqlite3 + **Drizzle ORM** (DB at `data/saasname.db`, WAL mode)
+- **SQLite** via better-sqlite3 + **Drizzle ORM** (DB at `data/pikname.db`, WAL mode)
 - **NextAuth v4** (Google OAuth)
 - **OpenAI** or **Anthropic** via `AI_PROVIDER` env var (see `src/lib/ai-client.ts`). OpenAI: gpt-4o / gpt-4o-mini. Anthropic: claude-sonnet-4-6 / claude-haiku-4-5. Models overridable via env vars.
 - **Stripe** (one-time $29 checkout + webhook)

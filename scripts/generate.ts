@@ -210,7 +210,7 @@ function printResult(r: NameResult, index: number) {
 // --- Main ---
 async function main() {
   console.log("");
-  console.log(`${cyan("$")} saasname ${dim(`"${idea}"`)}`);
+  console.log(`${cyan("$")} pikname ${dim(`"${idea}"`)}`);
   console.log("");
   console.log(dim(`Generating ${count} names...`));
 

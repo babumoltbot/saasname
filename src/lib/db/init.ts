@@ -4,7 +4,7 @@
 import { resolve } from "path";
 import { mkdirSync } from "fs";
 
-const dbPath = resolve("data/saasname.db");
+const dbPath = resolve("data/pikname.db");
 mkdirSync("data", { recursive: true });
 
 // Just trigger the DB singleton which runs migrate() automatically

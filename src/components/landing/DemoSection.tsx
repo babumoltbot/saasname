@@ -289,7 +289,7 @@ export default function DemoSection() {
             See it in action
           </h2>
           <p className="text-[17px] font-light text-text-secondary max-w-[520px] leading-[1.7] mx-auto max-[768px]:text-[15px]">
-            Explore real sample reports. Pick an idea below and see what SaaSName generates.
+            Explore real sample reports. Pick an idea below and see what PikName generates.
           </p>
         </div>
 

@@ -1,4 +1,4 @@
-# SaaSName - Validate Your SaaS Name
+# PikName - Validate Your SaaS Name
 
 AI-powered SaaS name validator that helps founders validate and choose names for their SaaS ideas.
 

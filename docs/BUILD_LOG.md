@@ -1,4 +1,4 @@
-# SaaSName — Build Log
+# PikName — Build Log
 
 Detailed breakdown of every submission, the logic behind each decision, and how the system works end-to-end.
 
@@ -29,7 +29,7 @@ Detailed breakdown of every submission, the logic behind each decision, and how 
 - Proof-of-concept only — never shipped to users
 
 ### `ffaa42f` — Landing page redesign
-- Terminal demo card showing a mock `saasname validate` session
+- Terminal demo card showing a mock `pikname validate` session
 - Animated hero ticker cycling through "Validate it.", "Check domains.", "Secure handles.", "Ship faster."
 - Film grain overlay via SVG noise filter
 - Scroll-reveal animations with IntersectionObserver

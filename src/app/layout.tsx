@@ -3,23 +3,23 @@ import SessionProvider from "@/components/SessionProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SaaSName — AI-Powered Name Validator for Founders",
+  title: "PikName — AI-Powered Name Validator for Founders",
   description:
     "Generate, validate, and secure the perfect name for your SaaS. Domain checks, trademark screening, social handle availability — all in one tool.",
   openGraph: {
     type: "website",
-    url: "https://saasname.nagrao.dev",
-    title: "SaaSName — Stop guessing. Validate your SaaS name.",
+    url: "https://pikname.com",
+    title: "PikName — Stop guessing. Validate your SaaS name.",
     description:
       "AI-powered name generator for founders. Get name ideas, check domains, social handles, trademarks, and brand scores — all in one tool.",
-    images: ["https://saasname.nagrao.dev/og-image.png"],
+    images: ["https://pikname.com/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SaaSName — Stop guessing. Validate your SaaS name.",
+    title: "PikName — Stop guessing. Validate your SaaS name.",
     description:
       "AI-powered name generator for founders. Get name ideas, check domains, social handles, trademarks, and brand scores — all in one tool.",
-    images: ["https://saasname.nagrao.dev/og-image.png"],
+    images: ["https://pikname.com/og-image.png"],
   },
 };
 

@@ -26,7 +26,7 @@ export async function createCheckoutSession(
         price_data: {
           currency: "usd",
           product_data: {
-            name: "SaaSName Pro",
+            name: "PikName Pro",
             description:
               "50 generations, all TLDs, social handles, trademark screening, competitor analysis",
           },

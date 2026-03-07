@@ -1,8 +1,8 @@
-# SaaSName — Free Tier Replacement Strategy
+# PikName — Free Tier Replacement Strategy
 
 ## Problem
 
-The current Free tier (3 generations, 5 names, .com only) is likely to serve casual users fully without converting them to Pro. Since SaaSName is a one-time-use tool for most founders, a functional free tier bleeds API costs with low conversion upside.
+The current Free tier (3 generations, 5 names, .com only) is likely to serve casual users fully without converting them to Pro. Since PikName is a one-time-use tool for most founders, a functional free tier bleeds API costs with low conversion upside.
 
 ---
 
@@ -54,7 +54,7 @@ Some indie SaaS founders suggest allowing **one real, uncached generation** (no 
 **Pros:** User gets personalized results, higher emotional stakes, stronger conversion signal  
 **Cons:** Casual/one-time users may get full value from a single run and never pay
 
-**Recommendation:** Given SaaSName's one-time-use nature, skip this for now. Start with pure cached demos and measure conversion. Add the one-free-run hook only if demo-to-paid conversion is low.
+**Recommendation:** Given PikName's one-time-use nature, skip this for now. Start with pure cached demos and measure conversion. Add the one-free-run hook only if demo-to-paid conversion is low.
 
 ---
 

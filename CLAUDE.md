@@ -64,6 +64,7 @@ Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users
 - **Rate limiting**: In-memory Map, 60-second windows, per-user-per-action (`src/lib/rate-limit.ts`).
 - **API route pattern**: Get session → find user → check rate limit → check tier limits → execute → update usage → return JSON.
 - **Domain check caching**: Results stored globally in `domainChecks` table, shared across all users.
+- **Audit logging**: `src/lib/audit-log.ts` writes NDJSON to daily files in `logs/` (configurable via `AUDIT_LOG_DIR`). Previous days' files are auto-gzipped. Actions logged: `sign_in`, `generate` (includes `aiProvider`), `validate`, `check_domains`, `checkout_created`, `payment_completed`, `pro_granted`, `pro_revoked`, `rate_limited`, `error`.
 - `next.config.ts` uses `serverExternalPackages: ["better-sqlite3"]` for native bindings.
 - Path alias: `@/*` maps to `./src/*`.
 

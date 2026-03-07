@@ -22,7 +22,7 @@ export function buildMessages(idea: string, count: number, clarifications?: Clar
 
   const scaleLine = hasClarifications
     ? "- Should match the founder's described brand ambition and tone"
-    : "- Prefer names that could plausibly become a venture-scale brand";
+    : "- Prefer names with personality and character that a solo founder or small team would be proud to build under";
 
   return [
     {
@@ -37,8 +37,8 @@ ${industryLine}
 - Prefer invented or compound words over generic dictionary phrases
 - Avoid names already widely used by major companies
 - No hyphens, numbers, or difficult spellings
-- Should work as a domain name — short, no special characters, easy to type
-- Must sound professional and trustworthy
+- Should work as a domain name — short, no special characters, easy to type. Favor names where .com, .io, .co, or .app would be realistically available
+- Should feel approachable and have personality — warm or clever beats corporate-sounding
 - Should scale globally (not region-specific)
 - Easy to spell after hearing once
 - Should evoke a positive emotion or mental image related to the product's value
@@ -48,10 +48,10 @@ ${industryLine}
 - None of the ${count} names should share the same root word, prefix, or suffix pattern — maximize variety
 
 Generate a diverse mix of naming styles:
-- Invented words (e.g., "Zapier", "Calendly")
-- Compound tech names (e.g., "Webflow", "Mailchimp")
-- Abstract brand names (e.g., "Notion", "Figma")
-- Slightly descriptive but still brandable (e.g., "Airtable", "Canva")
+- Invented words (e.g., "Plausible", "Fathom")
+- Compound names (e.g., "Buttondown", "Carrd")
+- Abstract brand names (e.g., "Pika", "Lemon Squeezy")
+- Slightly descriptive but still brandable (e.g., "Typefully", "Tally")
 
 ${scaleLine}
 Avoid names that feel generic, spammy, or auto-generated. Do NOT generate names like "SmartTask Pro", "DataSync Hub", or "QuickBuild" — these are forgettable.

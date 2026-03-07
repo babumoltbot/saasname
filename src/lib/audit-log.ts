@@ -4,7 +4,7 @@ import { createGzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
 import { createReadStream, createWriteStream } from "node:fs";
 
-const LOGS_DIR = path.join(process.cwd(), "logs");
+const LOGS_DIR = process.env.AUDIT_LOG_DIR || path.join(process.cwd(), "logs");
 
 let currentDate = "";
 let currentStream: fs.WriteStream | null = null;

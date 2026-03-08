@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  if (dbUser.tier !== "pro") {
+    return NextResponse.json({ error: "Pro plan required", upgrade: true }, { status: 403 });
+  }
+
   if (!rateLimit(`questions:${dbUser.id}`, 10)) {
     return NextResponse.json({ error: "Rate limit exceeded. Try again in a minute." }, { status: 429 });
   }

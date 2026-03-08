@@ -50,6 +50,10 @@ export default function GeneratePage() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (res.status === 403 && data.upgrade) {
+          setShowUpgrade(true);
+          return;
+        }
         throw new Error(data.error || "Failed to get questions");
       }
 

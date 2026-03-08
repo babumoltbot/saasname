@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-AI-powered name generator and validator for startups, products, and businesses. Users describe their idea, get AI-generated names, then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Landing page has a cached demo mode (no API calls) showing sample reports. Pro tier ($29 one-time) unlocks 50 gens, 10 names, all checks.
+AI-powered name generator and validator for startups, products, and businesses. Users describe their idea, get AI-generated names, then validate them across domains, brand scoring, trademark risk, social handles, and competitors. Landing page has a cached demo mode (no API calls) showing sample reports. No free tier — Pro ($29 one-time, 50 gens, 10 names, all checks) is required to generate. New users sign in but must pay before using the generator.
 
 ## Commands
 
@@ -18,6 +18,7 @@ npm run db:init      # Initialize database (runs migrations)
 npm run generate -- "idea" --count=10 --tlds=.com,.io  # CLI name generator (--provider=anthropic to override)
 npx tsx scripts/list-users.ts          # List all users (--pro or --free to filter)
 npx tsx scripts/grant-pro.ts <email>   # Grant Pro access (--generations=N, --revoke)
+npx tsx scripts/delete-user.ts <email> # Delete user and all their data
 node scripts/screenshots.mjs                  # Screenshot all pages (unauthenticated)
 node scripts/screenshots.mjs <session-token>  # Screenshot all pages (authenticated)
 ```
@@ -61,7 +62,7 @@ Each service is a module exporting an object with methods, reused by both API ro
 Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users`, `generations`, `validations`, `domainChecks` (global cache), `featureInterest`. Migrations run automatically on first DB access via `drizzle-orm/migrator`. Migration SQL files live in `drizzle/` (committed to git). After changing `schema.ts`, run `npm run db:generate` to create a new migration file.
 
 ### Key Patterns
-- **Tier gating**: Checked in every relevant API route. Constants in `src/lib/constants.ts`.
+- **Tier gating**: Pro tier required for all generation/validation. No free tier. Constants in `src/lib/constants.ts`.
 - **Rate limiting**: In-memory Map, 60-second windows, per-user-per-action (`src/lib/rate-limit.ts`).
 - **API route pattern**: Get session → find user → check rate limit → check tier limits → execute → update usage → return JSON.
 - **Domain check caching**: Results stored globally in `domainChecks` table, shared across all users.

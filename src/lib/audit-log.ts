@@ -89,6 +89,11 @@ export function audit(
   } catch {
     // Logging should never crash the app
   }
+
+  // Async Slack notification (non-blocking, lazy import to avoid circular deps)
+  import("./slack-notify").then(({ slackNotify }) => {
+    slackNotify(action, opts);
+  }).catch(() => {});
 }
 
 // Gzip any leftover un-gzipped log files from previous days on startup

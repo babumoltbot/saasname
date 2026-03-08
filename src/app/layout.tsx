@@ -6,20 +6,19 @@ export const metadata: Metadata = {
   title: "PikName — AI-Powered Name Generator for Startups & Products",
   description:
     "Generate, validate, and secure the perfect name for your startup or product. Domain checks, trademark screening, social handle availability — all in one tool.",
+  metadataBase: new URL("https://www.pikname.com"),
   openGraph: {
     type: "website",
-    url: "https://pikname.com",
+    url: "https://www.pikname.com",
     title: "PikName — Stop guessing. Validate your startup name.",
     description:
       "AI-powered name generator for founders. Get name ideas, check domains, social handles, trademarks, and brand scores — all in one tool.",
-    images: ["https://pikname.com/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "PikName — Stop guessing. Validate your startup name.",
     description:
       "AI-powered name generator for founders. Get name ideas, check domains, social handles, trademarks, and brand scores — all in one tool.",
-    images: ["https://pikname.com/og-image.png"],
   },
 };
 

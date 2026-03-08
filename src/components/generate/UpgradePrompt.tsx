@@ -36,10 +36,10 @@ export default function UpgradePrompt({ onClose }: Props) {
           </div>
 
           <h3 className="text-lg font-bold mb-2 tracking-tight">
-            Upgrade to unlock generations
+            Get Pro to start generating
           </h3>
           <p className="text-text-secondary text-sm leading-relaxed mb-8">
-            Get 50 name generations, all TLDs, social handle checks, trademark screening, and competitor analysis.
+            Unlock 50 name generations, 10 names each, all TLDs, and full brand validation.
           </p>
 
           <div className="space-y-3">

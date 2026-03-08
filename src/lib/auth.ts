@@ -3,7 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { TIERS } from "./constants";
 import { audit } from "./audit-log";
 
 export const authOptions: NextAuthOptions = {
@@ -28,8 +27,8 @@ export const authOptions: NextAuthOptions = {
             googleId: account.providerAccountId,
             tier: "free",
             generationsUsed: 0,
-            generationsLimit: TIERS.free.generationsLimit,
-            namesPerGeneration: TIERS.free.namesPerGeneration,
+            generationsLimit: 0,
+            namesPerGeneration: 0,
           });
         } else if (!existing.googleId) {
           await db

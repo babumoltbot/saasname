@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Name and generationId required" }, { status: 400 });
   }
 
-  const tier = TIERS[dbUser.tier as keyof typeof TIERS];
+  const tier = TIERS.pro;
 
-  // Run checks in parallel based on tier
+  // Run checks in parallel
   const [domains, socials, trademark, competitors] = await Promise.all([
     domainChecker.check(name, [...tier.tlds]),
     tier.features.socialHandles
@@ -81,10 +81,5 @@ export async function POST(req: NextRequest) {
     socials,
     trademark,
     competitors,
-    tierLocked: {
-      socialHandles: !tier.features.socialHandles,
-      trademarkScreening: !tier.features.trademarkScreening,
-      competitorAnalysis: !tier.features.competitorAnalysis,
-    },
   });
 }

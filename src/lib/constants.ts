@@ -3,19 +3,6 @@
 export const DIRECT_CHECK_TLDS: string[] = [".com", ".net", ".app", ".dev"];
 
 export const TIERS = {
-  free: {
-    name: "Free",
-    generationsLimit: 1,
-    namesPerGeneration: 5,
-    tlds: [".com"],
-    features: {
-      socialHandles: false,
-      trademarkScreening: false,
-      competitorAnalysis: false,
-      brandScorePreview: true,
-      brandScoreFull: false,
-    },
-  },
   pro: {
     name: "Pro",
     generationsLimit: 50,

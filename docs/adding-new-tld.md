@@ -5,8 +5,7 @@
 ```
 src/lib/constants.ts
   DIRECT_CHECK_TLDS → add ".newTld"
-  TIERS.free.tlds   → add if free tier should see it
-  TIERS.pro.tlds    → add if pro tier should see it
+  TIERS.pro.tlds    → add to make it available
 ```
 
 ## How it works

@@ -29,9 +29,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
   }
 
-  const tier = TIERS[dbUser.tier as keyof typeof TIERS];
   const slug = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-  const domains = tier.tlds.map((tld) => slug + tld);
+  const domains = TIERS.pro.tlds.map((tld) => slug + tld);
 
   const cached = await db
     .select()
@@ -70,8 +69,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "name and tlds are required" }, { status: 400 });
   }
 
-  const tier = TIERS[dbUser.tier as keyof typeof TIERS];
-  const allowed = tier.tlds as readonly string[];
+  const allowed = TIERS.pro.tlds as readonly string[];
   const invalid = tlds.filter((t) => !allowed.includes(t));
   if (invalid.length > 0) {
     return NextResponse.json({ error: `TLDs not available on your tier: ${invalid.join(", ")}` }, { status: 403 });

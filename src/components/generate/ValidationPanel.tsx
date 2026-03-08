@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import type { NameWithScore } from "@/app/generate/page";
 import BrandScore from "./BrandScore";
 import { TIERS, DIRECT_CHECK_TLDS } from "@/lib/constants";
@@ -36,9 +35,7 @@ function timeAgo(date: Date): string {
 }
 
 export default function ValidationPanel({ name }: Props) {
-  const { data: session } = useSession();
-  const tier = (session as any)?.tier ?? "free";
-  const tlds = TIERS[tier as keyof typeof TIERS]?.tlds ?? TIERS.free.tlds;
+  const tlds = TIERS.pro.tlds;
 
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
 

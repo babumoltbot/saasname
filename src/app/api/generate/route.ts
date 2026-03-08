@@ -31,11 +31,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Rate limit exceeded. Try again in a minute." }, { status: 429 });
   }
 
+  // Require Pro tier
+  if (dbUser.tier !== "pro") {
+    return NextResponse.json({
+      error: "Pro plan required",
+      upgrade: true,
+    }, { status: 403 });
+  }
+
   // Check generation limit
   if (dbUser.generationsUsed >= dbUser.generationsLimit) {
     return NextResponse.json({
       error: "Generation limit reached",
-      upgrade: dbUser.tier === "free",
+      upgrade: false,
     }, { status: 403 });
   }
 
@@ -47,8 +55,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Please describe your idea in at least 10 characters" }, { status: 400 });
   }
 
-  const tier = TIERS[dbUser.tier as keyof typeof TIERS];
-  const count = tier.namesPerGeneration;
+  const count = TIERS.pro.namesPerGeneration;
 
   // Generate names
   const names = await nameGenerator.generate(idea, count, clarifications);

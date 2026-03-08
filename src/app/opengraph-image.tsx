@@ -136,7 +136,7 @@ export default async function Image() {
             letterSpacing: "-0.01em",
           }}
         >
-          Try it free at pikname.com
+          Try it at www.pikname.com
         </div>
       </div>
     ),

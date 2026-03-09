@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import SessionProvider from "@/components/SessionProvider";
 import "./globals.css";
 
@@ -43,6 +44,13 @@ export default function RootLayout({
       </head>
       <body className="font-[family-name:var(--font-display)] bg-black text-text-primary leading-relaxed overflow-x-hidden antialiased">
         <SessionProvider>{children}</SessionProvider>
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            src="https://trk.nagrao.dev/script.js"
+            data-website-id="9a59fdb3-4798-46c8-9a9b-ce0acd5356f6"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );

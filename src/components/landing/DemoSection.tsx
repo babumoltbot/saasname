@@ -294,12 +294,12 @@ export default function DemoSection() {
         </div>
 
         {/* Demo picker chips */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10 max-[480px]:mb-8">
+        <div className="flex flex-wrap justify-center gap-2 mb-10 max-[480px]:mb-6 max-[480px]:gap-1.5">
           {DEMO_JOURNEYS.map((journey) => (
             <button
               key={journey.id}
               onClick={() => handleJourneySelect(journey)}
-              className={`font-[family-name:var(--font-mono)] text-sm tracking-wide px-4 py-2.5 rounded-lg border transition-all duration-200 ${
+              className={`font-[family-name:var(--font-mono)] text-sm tracking-wide px-4 py-2.5 rounded-lg border transition-all duration-200 max-[480px]:text-xs max-[480px]:px-3 max-[480px]:py-2 ${
                 activeJourney.id === journey.id
                   ? "text-accent bg-accent/10 border-accent/30 shadow-[0_0_20px_-5px_var(--color-accent-glow)]"
                   : "text-text-muted bg-surface border-border/50 hover:border-text-muted hover:text-text-secondary"

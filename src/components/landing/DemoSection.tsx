@@ -74,7 +74,7 @@ function DemoNameCard({
           isSelected ? "bg-accent" : "bg-transparent group-hover:bg-border"
         }`}
       />
-      <div className="flex items-center gap-4 py-4 px-5 pl-6">
+      <div className="flex items-center gap-4 py-4 px-5 pl-6 max-[768px]:py-3 max-[768px]:px-4 max-[768px]:pl-5 max-[768px]:gap-3">
         <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted w-5 shrink-0 tabular-nums">
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -321,7 +321,7 @@ export default function DemoSection() {
         </div>
 
         {/* Results grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 max-[768px]:gap-4">
           {/* Name list */}
           <div>
             <div className="flex items-center justify-between mb-5">
@@ -332,7 +332,7 @@ export default function DemoSection() {
                 {activeJourney.names.length} names
               </span>
             </div>
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 max-[768px]:max-h-[320px] max-[768px]:overflow-y-auto max-[768px]:pr-1 max-[768px]:scrollbar-thin">
               {activeJourney.names.map((name, i) => (
                 <DemoNameCard
                   key={name.name}

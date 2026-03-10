@@ -88,6 +88,7 @@ function DemoNameCard({
 }
 
 function DemoValidationPanel({ name }: { name: DemoName }) {
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
   const checkable = name.domains.filter((d) => DIRECT_CHECK_TLDS.includes(d.tld));
   const external = name.domains.filter((d) => !DIRECT_CHECK_TLDS.includes(d.tld));
   const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -96,19 +97,27 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
   return (
     <div className="bg-surface border border-border/60 rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="p-6 pb-5 border-b border-border/40">
-        <div className="flex items-start gap-4">
+      <div className="p-5 pb-4 border-b border-border/40">
+        <div className="flex items-center gap-3">
           <BrandScoreMini score={name.brandScore.overall} />
-          <div className="min-w-0 flex-1 pt-0.5">
-            <h3 className="text-2xl font-bold tracking-tight">{name.name}</h3>
-            <p className="text-sm text-text-secondary mt-1 leading-relaxed">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-xl font-bold tracking-tight">{name.name}</h3>
+            <p className={`text-[13px] text-text-secondary mt-0.5 leading-snug ${
+              summaryExpanded ? "" : "line-clamp-2"
+            }`}>
               {name.brandScore.summary}
             </p>
+            <button
+              onClick={() => setSummaryExpanded(!summaryExpanded)}
+              className="text-[12px] text-accent font-[family-name:var(--font-mono)] mt-1 hover:underline"
+            >
+              {summaryExpanded ? "less" : "more"}
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="px-6 pb-6 pt-5 space-y-5">
+      <div className="px-5 pb-5 pt-4 space-y-4">
         {/* Brand breakdown */}
         <div>
           <h4 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
@@ -344,7 +353,7 @@ export default function DemoSection() {
 
           {/* Validation panel */}
           <div className="lg:sticky lg:top-[80px] lg:self-start">
-            <DemoValidationPanel name={selectedName} />
+            <DemoValidationPanel key={selectedName.name} name={selectedName} />
           </div>
         </div>
 

@@ -28,8 +28,8 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
 
   if (compact) {
     return (
-      <form onSubmit={handleSubmit} className="flex gap-3 items-start">
-        <div className="flex-1 relative">
+      <form onSubmit={handleSubmit} className="flex gap-3 items-start max-[480px]:flex-col">
+        <div className="flex-1 relative max-[480px]:w-full">
           <textarea
             value={idea}
             onChange={(e) => setIdea(e.target.value)}
@@ -42,7 +42,7 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
         <button
           type="submit"
           disabled={loading || !idea.trim() || idea.trim().length < 10}
-          className="shrink-0 px-5 py-3 text-sm font-semibold text-black bg-accent rounded-xl hover:shadow-[0_0_20px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="shrink-0 px-5 py-3 text-sm font-semibold text-black bg-accent rounded-xl hover:shadow-[0_0_20px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed max-[480px]:w-full"
         >
           Regenerate
         </button>
@@ -60,16 +60,16 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
         }`}
       >
         {/* Terminal-style header bar */}
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-border/50">
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-border/50 max-[480px]:px-4">
           <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-          <span className="flex-1 text-center text-[13px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
+          <span className="flex-1 text-center text-[12px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
             describe your idea
           </span>
         </div>
 
-        <div className="p-5">
+        <div className="p-5 max-[480px]:p-4">
           <div className="flex items-start gap-3">
             <span className="text-accent font-[family-name:var(--font-mono)] text-sm mt-0.5 select-none shrink-0">$</span>
             <textarea
@@ -78,21 +78,21 @@ export default function IdeaInput({ onSubmit, loading, sessionStatus, compact }:
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               placeholder="A tool that helps consultants schedule LinkedIn posts with AI-generated content..."
-              className="w-full font-[family-name:var(--font-mono)] text-sm text-text-primary bg-transparent outline-none resize-none min-h-[100px] placeholder:text-text-muted/60 leading-relaxed"
+              className="w-full font-[family-name:var(--font-mono)] text-[13px] lg:text-sm text-text-primary bg-transparent outline-none resize-none min-h-[100px] placeholder:text-text-muted/60 leading-relaxed"
               disabled={loading}
             />
           </div>
         </div>
 
         {/* Bottom action bar */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-border/50 bg-surface-raised/30 rounded-b-2xl">
-          <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
+        <div className="flex items-center justify-between px-5 py-3 border-t border-border/50 bg-surface-raised/30 rounded-b-2xl max-[480px]:px-4 max-[480px]:flex-col max-[480px]:gap-3">
+          <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
             {idea.length === 0 ? "min. 10 characters" : idea.trim().length < 10 ? `${idea.trim().length}/10 characters` : `${idea.trim().split(/\s+/).length} words`}
           </span>
           <button
             type="submit"
             disabled={loading || !idea.trim() || idea.trim().length < 10}
-            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-black bg-accent rounded-lg hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-black bg-accent rounded-lg hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none max-[480px]:w-full max-[480px]:justify-center"
           >
             {loading ? (
               <>

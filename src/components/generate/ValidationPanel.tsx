@@ -11,7 +11,7 @@ interface Props {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
+    <h4 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[2px] uppercase text-text-muted mb-3 flex items-center gap-2">
       <span className="w-4 h-px bg-border" />
       {children}
     </h4>
@@ -61,14 +61,12 @@ export default function ValidationPanel({ name }: Props) {
 
   async function checkAllDomains() {
     const checkable = [...tlds].filter((tld) => DIRECT_CHECK_TLDS.includes(tld));
-    // Only check TLDs that haven't been checked yet
     const unchecked = checkable.filter((tld) => {
       const s = domainStates[tld]?.status;
       return !s || s === "idle" || s === "error";
     });
     if (unchecked.length === 0) return;
 
-    // Set all to loading
     setDomainStates((prev) => {
       const next = { ...prev };
       for (const tld of unchecked) next[tld] = { status: "loading" };
@@ -107,11 +105,11 @@ export default function ValidationPanel({ name }: Props) {
   return (
     <div className="animate-slide-in-right bg-surface/70 border border-border/50 rounded-2xl overflow-hidden">
       {/* Header with score */}
-      <div className="relative p-6 pb-5 bg-gradient-to-b from-accent/[0.03] to-transparent">
+      <div className="p-6 pb-5 border-b border-border/40 max-[480px]:p-5 max-[480px]:pb-4">
         <div className="flex items-start gap-4">
           <BrandScore score={name.brandScore.overall} size="lg" animated />
-          <div className="min-w-0 flex-1 pt-1">
-            <h3 className="text-2xl font-bold tracking-tight">{name.name}</h3>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <h3 className="text-2xl font-bold tracking-tight max-[480px]:text-xl">{name.name}</h3>
             <p className="text-sm text-text-secondary mt-1.5 leading-relaxed">
               {name.brandScore.summary}
             </p>
@@ -119,17 +117,17 @@ export default function ValidationPanel({ name }: Props) {
         </div>
       </div>
 
-      <div className="px-6 pb-6 space-y-5">
+      <div className="px-6 pb-6 pt-5 space-y-5 max-[480px]:px-5 max-[480px]:pb-5">
         {/* Brand breakdown */}
         <div>
           <SectionLabel>Brand Score</SectionLabel>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {Object.entries(name.brandScore.breakdown).map(([key, val]) => (
               <div key={key} className="flex items-center gap-3">
-                <span className="text-[13px] text-text-secondary w-28 capitalize">
+                <span className="text-[13px] text-text-secondary w-28 capitalize max-[480px]:w-24 max-[480px]:text-[12px]">
                   {key}
                 </span>
-                <div className="flex-1 h-2 bg-border/50 rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-700"
                     style={{
@@ -143,7 +141,7 @@ export default function ValidationPanel({ name }: Props) {
                     }}
                   />
                 </div>
-                <span className="text-sm text-text-secondary font-[family-name:var(--font-mono)] w-8 text-right tabular-nums">
+                <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)] w-7 text-right tabular-nums">
                   {val}
                 </span>
               </div>
@@ -151,7 +149,6 @@ export default function ValidationPanel({ name }: Props) {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="h-px bg-border/40" />
 
         {/* Domains */}
@@ -164,8 +161,8 @@ export default function ValidationPanel({ name }: Props) {
             const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
 
             return (
-              <div className="space-y-3">
-                {/* Checkable TLDs — show status + single Check All button */}
+              <div className="space-y-2">
+                {/* Checkable TLDs */}
                 {checkable.length > 0 && (() => {
                   const allChecked = checkable.every((tld) => {
                     const s = domainStates[tld]?.status;
@@ -193,23 +190,23 @@ export default function ValidationPanel({ name }: Props) {
                               }`}
                             >
                               <div className="min-w-0">
-                                <span className="font-[family-name:var(--font-mono)] text-sm text-text-primary">
+                                <span className="font-[family-name:var(--font-mono)] text-sm text-text-primary max-[480px]:text-[13px]">
                                   {domain}
                                 </span>
                                 {checkedAt && (
-                                  <span className="block text-xs text-text-muted font-[family-name:var(--font-mono)] mt-0.5">
+                                  <span className="block text-[11px] text-text-muted font-[family-name:var(--font-mono)] mt-0.5">
                                     {timeAgo(checkedAt)}
                                   </span>
                                 )}
                               </div>
                               {status === "loading" && (
-                                <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
+                                <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted animate-pulse">
                                   Checking...
                                 </span>
                               )}
                               {(status === "available" || status === "taken") && (
                                 <span
-                                  className={`inline-flex items-center gap-1.5 text-xs font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2.5 py-1 rounded-full ${
+                                  className={`inline-flex items-center gap-1.5 text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase px-2.5 py-1 rounded-full ${
                                     status === "available"
                                       ? "text-accent bg-accent/10"
                                       : "text-warning bg-warning/10"
@@ -227,7 +224,7 @@ export default function ValidationPanel({ name }: Props) {
                         <button
                           onClick={checkAllDomains}
                           disabled={anyLoading}
-                          className="flex items-center justify-center gap-2 w-full mt-3 py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[13px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150 disabled:opacity-50"
+                          className="flex items-center justify-center gap-2 w-full mt-3 py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[12px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150 disabled:opacity-50"
                         >
                           {anyLoading ? (
                             <>
@@ -244,12 +241,12 @@ export default function ValidationPanel({ name }: Props) {
                   );
                 })()}
 
-                {/* External TLDs — badges with registrar link */}
+                {/* External TLDs */}
                 {external.length > 0 && (
-                  <div className="rounded-xl bg-surface/40 border border-border/40 p-4">
+                  <div className="rounded-xl bg-surface-raised/30 border border-border/30 p-4 mt-2">
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {external.map((tld) => (
-                        <span key={tld} className="font-[family-name:var(--font-mono)] text-[13px] text-text-muted bg-surface border border-dashed border-border/30 px-2.5 py-1 rounded-lg">
+                        <span key={tld} className="font-[family-name:var(--font-mono)] text-[13px] text-text-muted bg-surface border border-dashed border-border/30 px-2.5 py-1 rounded-lg max-[480px]:text-[12px]">
                           {slug}{tld}
                         </span>
                       ))}
@@ -258,7 +255,7 @@ export default function ValidationPanel({ name }: Props) {
                       href={registrarUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[13px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-accent/10 border border-accent/30 text-accent text-[12px] font-semibold font-[family-name:var(--font-mono)] tracking-wide uppercase hover:bg-accent/20 hover:border-accent/50 transition-all duration-150"
                     >
                       Check availability
                       <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
@@ -303,14 +300,14 @@ function ComingSoonSection({
   description: string;
 }) {
   return (
-    <div className="p-5 rounded-xl border border-dashed border-border/40 bg-surface/20">
-      <div className="flex items-center gap-2.5 mb-2">
+    <div className="p-4 rounded-xl border border-dashed border-border/40 bg-surface/20">
+      <div className="flex items-center gap-2.5 mb-1.5">
         <SectionLabel>{label}</SectionLabel>
-        <span className="text-[11px] font-semibold font-[family-name:var(--font-mono)] tracking-widest uppercase text-text-muted bg-surface-raised px-1.5 py-0.5 rounded -mt-3">
-          Coming Soon
+        <span className="text-[10px] font-semibold font-[family-name:var(--font-mono)] tracking-widest uppercase text-text-muted bg-surface-raised px-1.5 py-0.5 rounded -mt-3">
+          Soon
         </span>
       </div>
-      <p className="text-sm text-text-secondary leading-relaxed">{description}</p>
+      <p className="text-[13px] text-text-secondary leading-relaxed">{description}</p>
     </div>
   );
 }

@@ -61,7 +61,6 @@ export default function GeneratePage() {
         setQuestions(data.questions);
         setPhase("questions");
       } else {
-        // No questions returned, go straight to generation
         await generateNames(idea, []);
       }
     } catch (err: any) {
@@ -132,7 +131,7 @@ export default function GeneratePage() {
       <div className="fixed top-[40%] left-[-15%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(37,99,235,0.04)_0%,transparent_70%)] pointer-events-none" />
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 px-8 py-4 flex items-center justify-between bg-black/70 backdrop-blur-[24px] border-b border-border/50">
+      <nav className="sticky top-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between bg-black/70 backdrop-blur-[24px] border-b border-border/50">
         <Link
           href="/"
           className="font-[family-name:var(--font-mono)] text-lg font-bold text-text-primary no-underline tracking-tight"
@@ -159,20 +158,20 @@ export default function GeneratePage() {
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-24">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 pt-14 pb-24 max-[480px]:pt-10 max-[480px]:px-4">
         {/* Hero section — only shows before first generation */}
         {showHero && (
-          <div className="text-center mb-14 animate-fade-up animate-fade-up-1">
+          <div className="text-center mb-12 animate-fade-up animate-fade-up-1 max-[480px]:mb-8">
             <div className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] text-accent bg-accent-dim border border-accent/20 px-3 py-1 rounded-full mb-6 tracking-wide uppercase">
               <span className="status-dot" />
               AI Startup Name Generator
             </div>
-            <h1 className="text-[clamp(32px,5vw,52px)] font-bold tracking-[-1.5px] leading-[1.1] mb-4">
+            <h1 className="text-[clamp(30px,5vw,48px)] font-bold tracking-[-1.5px] leading-[1.1] mb-4">
               Name your next
               <br />
               <span className="text-accent font-[family-name:var(--font-mono)]">big thing</span>
             </h1>
-            <p className="text-text-secondary text-base max-w-md mx-auto leading-relaxed">
+            <p className="text-text-secondary text-[15px] lg:text-base max-w-md mx-auto leading-relaxed">
               Describe your idea. Get AI-generated brandable names with brand
               scores and instant domain availability checks.
             </p>
@@ -181,11 +180,11 @@ export default function GeneratePage() {
 
         {/* Compact header when results exist */}
         {showCompactHeader && (
-          <div className="mb-8">
+          <div className="mb-8 max-[480px]:mb-6">
             <h1 className="text-xl font-bold tracking-tight text-text-primary">
               Name Generator
             </h1>
-            <p className="text-sm text-text-muted mt-1">
+            <p className="text-sm text-text-muted mt-1 font-[family-name:var(--font-mono)]">
               {isLoadingQuestions
                 ? "Analyzing your idea..."
                 : isGenerating
@@ -243,7 +242,7 @@ export default function GeneratePage() {
           <div className="mt-8 max-w-2xl mx-auto animate-scale-in">
             <div className="flex items-start gap-3 p-4 bg-red-500/[0.06] border border-red-500/20 rounded-xl">
               <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-red-600 text-xs">!</span>
+                <span className="text-red-600 text-xs font-bold">!</span>
               </div>
               <div>
                 <p className="text-red-600 text-sm font-medium">Generation failed</p>
@@ -255,7 +254,7 @@ export default function GeneratePage() {
 
         {/* Loading state for name generation */}
         {isGenerating && (
-          <div className="mt-12 max-w-2xl mx-auto space-y-4">
+          <div className="mt-12 max-w-2xl mx-auto space-y-3">
             {[0, 1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -272,14 +271,14 @@ export default function GeneratePage() {
               </div>
             ))}
             <p className="text-center text-xs text-text-muted font-[family-name:var(--font-mono)] mt-6">
-              Generating names with GPT-4o...
+              Generating names...
             </p>
           </div>
         )}
 
         {/* Results area */}
         {phase === "results" && result && (
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
             <NameList
               names={result.names}
               generationId={result.generationId}
@@ -293,11 +292,6 @@ export default function GeneratePage() {
                 />
               ) : (
                 <div className="border border-dashed border-border/60 rounded-2xl p-10 text-center bg-surface/30">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-surface border border-border flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-text-muted">
-                      <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    </svg>
-                  </div>
                   <p className="text-sm text-text-muted font-medium">Select a name</p>
                   <p className="text-xs text-text-muted/70 mt-1">
                     Click on a name to see its brand score and domain availability

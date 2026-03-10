@@ -45,7 +45,6 @@ export default function HistoryPage() {
       .then((r) => r.json())
       .then((rows) => {
         setGenerations(rows);
-        // Auto-expand the most recent generation
         if (rows.length > 0) {
           setExpandedId(rows[0].id);
           if (rows[0].names.length > 0) setSelectedName(rows[0].names[0]);
@@ -60,7 +59,7 @@ export default function HistoryPage() {
       <div className="ambient-glow" />
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 px-8 py-4 flex items-center justify-between bg-black/70 backdrop-blur-[24px] border-b border-border/50">
+      <nav className="sticky top-0 z-50 px-6 lg:px-10 py-4 flex items-center justify-between bg-black/70 backdrop-blur-[24px] border-b border-border/50">
         <Link
           href="/"
           className="font-[family-name:var(--font-mono)] text-lg font-bold text-text-primary no-underline tracking-tight"
@@ -70,7 +69,7 @@ export default function HistoryPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/generate"
-            className="text-[13px] font-[family-name:var(--font-mono)] tracking-wide uppercase text-text-muted hover:text-accent transition-colors"
+            className="text-[11px] font-[family-name:var(--font-mono)] tracking-wide uppercase text-text-muted hover:text-accent transition-colors"
           >
             + New
           </Link>
@@ -78,11 +77,14 @@ export default function HistoryPage() {
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-24">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-24 max-[480px]:pt-8 max-[480px]:px-4">
         {/* Page header */}
-        <div className="mb-10 animate-fade-up animate-fade-up-1">
-          <h1 className="text-3xl font-bold tracking-tight">Generation History</h1>
-          <p className="text-base text-text-secondary mt-2">
+        <div className="mb-10 animate-fade-up animate-fade-up-1 max-[480px]:mb-8">
+          <p className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-accent mb-3">
+            History
+          </p>
+          <h1 className="text-[clamp(24px,4vw,32px)] font-bold tracking-[-1px]">Generation History</h1>
+          <p className="text-[15px] text-text-secondary mt-2 leading-relaxed">
             All your past name generations — click any name to explore it.
           </p>
         </div>
@@ -90,16 +92,10 @@ export default function HistoryPage() {
         {/* Unauthenticated */}
         {status === "unauthenticated" && (
           <div className="text-center py-24 animate-fade-up">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-surface border border-border flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-text-muted">
-                <circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M3 18c0-4 3-6 7-6s7 2 7 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
             <p className="text-sm text-text-muted mb-4">Sign in to view your history</p>
             <button
               onClick={() => signIn("google", { callbackUrl: "/history" })}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-black text-sm font-semibold rounded-lg hover:bg-accent/90 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-black text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
             >
               Sign in with Google
             </button>
@@ -108,9 +104,9 @@ export default function HistoryPage() {
 
         {/* Loading */}
         {loading && status !== "unauthenticated" && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="p-5 bg-surface/60 border border-border/50 rounded-xl space-y-3">
+              <div key={i} className="p-5 bg-surface/60 border border-border/50 rounded-xl space-y-2.5">
                 <div className="skeleton-line h-4 w-64" />
                 <div className="skeleton-line h-3 w-32" />
               </div>
@@ -121,15 +117,10 @@ export default function HistoryPage() {
         {/* Empty state */}
         {!loading && status === "authenticated" && generations.length === 0 && (
           <div className="text-center py-24 animate-fade-up">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-surface border border-border flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-text-muted">
-                <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
             <p className="text-sm text-text-muted mb-4">No generations yet</p>
             <Link
               href="/generate"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-black text-sm font-semibold rounded-lg hover:bg-accent/90 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-black text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
             >
               Generate your first name
             </Link>
@@ -138,7 +129,7 @@ export default function HistoryPage() {
 
         {/* Content */}
         {!loading && generations.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
             {/* Left: generation list */}
             <div className="space-y-3 min-w-0">
               {generations.map((gen, gi) => {
@@ -151,7 +142,7 @@ export default function HistoryPage() {
                   >
                     {/* Generation header */}
                     <button
-                      className="w-full text-left px-5 py-4 flex items-center gap-4 group"
+                      className="w-full text-left px-5 py-4 flex items-center gap-4 group max-[480px]:px-4 max-[480px]:py-3"
                       onClick={() => {
                         if (isExpanded) {
                           setExpandedId(null);
@@ -163,14 +154,14 @@ export default function HistoryPage() {
                       }}
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-base font-medium text-text-primary truncate">
+                        <p className="text-[15px] font-medium text-text-primary truncate">
                           {gen.ideaText}
                         </p>
                         <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[13px] text-text-muted font-[family-name:var(--font-mono)]">
+                          <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
                             {formatDate(gen.createdAt)} · {formatTime(gen.createdAt)}
                           </span>
-                          <span className="text-[13px] text-text-muted">
+                          <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
                             {gen.names.length} names
                           </span>
                         </div>
@@ -188,7 +179,7 @@ export default function HistoryPage() {
 
                     {/* Expanded names list */}
                     {isExpanded && (
-                      <div className="border-t border-border/40 px-4 pb-4 pt-3 space-y-1.5">
+                      <div className="border-t border-border/40 px-4 pb-4 pt-3 space-y-1.5 max-[480px]:px-3">
                         {gen.names.map((name, ni) => {
                           const isSelected = selectedName?.name === name.name;
                           return (
@@ -206,12 +197,12 @@ export default function HistoryPage() {
                                   isSelected ? "bg-accent" : "bg-transparent group-hover:bg-border"
                                 }`}
                               />
-                              <div className="flex items-center gap-3 py-3 px-4 pl-5">
+                              <div className="flex items-center gap-3 py-3 px-4 pl-5 max-[480px]:py-2.5 max-[480px]:px-3 max-[480px]:pl-4">
                                 <span className="text-xs font-[family-name:var(--font-mono)] text-text-muted w-4 shrink-0 tabular-nums">
                                   {String(ni + 1).padStart(2, "0")}
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                  <span className={`text-base font-semibold tracking-tight ${isSelected ? "text-accent" : "text-text-primary"}`}>
+                                  <span className={`text-[15px] font-semibold tracking-tight ${isSelected ? "text-accent" : "text-text-primary"}`}>
                                     {name.name}
                                   </span>
                                   <span className="text-[13px] text-text-secondary ml-2 hidden sm:inline truncate">
@@ -236,13 +227,8 @@ export default function HistoryPage() {
                 <ValidationPanel name={selectedName} />
               ) : (
                 <div className="border border-dashed border-border/60 rounded-2xl p-10 text-center bg-surface/30">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-surface border border-border flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-text-muted">
-                      <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                  <p className="text-base text-text-muted font-medium">Select a name</p>
-                  <p className="text-sm text-text-secondary mt-1">
+                  <p className="text-sm text-text-muted font-medium">Select a name</p>
+                  <p className="text-xs text-text-muted/70 mt-1">
                     Click any name to see its brand score and checks
                   </p>
                 </div>

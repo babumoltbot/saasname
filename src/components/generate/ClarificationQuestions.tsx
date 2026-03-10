@@ -106,9 +106,9 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
     <div className="max-w-2xl mx-auto animate-fade-up">
       <div className="rounded-2xl border border-border/60 bg-surface/70 overflow-hidden">
         {/* Header with progress */}
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-border/50">
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-border/50 max-[480px]:px-4">
           <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-          <span className="flex-1 text-center text-[13px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
+          <span className="flex-1 text-center text-[12px] font-[family-name:var(--font-mono)] text-text-muted tracking-wide">
             question {step + 1} of {questions.length} — optional
           </span>
         </div>
@@ -122,8 +122,8 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
         </div>
 
         {/* Single question */}
-        <div className="p-8" key={q.id}>
-          <p className="text-lg text-text-primary font-semibold mb-6 animate-fade-up">
+        <div className="p-6 lg:p-8 max-[480px]:p-5" key={q.id}>
+          <p className="text-[17px] text-text-primary font-semibold mb-6 animate-fade-up max-[480px]:text-base max-[480px]:mb-5">
             {q.question}
           </p>
 
@@ -139,7 +139,7 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
             />
           ) : (
             <div className="space-y-3">
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5 max-[480px]:gap-2">
                 {q.options?.map((option) => {
                   const isSelected =
                     q.type === "multi-select"
@@ -156,7 +156,7 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
                           ? handleMultiSelect(q.id, option)
                           : handleSingleSelect(q.id, option)
                       }
-                      className={`px-4 py-2 text-sm rounded-xl border transition-all cursor-pointer disabled:opacity-40 ${
+                      className={`px-4 py-2 text-sm rounded-xl border transition-all cursor-pointer disabled:opacity-40 max-[480px]:px-3 max-[480px]:text-[13px] ${
                         isSelected
                           ? "bg-accent/15 border-accent/50 text-accent font-medium"
                           : "bg-black/20 border-border/50 text-text-secondary hover:border-border hover:text-text-primary"
@@ -178,7 +178,7 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
                       ? handleMultiCustomToggle(q.id)
                       : handleSingleCustomToggle(q.id)
                   }
-                  className={`px-4 py-2 text-sm rounded-xl border transition-all cursor-pointer disabled:opacity-40 ${
+                  className={`px-4 py-2 text-sm rounded-xl border transition-all cursor-pointer disabled:opacity-40 max-[480px]:px-3 max-[480px]:text-[13px] ${
                     customOpen[q.id]
                       ? "bg-accent/15 border-accent/50 text-accent font-medium"
                       : "bg-black/20 border-dashed border-border/50 text-text-muted hover:border-border hover:text-text-primary"
@@ -207,8 +207,8 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between px-8 py-4 border-t border-border/50 bg-surface-raised/30">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-6 lg:px-8 py-4 border-t border-border/50 bg-surface-raised/30 max-[480px]:px-5 max-[480px]:flex-col max-[480px]:gap-3">
+          <div className="flex items-center gap-3 max-[480px]:order-2 max-[480px]:w-full max-[480px]:justify-center">
             {step > 0 && (
               <button
                 type="button"
@@ -233,7 +233,7 @@ export default function ClarificationQuestions({ questions, onSubmit, onSkip, lo
             type="button"
             onClick={handleNext}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-black bg-accent rounded-lg hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-black bg-accent rounded-lg hover:translate-y-[-1px] hover:shadow-[0_0_30px_var(--color-accent-glow)] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none max-[480px]:order-1 max-[480px]:w-full max-[480px]:justify-center"
           >
             {loading ? (
               <>

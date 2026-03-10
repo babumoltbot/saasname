@@ -89,6 +89,25 @@ body::after {
   transform: translateY(0);
 }
 
+/* Stagger reveal — parent gets .visible via IntersectionObserver, children animate in */
+.stagger-parent > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+}
+
+.stagger-parent.visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.stagger-parent.visible > *:nth-child(1) { transition-delay: 0.04s; }
+.stagger-parent.visible > *:nth-child(2) { transition-delay: 0.08s; }
+.stagger-parent.visible > *:nth-child(3) { transition-delay: 0.12s; }
+.stagger-parent.visible > *:nth-child(4) { transition-delay: 0.16s; }
+.stagger-parent.visible > *:nth-child(5) { transition-delay: 0.20s; }
+.stagger-parent.visible > *:nth-child(6) { transition-delay: 0.24s; }
+
 /* Generate page animations */
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(30px); }

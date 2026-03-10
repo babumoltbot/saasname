@@ -16,7 +16,7 @@ const steps = [
   {
     num: "03",
     title: "Review suggestions",
-    desc: "Get a list of creative, brandable names. Each one comes with domain availability, social handle status, and a brand score.",
+    desc: "Get a list of creative, brandable names — each with domain availability, social handle status, and a brand score.",
   },
   {
     num: "04",
@@ -26,44 +26,71 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const ref = useScrollReveal();
+  const headerRef = useScrollReveal();
+  const terminalRef = useScrollReveal();
 
   return (
-    <section id="how-it-works" className="py-[120px] px-6 max-[768px]:py-20 max-[768px]:px-5 max-[480px]:py-12 max-[480px]:px-4">
-      <div className="max-w-[900px] mx-auto">
-        <div ref={ref} className="text-center mb-[72px] reveal max-[768px]:mb-10 max-[480px]:mb-6">
-          <p className="font-[family-name:var(--font-mono)] text-xs font-normal tracking-[2px] uppercase text-accent mb-4 max-[480px]:text-[11px] max-[480px]:tracking-[1.5px]">
+    <section
+      id="how-it-works"
+      className="py-20 lg:py-32 px-6 lg:px-10 max-[480px]:py-14 max-[480px]:px-4"
+    >
+      <div className="max-w-[860px] mx-auto">
+        {/* Section header */}
+        <div ref={headerRef} className="text-center mb-14 reveal max-[768px]:mb-10 max-[480px]:mb-8">
+          <p className="font-[family-name:var(--font-mono)] text-xs tracking-[2px] uppercase text-accent mb-4">
             How It Works
           </p>
-          <h2 className="text-[clamp(28px,4vw,44px)] font-bold tracking-[-1px] leading-[1.15] mb-5">
+          <h2 className="text-[clamp(28px,4vw,40px)] font-bold tracking-[-1px] leading-[1.15] mb-5">
             Four steps to the
             <br />
             perfect name
           </h2>
-          <p className="text-[17px] font-light text-text-secondary max-w-[520px] leading-[1.7] mx-auto max-[768px]:text-[15px]">
+          <p className="text-[15px] lg:text-[17px] font-light text-text-secondary max-w-[460px] leading-[1.7] mx-auto">
             From idea to validated name in under 60 seconds.
           </p>
         </div>
 
-        <div className="flex flex-col relative">
-          {/* Vertical line */}
-          <div className="absolute left-6 top-12 bottom-12 w-px bg-gradient-to-b from-accent to-border max-[768px]:left-[19px] max-[480px]:left-[15px]" />
+        {/* Terminal window with steps */}
+        <div ref={terminalRef} className="reveal">
+          <div className="bg-surface border border-border rounded-xl overflow-hidden shadow-[0_16px_60px_rgba(0,0,0,0.06)]">
+            {/* Window chrome */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+              <span className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
+              <span className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
+              <span className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
+              <span className="flex-1 text-center font-[family-name:var(--font-mono)] text-xs text-text-muted">
+                pikname --how-it-works
+              </span>
+            </div>
 
-          {steps.map((s) => (
-            <div key={s.num} className="flex items-start gap-8 py-9 max-[768px]:gap-5 max-[768px]:py-6 max-[480px]:gap-4 max-[480px]:py-4">
-              <div className="shrink-0 w-12 h-12 flex items-center justify-center font-[family-name:var(--font-mono)] text-base font-bold text-accent bg-accent-dim border border-accent/20 rounded-full relative z-10 max-[768px]:w-10 max-[768px]:h-10 max-[768px]:text-sm max-[480px]:w-8 max-[480px]:h-8 max-[480px]:text-xs">
-                {s.num}
+            {/* Terminal body */}
+            <div className="p-6 lg:p-8 max-[480px]:p-4">
+              <div className="space-y-6 lg:space-y-8 max-[480px]:space-y-5">
+                {steps.map((s) => (
+                  <div key={s.num}>
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <span className="text-accent font-[family-name:var(--font-mono)] text-sm">→</span>
+                      <span className="font-[family-name:var(--font-mono)] text-sm text-accent font-bold">
+                        Step {s.num}
+                      </span>
+                      <span className="text-[16px] lg:text-[17px] font-semibold text-text-primary tracking-[-0.2px]">
+                        {s.title}
+                      </span>
+                    </div>
+                    <p className="text-[14px] lg:text-[15px] text-text-secondary leading-[1.65] ml-[52px] max-w-[520px] max-[480px]:ml-[40px]">
+                      {s.desc}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 tracking-[-0.3px] max-[768px]:text-lg max-[480px]:text-base">
-                  {s.title}
-                </h3>
-                <p className="text-base text-text-secondary leading-[1.7] max-w-[480px] max-[768px]:text-[15px] max-[480px]:text-sm">
-                  {s.desc}
-                </p>
+
+              {/* Blinking cursor */}
+              <div className="mt-8 max-[480px]:mt-6">
+                <span className="font-[family-name:var(--font-mono)] text-sm text-accent">$</span>{" "}
+                <span className="inline-block w-2 h-4 bg-accent align-text-bottom animate-blink" />
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

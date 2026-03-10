@@ -29,10 +29,10 @@ To visually check all pages, run the screenshot script (requires `npx playwright
 ## Tech Stack
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript 5**
-- **Tailwind CSS v4** (dark theme, accent green #3cff8a, fonts: Sora/Space Mono)
+- **Tailwind CSS v4** (light theme, accent emerald #059669, fonts: Sora/Space Mono)
 - **SQLite** via better-sqlite3 + **Drizzle ORM** (DB at `data/pikname.db`, WAL mode)
 - **NextAuth v4** (Google OAuth)
-- **OpenAI** or **Anthropic** via `AI_PROVIDER` env var (see `src/lib/ai-client.ts`). OpenAI: gpt-4o / gpt-4o-mini. Anthropic: claude-sonnet-4-6 / claude-haiku-4-5. Models overridable via env vars.
+- **OpenAI** or **Anthropic** via `AI_PROVIDER` env var (see `src/lib/ai-client.ts`). OpenAI: gpt-4o / gpt-4o-mini. Anthropic: claude-sonnet-4-6 / claude-haiku-4-5-20251001. Models overridable via env vars.
 - **Stripe** (one-time $29 checkout + webhook)
 - **WhoisXML API** for domain checks (or Porkbun redirect fallback via `NEXT_PUBLIC_DOMAIN_CHECK_MODE`)
 
@@ -68,9 +68,10 @@ Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users
 - **Domain check caching**: Results stored globally in `domainChecks` table, shared across all users.
 - **Audit logging**: `src/lib/audit-log.ts` writes NDJSON to daily files in `logs/` (configurable via `AUDIT_LOG_DIR`). Previous days' files are auto-gzipped. Actions logged: `sign_in`, `generate` (includes `aiProvider`), `validate`, `check_domains`, `checkout_created`, `payment_completed`, `pro_granted`, `pro_revoked`, `rate_limited`, `error`.
 - **Slack notifications**: `src/lib/slack-notify.ts` sends events to two webhook channels. High importance (`SLACK_WEBHOOK_HIGH`): `sign_in`, `payment_completed`, `pro_granted`, `pro_revoked`, `error`. Low importance (`SLACK_WEBHOOK_LOW`): `generate`, `checkout_created`, `rate_limited`. Fires async from `audit()`, never blocks requests.
+- **Analytics**: Umami tracking in production only (loaded in `src/app/layout.tsx`, hosted at `trk.nagrao.dev`).
 - `next.config.ts` uses `serverExternalPackages: ["better-sqlite3"]` for native bindings.
 - Path alias: `@/*` maps to `./src/*`.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits).
+Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_BASE_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits).

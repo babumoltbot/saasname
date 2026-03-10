@@ -38,10 +38,12 @@ export default function ValidationPanel({ name }: Props) {
   const tlds = TIERS.pro.tlds;
 
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
 
-  // Load cached results when name changes
+  // Reset state when name changes
   useEffect(() => {
     setDomainStates({});
+    setSummaryExpanded(false);
     fetch(`/api/check-domains?name=${encodeURIComponent(name.name)}`)
       .then((r) => r.json())
       .then((data) => {
@@ -105,19 +107,27 @@ export default function ValidationPanel({ name }: Props) {
   return (
     <div className="animate-slide-in-right bg-surface/70 border border-border/50 rounded-2xl overflow-hidden">
       {/* Header with score */}
-      <div className="p-6 pb-5 border-b border-border/40 max-[480px]:p-5 max-[480px]:pb-4">
-        <div className="flex items-start gap-4">
-          <BrandScore score={name.brandScore.overall} size="lg" animated />
-          <div className="min-w-0 flex-1 pt-0.5">
-            <h3 className="text-2xl font-bold tracking-tight max-[480px]:text-xl">{name.name}</h3>
-            <p className="text-sm text-text-secondary mt-1.5 leading-relaxed">
+      <div className="p-5 pb-4 border-b border-border/40 max-[480px]:p-4 max-[480px]:pb-3">
+        <div className="flex items-center gap-3">
+          <BrandScore score={name.brandScore.overall} size="sm" animated />
+          <div className="min-w-0 flex-1">
+            <h3 className="text-xl font-bold tracking-tight max-[480px]:text-lg">{name.name}</h3>
+            <p className={`text-[13px] text-text-secondary mt-0.5 leading-snug ${
+                summaryExpanded ? "" : "line-clamp-2"
+              }`}>
               {name.brandScore.summary}
             </p>
+            <button
+              onClick={() => setSummaryExpanded(!summaryExpanded)}
+              className="text-[12px] text-accent font-[family-name:var(--font-mono)] mt-1 hover:underline"
+            >
+              {summaryExpanded ? "less" : "more"}
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="px-6 pb-6 pt-5 space-y-5 max-[480px]:px-5 max-[480px]:pb-5">
+      <div className="px-5 pb-5 pt-4 space-y-4 max-[480px]:px-4 max-[480px]:pb-4">
         {/* Brand breakdown */}
         <div>
           <SectionLabel>Brand Score</SectionLabel>

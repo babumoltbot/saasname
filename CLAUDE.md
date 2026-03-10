@@ -74,3 +74,49 @@ Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users
 ## Environment Variables
 
 Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits).
+
+## Design Context
+
+### Users
+Early-stage founders — pre-revenue, solo or small teams, validating startup ideas quickly. They need speed and confidence: generate a name, see if it's viable, move on. They're time-poor and making high-stakes brand decisions with limited resources.
+
+### Brand Personality
+**Clean, trustworthy, fast.** The interface should feel like a reliable professional tool — not flashy, not playful, but quietly competent. Users should trust the results and feel the product respects their time.
+
+### Aesthetic Direction
+- **Visual tone**: Dark theme, precise typography, minimal ornamentation. Terminal-inspired elements (monospace fonts, command-line metaphors) signal technical credibility without being intimidating.
+- **References**: Stripe (approachable polish, clear hierarchy, trustworthy feel) and Notion (clean layout, restrained use of color, professional utility).
+- **Anti-references**: Avoid overly playful/startup-bro aesthetics, cluttered dashboards, or heavy illustration-driven designs.
+- **Theme**: Dark mode only. True black backgrounds with emerald green (#059669) as the sole accent color.
+
+### Design Tokens
+| Token | Value |
+|-------|-------|
+| Accent | `#059669` (emerald green) |
+| Accent Dim | `rgba(5, 150, 105, 0.08)` |
+| Accent Glow | `rgba(5, 150, 105, 0.18)` |
+| Background | `#000000` (true black) |
+| Surface | `#ffffff` |
+| Surface Raised | `#eef0f4` |
+| Border | `#d8dce5` |
+| Text Primary | `#1a1d24` |
+| Text Secondary | `#3d4250` |
+| Text Muted | `#6b7280` |
+| Warning | `#d97706` (amber) |
+| Error | `#ef4444` (red) |
+| Display Font | Sora (300–700) |
+| Mono Font | Space Mono (400, 700) |
+| Easing | `cubic-bezier(0.16, 1, 0.3, 1)` |
+| Radius Large | 16px (`rounded-2xl`) |
+| Radius Medium | 12px (`rounded-xl`) |
+| Radius Small | 8px (`rounded-lg`) |
+
+### Design Principles
+1. **Speed over ceremony** — Every interaction should feel instant. Minimize steps, reduce friction, prioritize perceived performance.
+2. **Show, don't decorate** — Use visual elements to convey information (score circles, availability badges, domain status), not for decoration. Every pixel earns its place.
+3. **Terminal credibility** — Monospace fonts, numbered lists, and command-line metaphors signal that this is a serious tool built by people who ship.
+4. **One accent, used sparingly** — Emerald green marks interactive elements, success states, and primary actions. Everything else stays neutral.
+5. **Trust through clarity** — Clean hierarchy, consistent spacing, and predictable patterns. No surprises, no confusion.
+
+### Accessibility
+Standard best practices: good contrast ratios, keyboard navigation, semantic HTML. No specific WCAG compliance target, but aim for AA where practical.

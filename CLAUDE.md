@@ -75,3 +75,28 @@ Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users
 ## Environment Variables
 
 Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_BASE_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits).
+
+## Design Context
+
+### Users
+Founders, indie hackers, and startup builders who need to name their product or company. They're in "launch mode" — moving fast, validating ideas, and want to cross naming off their list with confidence. They come in with an idea and leave with a validated, brandable name.
+
+### Brand Personality
+**Sharp, founder-friendly, confident.** Direct tone, no fluff. Speaks like a fellow founder who built the tool they wished existed. Copy is action-oriented ("Stop guessing. Validate it.") and respects the user's time.
+
+### Aesthetic Direction
+- **Theme**: Light (soft gray `#f7f8fa` backgrounds, white surfaces, dark text). CSS remaps `--color-black` to light values — components use `bg-black` but render light.
+- **Accent**: Emerald green `#059669` with dim (`rgba(5,150,105,0.08)`) and glow (`rgba(5,150,105,0.18)`) variants.
+- **Typography**: Sora (display/body, weights 300–700) + Space Mono (monospace accents, terminal UI, labels).
+- **Terminal motif**: MacOS-style window chrome on inputs, `$` prompt, monospace labels — reflects technical audience.
+- **Motion**: Purposeful animations via `--ease-out-expo` (cubic-bezier 0.16,1,0.3,1). Fade-up reveals, staggered entries, score circle fills, ambient glow pulses. Never gratuitous.
+- **Texture**: Subtle SVG grain overlay at 3% opacity across entire app.
+- **References**: Product Hunt / Indie Hackers energy — startup community feel, approachable but not toy-like.
+- **Anti-references**: Enterprise SaaS dashboards, overly minimal "design agency" sites, anything cluttered or feature-heavy.
+
+### Design Principles
+1. **Clarity over cleverness** — Every element earns its place. No decorative bloat. Status colors (green = available, amber = taken) convey meaning instantly.
+2. **Trust through thoroughness** — Validation results (domains, trademark, competitors) should feel comprehensive and reliable. The UI should reduce naming anxiety, not add to it.
+3. **Delight in discovery** — Name suggestions should feel like "oh, that's clever" moments. Animations reveal results progressively, building anticipation.
+4. **One path, no friction** — Single pricing tier, linear flow (describe → generate → validate → decide). No upsell UI, no feature gates cluttering the interface.
+5. **Accessibility as baseline** — WCAG AA contrast ratios, keyboard navigation, readable font sizes (min 13px monospace, 15px body). Respect `prefers-reduced-motion`.

@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { users, featureInterest } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 import { createCheckoutSession } from "@/lib/stripe";
 import { audit } from "@/lib/audit-log";
 
@@ -23,6 +23,42 @@ export async function POST() {
 
   if (dbUser.tier === "pro") {
     return NextResponse.json({ error: "Already on Pro" }, { status: 400 });
+  }
+
+  // Stripe not configured
+  if (!process.env.STRIPE_SECRET_KEY) {
+    const bypassEnabled = process.env.STRIPE_BYPASS_ENABLED !== "false";
+
+    if (bypassEnabled) {
+      // Check if we already sent a Slack alert for this user
+      const alreadyRecorded = await db.query.featureInterest.findFirst({
+        where: and(
+          eq(featureInterest.userId, dbUser.id),
+          eq(featureInterest.feature, "stripe_bypass"),
+        ),
+      });
+
+      if (!alreadyRecorded) {
+        await db.insert(featureInterest).values({
+          userId: dbUser.id,
+          feature: "stripe_bypass",
+        });
+
+        audit("stripe_bypass", {
+          user: session.user.email,
+          tier: dbUser.tier,
+          meta: { message: "User tried to pay but Stripe is not configured" },
+        });
+      }
+
+      return NextResponse.json({ stripeUnavailable: true });
+    }
+
+    // Bypass disabled — hard error
+    return NextResponse.json(
+      { error: "Payments are temporarily unavailable. Please try again later." },
+      { status: 503 },
+    );
   }
 
   const url = await createCheckoutSession(dbUser.email, dbUser.id);

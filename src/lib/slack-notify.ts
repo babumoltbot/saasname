@@ -20,6 +20,7 @@ const HIGH_ACTIONS: Set<AuditAction> = new Set([
   "pro_granted",       // tier change
   "pro_revoked",       // tier change
   "error",             // something broke
+  "stripe_bypass",     // user hit checkout with Stripe unconfigured
 ]);
 
 const LOW_ACTIONS: Set<AuditAction> = new Set([
@@ -39,6 +40,7 @@ const EMOJI: Partial<Record<AuditAction, string>> = {
   generate: ":sparkles:",
   checkout_created: ":credit_card:",
   rate_limited: ":snail:",
+  stripe_bypass: ":construction:",
 };
 
 function formatMessage(

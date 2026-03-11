@@ -63,6 +63,7 @@ export type AuditAction =
   | "pro_granted"
   | "pro_revoked"
   | "rate_limited"
+  | "stripe_bypass"
   | "error";
 
 interface AuditEntry {

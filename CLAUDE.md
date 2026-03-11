@@ -74,7 +74,7 @@ Drizzle ORM with lazy-initialized singleton (Proxy pattern). Five tables: `users
 
 ## Environment Variables
 
-Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_BASE_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits).
+Copy `.env.example` to `.env`. Required: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_BASE_URL`, `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`. Optional: `AI_PROVIDER` (openai|anthropic, default openai), `WHOISXML_API_KEY`, `NEXT_PUBLIC_DOMAIN_CHECK_MODE` (api|redirect), `SLACK_WEBHOOK_HIGH` (revenue/errors/new users), `SLACK_WEBHOOK_LOW` (generations/checkouts/rate limits), `STRIPE_BYPASS_ENABLED` (true|false, default true — when Stripe is unconfigured, shows friendly "early access" message instead of error; set to "false" to disable the bypass and show a hard error).
 
 ## Design Context
 

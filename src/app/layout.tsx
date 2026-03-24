@@ -21,6 +21,12 @@ export const metadata: Metadata = {
     description:
       "AI-powered name generator for founders. Get name ideas, check domains, social handles, trademarks, and brand scores — all in one tool.",
   },
+  other: {
+    "theme-color": "#059669",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -43,6 +49,38 @@ export default function RootLayout({
         />
       </head>
       <body className="font-[family-name:var(--font-display)] bg-black text-text-primary leading-relaxed overflow-x-hidden antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "PikName",
+                  url: "https://www.pikname.com",
+                  description:
+                    "AI-powered name generator and validator for startups, products, and businesses.",
+                },
+                {
+                  "@type": "WebApplication",
+                  name: "PikName",
+                  url: "https://www.pikname.com",
+                  applicationCategory: "BusinessApplication",
+                  operatingSystem: "Web",
+                  description:
+                    "Generate, validate, and secure the perfect name for your startup or product. Domain checks, trademark screening, social handle availability — all in one tool.",
+                  offers: {
+                    "@type": "Offer",
+                    price: "29",
+                    priceCurrency: "USD",
+                    description: "Pro — one-time payment",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         <SessionProvider>{children}</SessionProvider>
         {process.env.NODE_ENV === "production" && (
           <Script

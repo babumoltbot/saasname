@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.pikname.com";
+  const legalLastModified = new Date("2026-03-12");
 
   return [
     {
@@ -12,25 +13,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: new Date("2025-03-20"),
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date("2025-03-20"),
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/refunds`,
-      lastModified: new Date("2025-03-20"),
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/cookies`,
-      lastModified: new Date("2025-03-20"),
+      lastModified: legalLastModified,
       changeFrequency: "yearly",
       priority: 0.3,
     },

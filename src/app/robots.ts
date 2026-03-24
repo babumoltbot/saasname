@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/generate", "/history", "/api/"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: "https://www.pikname.com/sitemap.xml",

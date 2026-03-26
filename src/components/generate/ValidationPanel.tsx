@@ -39,11 +39,32 @@ export default function ValidationPanel({ name }: Props) {
 
   const [domainStates, setDomainStates] = useState<Record<string, DomainState>>({});
   const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function copyNameDetails() {
+    const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const scoreLines = Object.entries(name.brandScore.breakdown)
+      .map(([key, val]) => `  ${key}: ${val}/100`)
+      .join("\n");
+
+    const domainLines = Object.entries(domainStates)
+      .filter(([, s]) => s.status === "available" || s.status === "taken")
+      .map(([tld, s]) => `  ${slug}${tld}: ${s.status === "available" ? "Available" : "Taken"}`)
+      .join("\n");
+
+    let text = `**${name.name}** — ${name.brandScore.summary}\n\nBrand Score: ${name.brandScore.overall}/100\n${scoreLines}`;
+    if (domainLines) text += `\n\nDomains:\n${domainLines}`;
+
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
 
   // Reset state when name changes
   useEffect(() => {
     setDomainStates({});
     setSummaryExpanded(false);
+    setCopied(false);
     fetch(`/api/check-domains?name=${encodeURIComponent(name.name)}`)
       .then((r) => r.json())
       .then((data) => {
@@ -111,7 +132,25 @@ export default function ValidationPanel({ name }: Props) {
         <div className="flex items-center gap-3">
           <BrandScore score={name.brandScore.overall} size="sm" animated />
           <div className="min-w-0 flex-1">
-            <h3 className="text-xl font-bold tracking-tight max-[480px]:text-lg">{name.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-xl font-bold tracking-tight max-[480px]:text-lg">{name.name}</h3>
+              <button
+                onClick={copyNameDetails}
+                className="shrink-0 p-1 rounded-md text-text-muted hover:text-accent hover:bg-accent/10 transition-all"
+                title="Copy name details"
+              >
+                {copied ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                  </svg>
+                )}
+              </button>
+            </div>
             <p className={`text-[13px] text-text-secondary mt-0.5 leading-snug ${
                 summaryExpanded ? "" : "line-clamp-2"
               }`}>

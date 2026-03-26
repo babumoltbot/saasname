@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { NameWithScore } from "@/app/generate/page";
 import BrandScore from "./BrandScore";
 
@@ -10,16 +11,63 @@ interface Props {
   onSelect: (name: NameWithScore) => void;
 }
 
+function CopyIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
 export default function NameList({ names, selectedName, onSelect }: Props) {
+  const [copiedName, setCopiedName] = useState<string | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
+
+  function copyToClipboard(text: string, key?: string) {
+    navigator.clipboard.writeText(text);
+    if (key) {
+      setCopiedName(key);
+      setTimeout(() => setCopiedName(null), 1500);
+    }
+  }
+
+  function copyAllNames() {
+    const text = names
+      .map((n, i) => `${i + 1}. **${n.name}** — ${n.tagline}`)
+      .join("\n");
+    navigator.clipboard.writeText(text);
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1500);
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-[family-name:var(--font-mono)] text-[12px] tracking-[2px] uppercase text-text-muted">
           Results
         </h2>
-        <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
-          {names.length} names
-        </span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={copyAllNames}
+            className="flex items-center gap-1.5 text-[11px] font-[family-name:var(--font-mono)] text-text-muted hover:text-accent transition-colors"
+            title="Copy all names"
+          >
+            {copiedAll ? <CheckIcon /> : <CopyIcon />}
+            {copiedAll ? "Copied!" : "Copy all"}
+          </button>
+          <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
+            {names.length} names
+          </span>
+        </div>
       </div>
       <div className="space-y-2">
         {names.map((name, i) => {
@@ -64,6 +112,18 @@ export default function NameList({ names, selectedName, onSelect }: Props) {
                     {name.reasoning}
                   </p>
                 </div>
+
+                {/* Copy button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyToClipboard(`${name.name} — ${name.tagline}`, name.name);
+                  }}
+                  className="shrink-0 p-1.5 rounded-md text-text-muted hover:text-accent hover:bg-accent/10 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  title="Copy name"
+                >
+                  {copiedName === name.name ? <CheckIcon className="text-accent" /> : <CopyIcon />}
+                </button>
 
                 {/* Score */}
                 <BrandScore score={name.brandScore.overall} size="sm" animated />

@@ -214,7 +214,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 3
+          "default": 0
         },
         "names_per_generation": {
           "name": "names_per_generation",
@@ -222,7 +222,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 5
+          "default": 0
         },
         "stripe_customer_id": {
           "name": "stripe_customer_id",

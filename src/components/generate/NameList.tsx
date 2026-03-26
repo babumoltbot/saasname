@@ -73,10 +73,13 @@ export default function NameList({ names, selectedName, onSelect }: Props) {
         {names.map((name, i) => {
           const isSelected = selectedName?.name === name.name;
           return (
-            <button
+            <div
               key={name.name}
               onClick={() => onSelect(name)}
-              className={`name-card-enter w-full text-left group relative overflow-hidden rounded-xl border transition-all duration-200 ${
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSelect(name); }}
+              className={`name-card-enter w-full text-left group relative overflow-hidden rounded-xl border transition-all duration-200 cursor-pointer ${
                 isSelected
                   ? "bg-accent/[0.06] border-accent/30 shadow-[0_0_24px_-8px_var(--color-accent-glow)]"
                   : "bg-surface/60 border-border/50 hover:bg-surface hover:border-border"
@@ -128,7 +131,7 @@ export default function NameList({ names, selectedName, onSelect }: Props) {
                 {/* Score */}
                 <BrandScore score={name.brandScore.overall} size="sm" animated />
               </div>
-            </button>
+            </div>
           );
         })}
       </div>

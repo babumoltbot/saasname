@@ -6,6 +6,23 @@ import { DEMO_JOURNEYS, type DemoJourney, type DemoName } from "@/lib/demo-data"
 import { DIRECT_CHECK_TLDS } from "@/lib/constants";
 import { useScrollReveal } from "@/lib/hooks";
 
+function CopyIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
 function BrandScoreMini({ score }: { score: number }) {
   const color =
     score >= 80
@@ -40,16 +57,23 @@ function DemoNameCard({
   index,
   isSelected,
   onSelect,
+  copied,
+  onCopy,
 }: {
   name: DemoName;
   index: number;
   isSelected: boolean;
   onSelect: () => void;
+  copied: boolean;
+  onCopy: () => void;
 }) {
   return (
-    <button
+    <div
       onClick={onSelect}
-      className={`w-full text-left group relative overflow-hidden rounded-xl border transition-all duration-200 ${
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSelect(); }}
+      className={`w-full text-left group relative overflow-hidden rounded-xl border transition-all duration-200 cursor-pointer ${
         isSelected
           ? "bg-accent/[0.06] border-accent/30 shadow-[0_0_24px_-8px_var(--color-accent-glow)]"
           : "bg-surface/60 border-border/50 hover:bg-surface hover:border-border"
@@ -81,18 +105,44 @@ function DemoNameCard({
             {name.reasoning}
           </p>
         </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy();
+          }}
+          className="shrink-0 p-1.5 rounded-md text-text-muted hover:text-accent hover:bg-accent/10 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+          title="Copy name"
+        >
+          {copied ? <CheckIcon className="text-accent" /> : <CopyIcon />}
+        </button>
         <BrandScoreMini score={name.brandScore.overall} />
       </div>
-    </button>
+    </div>
   );
 }
 
 function DemoValidationPanel({ name }: { name: DemoName }) {
   const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const checkable = name.domains.filter((d) => DIRECT_CHECK_TLDS.includes(d.tld));
   const external = name.domains.filter((d) => !DIRECT_CHECK_TLDS.includes(d.tld));
   const slug = name.name.toLowerCase().replace(/[^a-z0-9]/g, "");
   const registrarUrl = `https://www.namecheap.com/domains/registration/results/?domain=${encodeURIComponent(slug)}`;
+
+  function copyNameDetails() {
+    const scoreLines = Object.entries(name.brandScore.breakdown)
+      .map(([key, val]) => `  ${key}: ${val}/100`)
+      .join("\n");
+    const domainLines = name.domains
+      .filter((d) => d.available !== undefined)
+      .map((d) => `  ${d.domain}: ${d.available ? "Available" : "Taken"}`)
+      .join("\n");
+    let text = `**${name.name}** — ${name.brandScore.summary}\n\nBrand Score: ${name.brandScore.overall}/100\n${scoreLines}`;
+    if (domainLines) text += `\n\nDomains:\n${domainLines}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
 
   return (
     <div className="bg-surface border border-border/60 rounded-2xl overflow-hidden">
@@ -101,7 +151,16 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
         <div className="flex items-center gap-3">
           <BrandScoreMini score={name.brandScore.overall} />
           <div className="min-w-0 flex-1">
-            <h3 className="text-xl font-bold tracking-tight">{name.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-xl font-bold tracking-tight">{name.name}</h3>
+              <button
+                onClick={copyNameDetails}
+                className="shrink-0 p-1 rounded-md text-text-muted hover:text-accent hover:bg-accent/10 transition-all"
+                title="Copy name details"
+              >
+                {copied ? <CheckIcon className="text-accent" /> : <CopyIcon />}
+              </button>
+            </div>
             <p className={`text-[13px] text-text-secondary mt-0.5 leading-snug ${
               summaryExpanded ? "" : "line-clamp-2"
             }`}>
@@ -270,12 +329,29 @@ function DemoValidationPanel({ name }: { name: DemoName }) {
 export default function DemoSection() {
   const [activeJourney, setActiveJourney] = useState<DemoJourney>(DEMO_JOURNEYS[0]);
   const [selectedName, setSelectedName] = useState<DemoName>(DEMO_JOURNEYS[0].names[0]);
+  const [copiedName, setCopiedName] = useState<string | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
   const headerRef = useScrollReveal();
 
   const handleJourneySelect = (journey: DemoJourney) => {
     setActiveJourney(journey);
     setSelectedName(journey.names[0]);
   };
+
+  function copyAllNames() {
+    const text = activeJourney.names
+      .map((n, i) => `${i + 1}. **${n.name}** — ${n.tagline}`)
+      .join("\n");
+    navigator.clipboard.writeText(text);
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1500);
+  }
+
+  function copyName(name: DemoName) {
+    navigator.clipboard.writeText(`${name.name} — ${name.tagline}`);
+    setCopiedName(name.name);
+    setTimeout(() => setCopiedName(null), 1500);
+  }
 
   return (
     <section
@@ -334,9 +410,19 @@ export default function DemoSection() {
               <h3 className="font-[family-name:var(--font-mono)] text-[12px] tracking-[2px] uppercase text-text-muted">
                 Results
               </h3>
-              <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
-                {activeJourney.names.length} names
-              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={copyAllNames}
+                  className="flex items-center gap-1.5 text-[11px] font-[family-name:var(--font-mono)] text-text-muted hover:text-accent transition-colors"
+                  title="Copy all names"
+                >
+                  {copiedAll ? <CheckIcon /> : <CopyIcon />}
+                  {copiedAll ? "Copied!" : "Copy all"}
+                </button>
+                <span className="text-[12px] text-text-muted font-[family-name:var(--font-mono)]">
+                  {activeJourney.names.length} names
+                </span>
+              </div>
             </div>
             <div className="space-y-2 max-[768px]:max-h-[340px] max-[768px]:overflow-y-auto max-[768px]:pr-1">
               {activeJourney.names.map((name, i) => (
@@ -346,6 +432,8 @@ export default function DemoSection() {
                   index={i}
                   isSelected={selectedName.name === name.name}
                   onSelect={() => setSelectedName(name)}
+                  copied={copiedName === name.name}
+                  onCopy={() => copyName(name)}
                 />
               ))}
             </div>

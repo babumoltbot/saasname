@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const idea = body.idea?.trim();
   const clarifications = body.clarifications;
+  const excludeNames: string[] = body.excludeNames ?? [];
 
   if (!idea || idea.length < 10) {
     return NextResponse.json({ error: "Please describe your idea in at least 10 characters" }, { status: 400 });
@@ -57,8 +58,8 @@ export async function POST(req: NextRequest) {
 
   const count = TIERS.pro.namesPerGeneration;
 
-  // Generate names
-  const names = await nameGenerator.generate(idea, count, clarifications);
+  // Generate names, excluding any previously generated ones
+  const names = await nameGenerator.generate(idea, count, clarifications, excludeNames.length > 0 ? excludeNames : undefined);
 
   // Score each name
   const namesWithScores = await Promise.all(
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest) {
       userId: dbUser.id,
       ideaText: idea,
       names: namesWithScores,
+      clarifications: clarifications?.length ? clarifications : null,
       aiProvider,
     })
     .returning();

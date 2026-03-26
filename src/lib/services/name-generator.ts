@@ -1,7 +1,7 @@
 import { chatCompletion } from "@/lib/ai-client";
 import type { INameGenerator, GeneratedName, Clarification, ClarificationQuestion } from "./interfaces";
 
-export function buildMessages(idea: string, count: number, clarifications?: Clarification[]) {
+export function buildMessages(idea: string, count: number, clarifications?: Clarification[], excludeNames?: string[]) {
   const hasClarifications = clarifications?.some((c) => c.answer.trim());
   const clarificationContext = hasClarifications
     ? `\n\nThe founder provided additional context — use this to tailor industry, tone, naming style, and audience fit:\n${clarifications!
@@ -49,7 +49,7 @@ Generate a diverse mix of naming styles:
 
 ${scaleLine}
 Avoid names that feel generic, spammy, or auto-generated. Do NOT generate names like "SmartTask Pro", "DataSync Hub", or "QuickBuild" — these are forgettable.
-
+${excludeNames?.length ? `\nIMPORTANT: The founder has already seen and rejected these names. Do NOT suggest any of them or close variants:\n${excludeNames.map((n) => `- ${n}`).join("\n")}\n\nGenerate completely different names — different roots, different styles, different linguistic approaches. Explore naming angles not yet covered.` : ""}
 Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "reasoning": "The specific wordplay, etymology, or phonetic trick behind this name and why it fits" }] }`,
     },
     {
@@ -60,11 +60,11 @@ Return JSON: { "names": [{ "name": "...", "tagline": "One-line brand tagline", "
 }
 
 export const nameGenerator: INameGenerator = {
-  async generate(idea: string, count: number, clarifications?: Clarification[]): Promise<GeneratedName[]> {
+  async generate(idea: string, count: number, clarifications?: Clarification[], excludeNames?: string[]): Promise<GeneratedName[]> {
     const content = await chatCompletion({
       model: "primary",
       temperature: 0.8,
-      messages: buildMessages(idea, count, clarifications),
+      messages: buildMessages(idea, count, clarifications, excludeNames),
     });
 
     if (!content) return [];

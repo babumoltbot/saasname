@@ -28,11 +28,13 @@ export default function GeneratePage() {
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [selectedName, setSelectedName] = useState<NameWithScore | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [phase, setPhase] = useState<Phase>("input");
   const [questions, setQuestions] = useState<ClarificationQuestion[]>([]);
   const [currentIdea, setCurrentIdea] = useState("");
+  const [currentClarifications, setCurrentClarifications] = useState<Clarification[]>([]);
 
   const handleIdeaSubmit = async (idea: string) => {
     setError(null);
@@ -71,7 +73,7 @@ export default function GeneratePage() {
     }
   };
 
-  const generateNames = async (idea: string, clarifications: Clarification[]) => {
+  const generateNames = async (idea: string, clarifications: Clarification[], excludeNames?: string[]) => {
     setError(null);
     setLoading(true);
     setPhase("generating");
@@ -80,7 +82,7 @@ export default function GeneratePage() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idea, clarifications }),
+        body: JSON.stringify({ idea, clarifications, excludeNames }),
       });
 
       const data = await res.json();
@@ -95,6 +97,7 @@ export default function GeneratePage() {
       }
 
       setResult(data);
+      setCurrentClarifications(clarifications);
       if (data.names?.length > 0) setSelectedName(data.names[0]);
       setPhase("results");
     } catch (err: any) {
@@ -102,6 +105,46 @@ export default function GeneratePage() {
       setPhase("input");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGenerateMore = async () => {
+    if (!result) return;
+    setError(null);
+    setLoadingMore(true);
+
+    const excludeNames = result.names.map((n) => n.name);
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idea: currentIdea,
+          clarifications: currentClarifications,
+          excludeNames,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 403 && data.upgrade) {
+          setShowUpgrade(true);
+          return;
+        }
+        throw new Error(data.error || "Generation failed");
+      }
+
+      // Append new names to existing results
+      setResult({
+        ...data,
+        names: [...result.names, ...data.names],
+      });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -279,12 +322,41 @@ export default function GeneratePage() {
         {/* Results area */}
         {phase === "results" && result && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            <NameList
-              names={result.names}
-              generationId={result.generationId}
-              selectedName={selectedName}
-              onSelect={setSelectedName}
-            />
+            <div>
+              <NameList
+                names={result.names}
+                generationId={result.generationId}
+                selectedName={selectedName}
+                onSelect={setSelectedName}
+              />
+              {/* Generate more button */}
+              <button
+                onClick={handleGenerateMore}
+                disabled={loadingMore}
+                className="flex items-center justify-center gap-2 w-full mt-4 py-3 px-4 rounded-xl border border-dashed border-border/60 bg-surface/30 text-text-muted hover:text-accent hover:border-accent/40 hover:bg-accent/[0.04] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingMore ? (
+                  <>
+                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span className="text-[13px] font-[family-name:var(--font-mono)]">Generating more names...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span className="text-[13px] font-[family-name:var(--font-mono)]">Generate more names</span>
+                    <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted/60">
+                      (uses 1 generation)
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
             <div className="lg:sticky lg:top-[80px] lg:self-start">
               {selectedName ? (
                 <ValidationPanel

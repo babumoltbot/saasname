@@ -7,11 +7,13 @@ import SessionBanner from "@/components/generate/SessionBanner";
 import ValidationPanel from "@/components/generate/ValidationPanel";
 import NameList from "@/components/generate/NameList";
 import type { NameWithScore } from "@/app/generate/page";
+import type { Clarification } from "@/lib/services/interfaces";
 
 interface Generation {
   id: string;
   ideaText: string;
   names: NameWithScore[];
+  clarifications: Clarification[] | null;
   createdAt: string | null;
 }
 
@@ -25,6 +27,8 @@ export default function HistoryPage() {
   const { status } = useSession();
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [moreError, setMoreError] = useState<string | null>(null);
   const [activeGen, setActiveGen] = useState<Generation | null>(null);
   const [selectedName, setSelectedName] = useState<NameWithScore | null>(null);
 
@@ -51,6 +55,47 @@ export default function HistoryPage() {
   const handleGenSelect = (gen: Generation) => {
     setActiveGen(gen);
     setSelectedName(gen.names.length > 0 ? gen.names[0] : null);
+    setMoreError(null);
+  };
+
+  const handleGenerateMore = async () => {
+    if (!activeGen) return;
+    setMoreError(null);
+    setLoadingMore(true);
+
+    const excludeNames = activeGen.names.map((n) => n.name);
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idea: activeGen.ideaText,
+          clarifications: activeGen.clarifications ?? undefined,
+          excludeNames,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Generation failed");
+      }
+
+      // Append new names to the active generation in local state
+      const updatedGen = {
+        ...activeGen,
+        names: [...activeGen.names, ...data.names],
+      };
+      setActiveGen(updatedGen);
+      setGenerations((prev) =>
+        prev.map((g) => (g.id === activeGen.id ? updatedGen : g))
+      );
+    } catch (err: any) {
+      setMoreError(err.message);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   return (
@@ -164,12 +209,44 @@ export default function HistoryPage() {
 
             {/* Name list + validation panel */}
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-              <NameList
-                names={activeGen.names}
-                generationId={activeGen.id}
-                selectedName={selectedName}
-                onSelect={setSelectedName}
-              />
+              <div>
+                <NameList
+                  names={activeGen.names}
+                  generationId={activeGen.id}
+                  selectedName={selectedName}
+                  onSelect={setSelectedName}
+                />
+                {/* Generate more button */}
+                <button
+                  onClick={handleGenerateMore}
+                  disabled={loadingMore}
+                  className="flex items-center justify-center gap-2 w-full mt-4 py-3 px-4 rounded-xl border border-dashed border-border/60 bg-surface/30 text-text-muted hover:text-accent hover:border-accent/40 hover:bg-accent/[0.04] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loadingMore ? (
+                    <>
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span className="text-[13px] font-[family-name:var(--font-mono)]">Generating more names...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                      <span className="text-[13px] font-[family-name:var(--font-mono)]">Generate more names</span>
+                      <span className="text-[11px] font-[family-name:var(--font-mono)] text-text-muted/60">
+                        (uses 1 generation)
+                      </span>
+                    </>
+                  )}
+                </button>
+                {moreError && (
+                  <p className="text-xs text-red-500 font-[family-name:var(--font-mono)] mt-2 text-center">{moreError}</p>
+                )}
+              </div>
               <div className="lg:sticky lg:top-[72px] lg:self-start">
                 {selectedName ? (
                   <ValidationPanel name={selectedName} />

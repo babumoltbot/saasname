@@ -18,7 +18,7 @@ export interface ClarificationQuestion {
 }
 
 export interface INameGenerator {
-  generate(idea: string, count: number, clarifications?: Clarification[]): Promise<GeneratedName[]>;
+  generate(idea: string, count: number, clarifications?: Clarification[], excludeNames?: string[]): Promise<GeneratedName[]>;
   generateQuestions(idea: string): Promise<ClarificationQuestion[]>;
 }
 

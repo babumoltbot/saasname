@@ -20,6 +20,7 @@ export const generations = sqliteTable("generations", {
   userId: text("user_id").notNull().references(() => users.id),
   ideaText: text("idea_text").notNull(),
   names: text("names", { mode: "json" }).notNull(), // JSON array of generated names
+  clarifications: text("clarifications", { mode: "json" }), // JSON array of { question, answer }
   aiProvider: text("ai_provider").notNull().default("openai"), // "openai" or "anthropic"
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
 });
